@@ -2,7 +2,7 @@ package com.up.fintech.armagedon.tp2.tp2.service;
 
 import org.springframework.stereotype.Service;
 
-import com.up.fintech.armagedon.tp2.tp2.dto.Iso8583;
+import com.up.fintech.armagedon.tp2.tp2.entity.Iso8583;
 
 @Service
 public class Decoder8583 {
