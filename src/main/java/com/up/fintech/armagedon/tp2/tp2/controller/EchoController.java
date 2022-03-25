@@ -29,7 +29,7 @@ public class EchoController {
 		this.decoder = decoder;
 	}
 	
-	@PostMapping("/test")
+	@PostMapping("/test/json")
 	public ResponseEntity<Response> Test(@RequestBody Request request) {
 		
 		var response = echoService.echoReply(request);
@@ -37,10 +37,10 @@ public class EchoController {
 		return ResponseEntity.ok(response);
 	}
 	
-	@PostMapping("/test/8583")
-	public ResponseEntity<String> Test(@RequestParam(required=false) String param, @RequestBody String request) {
+	@PostMapping("/test/iso8583")
+	public ResponseEntity<String> Test(@RequestParam(required=true) String param) {//, @RequestBody String request) {
 		Iso8583 response = null;
-		
+		var request = "FFFFFFFFFFFFFFFF";
 		try {
 			response = decoder.converter(request);
 		} catch (IllegalArgumentException e) {
@@ -49,8 +49,9 @@ public class EchoController {
 		
 		if (param!=null && param.equals("bits"))
 			return ResponseEntity.ok(response.getBits());
-		else
+		else if (param!=null && param.equals("functions"))
 			return ResponseEntity.ok(response.getFunctions());
+		else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Soportado ?param=functions o ?param=bits");
 	}
 	
 }
