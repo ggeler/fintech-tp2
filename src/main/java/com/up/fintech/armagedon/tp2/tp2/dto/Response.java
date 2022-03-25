@@ -3,14 +3,32 @@ package com.up.fintech.armagedon.tp2.tp2.dto;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AccessLevel;
+import lombok.Setter;
+
 @lombok.Data
+
 public class Response {
 
 	private Boolean status;
-	private Integer errorCode;
+	@JsonIgnore
+	@Setter(value = AccessLevel.NONE)
+	private Integer internalErrorCode;
+	@Setter(value = AccessLevel.NONE)
+	private String errorCode;
 	private String msg;
 	private Data data;
 	private UUID transactionId;
 	private LocalDateTime timeStamp;
+	
+	public void setInternalErrorCode(Integer code) {
+		internalErrorCode = code;
+		if (internalErrorCode == 0) {
+			errorCode = "00";
+		} else
+			errorCode = String.valueOf(code);
+	}
 	
 }

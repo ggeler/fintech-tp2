@@ -1,11 +1,14 @@
 package com.up.fintech.armagedon.tp2.tp2.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.up.fintech.armagedon.tp2.tp2.dto.Iso8583;
 import com.up.fintech.armagedon.tp2.tp2.dto.Request;
@@ -35,11 +38,19 @@ public class EchoController {
 	}
 	
 	@PostMapping("/test8583")
-	public ResponseEntity<Iso8583> Test(@RequestBody String request) {
+	public ResponseEntity<String> Test(@RequestParam(required=false) String param, @RequestBody String request) {
+		Iso8583 response = null;
 		
-		var response = decoder.converter(request);
+		try {
+			response = decoder.converter(request);
+		} catch (IllegalArgumentException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
 		
-		return ResponseEntity.ok(response);
+		if (param!=null && param.equals("bits"))
+			return ResponseEntity.ok(response.getBits());
+		else
+			return ResponseEntity.ok(response.getFunctions());
 	}
 	
 }

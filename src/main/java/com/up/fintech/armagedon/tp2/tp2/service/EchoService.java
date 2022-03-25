@@ -16,7 +16,7 @@ public class EchoService {
 		
 		var response = new Response();
 		response.setStatus(true);
-		response.setErrorCode(0);
+		response.setInternalErrorCode(0);
 		response.setMsg("Estado operación");
 		response.setData(new Data());
 		response.setTimeStamp(LocalDateTime.now());
