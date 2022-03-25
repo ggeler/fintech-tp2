@@ -17,30 +17,32 @@ import com.up.fintech.armagedon.tp2.tp2.service.Decoder8583;
 import com.up.fintech.armagedon.tp2.tp2.service.EchoService;
 
 @RestController
-@RequestMapping("/fintech/echo")
-public class EchoController {
+@RequestMapping("/fintech/echo/test")
+public class EchoTestController {
 
 	private final EchoService echoService;
 	private final Decoder8583 decoder;
 	
 	@Autowired
-	public EchoController(EchoService echoService, Decoder8583 decoder) {
+	public EchoTestController(EchoService echoService, Decoder8583 decoder) {
 		this.echoService = echoService;
 		this.decoder = decoder;
 	}
 	
-	@PostMapping("/test/json")
-	public ResponseEntity<Response> Test(@RequestBody Request request) {
+	@PostMapping("/json")
+	public ResponseEntity<Response> json(@RequestBody Request request) {
 		
 		var response = echoService.echoReply(request);
 		
 		return ResponseEntity.ok(response);
 	}
 	
-	@PostMapping("/test/iso8583")
-	public ResponseEntity<String> Test(@RequestParam(required=true) String param) {//, @RequestBody String request) {
+	@PostMapping("/iso8583")
+	public ResponseEntity<String> iso8583(@RequestParam(required=true) String param) {//, @RequestBody String request) {
+		
 		Iso8583 response = null;
-		var request = "FFFFFFFFFFFFFFFF";
+		var request = "FFFFFFFFFFFFFFFF"; //3238050020C1801C
+		
 		try {
 			response = decoder.converter(request);
 		} catch (IllegalArgumentException e) {
@@ -49,9 +51,12 @@ public class EchoController {
 		
 		if (param!=null && param.equals("bits"))
 			return ResponseEntity.ok(response.getBits());
+		
 		else if (param!=null && param.equals("functions"))
 			return ResponseEntity.ok(response.getFunctions());
-		else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Soportado ?param=functions o ?param=bits");
+		
+		else 
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Soportado ?param=functions o ?param=bits");
 	}
 	
 }
