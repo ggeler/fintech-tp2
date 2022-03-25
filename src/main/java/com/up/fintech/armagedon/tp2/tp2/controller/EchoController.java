@@ -37,7 +37,7 @@ public class EchoController {
 		return ResponseEntity.ok(response);
 	}
 	
-	@PostMapping("/test8583")
+	@PostMapping("/test/8583")
 	public ResponseEntity<String> Test(@RequestParam(required=false) String param, @RequestBody String request) {
 		Iso8583 response = null;
 		
