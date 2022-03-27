@@ -17,7 +17,8 @@ public class EchoService {
 		var response = new Response();
 		
 		var data = new Data();
-		data.setInterfaceFrom(request.getInterfaceOrigin());
+		if (request.getInterfaceOrigin()!=null)
+			data.setInterfaceFrom(request.getInterfaceOrigin());
 		
 		response.setStatus(true);
 		response.setInternalErrorCode(0);
