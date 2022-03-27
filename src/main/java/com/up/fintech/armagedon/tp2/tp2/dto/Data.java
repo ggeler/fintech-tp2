@@ -7,4 +7,5 @@ public class Data {
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	String internalData;
+	String interfaceFrom;
 }

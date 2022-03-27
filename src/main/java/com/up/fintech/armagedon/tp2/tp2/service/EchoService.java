@@ -15,10 +15,14 @@ public class EchoService {
 	public Response echoReply(Request request) {
 		
 		var response = new Response();
+		
+		var data = new Data();
+		data.setInterfaceFrom(request.getInterfaceOrigin());
+		
 		response.setStatus(true);
 		response.setInternalErrorCode(0);
 		response.setMsg("Estado operación");
-		response.setData(new Data());
+		response.setData(data);
 		response.setTimeStamp(LocalDateTime.now());
 		response.setTransactionId(UUID.randomUUID());
 		
