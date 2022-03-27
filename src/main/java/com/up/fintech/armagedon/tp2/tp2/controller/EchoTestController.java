@@ -58,7 +58,7 @@ public class EchoTestController {
 			return ResponseEntity.ok(response.getFunctions());
 		
 		else 
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Soportado ?param=functions o ?param=bits");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Parametros soportados ?param=functions o ?param=bits");
 	}
 	
 }

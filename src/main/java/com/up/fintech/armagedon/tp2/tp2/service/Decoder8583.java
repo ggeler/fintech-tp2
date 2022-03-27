@@ -50,7 +50,7 @@ public class Decoder8583 {
 	public Iso8583 converter(String s) {
 		
 		if (s.length()!=16 && s.length()!=23)
-			throw new IllegalArgumentException("Msg debes tener Long = 16 || = 23");
+			throw new IllegalArgumentException("El string debes tener Long = 16 || = 23");
 		
 		String tmp = s.replaceAll("\\s", "");
 		
