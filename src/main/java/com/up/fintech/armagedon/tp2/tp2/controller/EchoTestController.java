@@ -39,10 +39,11 @@ public class EchoTestController {
 	}
 	
 	@PostMapping(value = "/iso8583", produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.ALL_VALUE)
-	public ResponseEntity<String> iso8583(@RequestParam(required=true) String param) {//, @RequestBody String request) {
+	public ResponseEntity<String> iso8583(@RequestParam(required=true) String param, @RequestParam (required = false) String request) {
 		
 		Iso8583 response = null;
-		var request = "FFFFFFFFFFFFFFFF"; //3238050020C1801C
+		if (request == null || request.isBlank())
+			request = "FFFFFFFFFFFFFFFF"; //3238050020C1801C
 		
 		try {
 			response = decoder.converter(request);
