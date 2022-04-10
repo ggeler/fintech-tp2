@@ -1,9 +1,14 @@
 package com.up.fintech.armagedon.tp2.tp2.controller;
 
+import java.security.Principal;
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,27 +16,44 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.up.fintech.armagedon.tp2.tp2.dao.UserTrail;
 import com.up.fintech.armagedon.tp2.tp2.dto.Request;
 import com.up.fintech.armagedon.tp2.tp2.dto.Response;
 import com.up.fintech.armagedon.tp2.tp2.entity.Iso8583;
 import com.up.fintech.armagedon.tp2.tp2.service.Decoder8583;
 import com.up.fintech.armagedon.tp2.tp2.service.EchoService;
+import com.up.fintech.armagedon.tp2.tp2.service.UserTrailService;
+
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequestMapping("/fintech/echo/test")
+@Log4j2
 public class EchoTestController {
 
 	private final EchoService echoService;
 	private final Decoder8583 decoder;
+	private final UserTrailService service;
 	
 	@Autowired
-	public EchoTestController(EchoService echoService, Decoder8583 decoder) {
+	public EchoTestController(EchoService echoService, Decoder8583 decoder, UserTrailService service) {
 		this.echoService = echoService;
 		this.decoder = decoder;
+		this.service = service;
+	}
+	
+	@GetMapping("/me")
+	public Principal getMe(Principal principal) {
+		return principal;
 	}
 	
 	@PostMapping(value = "/json", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE )
 	public ResponseEntity<Response> json(@RequestBody Request request) {
+		
+		var principal = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		service.log(new UserTrail(null, principal, LocalDateTime.now(), "POST /fintech/echo/test/json"));
+		log.info("Accediendo a /json");
 		
 		var response = echoService.echoReply(request);
 		
@@ -40,6 +62,11 @@ public class EchoTestController {
 	
 	@PostMapping(value = "/iso8583", produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.ALL_VALUE)
 	public ResponseEntity<String> iso8583(@RequestParam(required=true) String param, @RequestParam (required = false) String request) {
+		
+		var principal = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		service.log(new UserTrail(null, principal, LocalDateTime.now(), "POST /fintech/echo/test/iso8583"));
+		log.info("Accediendo a /iso8583");
 		
 		Iso8583 response = null;
 		if (request == null || request.isBlank())
