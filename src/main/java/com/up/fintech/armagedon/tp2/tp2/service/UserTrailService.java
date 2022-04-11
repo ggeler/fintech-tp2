@@ -1,5 +1,7 @@
 package com.up.fintech.armagedon.tp2.tp2.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,8 @@ public class UserTrailService {
 	public void log(UserTrail userTrail) {
 		repository.save(userTrail);		
 	}
-	
-	
-	
+
+	public List<UserTrail> getLog() {
+		return repository.findAll();
+	}
 }

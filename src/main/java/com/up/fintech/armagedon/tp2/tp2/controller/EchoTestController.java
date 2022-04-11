@@ -2,6 +2,7 @@ package com.up.fintech.armagedon.tp2.tp2.controller;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,8 +44,13 @@ public class EchoTestController {
 	}
 	
 	@GetMapping("/me")
-	public Principal getMe(Principal principal) {
-		return principal;
+	public ResponseEntity<Principal> getMe(Principal principal) {
+		return ResponseEntity.ok(principal);
+	}
+	
+	@GetMapping("/log")
+	public ResponseEntity<List<UserTrail>> getLog() {
+		return ResponseEntity.ok(service.getLog());
 	}
 	
 	@PostMapping(value = "/json", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE )
