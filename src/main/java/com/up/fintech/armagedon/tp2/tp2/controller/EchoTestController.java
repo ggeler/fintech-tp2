@@ -5,8 +5,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import com.up.fintech.armagedon.tp2.tp2.entity.Iso8583;
 import com.up.fintech.armagedon.tp2.tp2.entity.Request;
 import com.up.fintech.armagedon.tp2.tp2.entity.Response;
 import com.up.fintech.armagedon.tp2.tp2.entity.UserTrail;
+import com.up.fintech.armagedon.tp2.tp2.misc.assembler.UserTrailAssembler;
 import com.up.fintech.armagedon.tp2.tp2.service.Decoder8583Service;
 import com.up.fintech.armagedon.tp2.tp2.service.EchoService;
 import com.up.fintech.armagedon.tp2.tp2.service.UserTrailService;
@@ -37,12 +39,14 @@ public class EchoTestController {
 	private final EchoService echoService;
 	private final Decoder8583Service decoder;
 	private final UserTrailService service;
+	private final UserTrailAssembler assembler;
 	
 	@Autowired
-	public EchoTestController(EchoService echoService, Decoder8583Service decoder, UserTrailService service) {
+	public EchoTestController(EchoService echoService, Decoder8583Service decoder, UserTrailService service, UserTrailAssembler assembler) {
 		this.echoService = echoService;
 		this.decoder = decoder;
 		this.service = service;
+		this.assembler = assembler;
 	}
 	
 	@GetMapping("/me")
@@ -56,8 +60,8 @@ public class EchoTestController {
 	}
 	
 	@GetMapping("/log/paged")
-	public ResponseEntity<Page<UserTrail>> getLogPaged(Pageable pageable) {
-		return ResponseEntity.ok(service.getLogPaged(pageable));
+	public ResponseEntity<PagedModel<EntityModel<UserTrail>>> getLogPaged(Pageable pageable) {
+		return ResponseEntity.ok(assembler.toModel(service.getLogPaged(pageable)));
 	}
 	
 	@PostMapping(value = "/json", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE )
