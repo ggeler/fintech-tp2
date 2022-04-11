@@ -56,7 +56,7 @@ public class EchoTestController {
 	}
 	
 	@GetMapping("/log/paged")
-	public ResponseEntity<Page<UserTrail>> getLogPaged(Pageable pageable) {
+	public ResponseEntity<Page<UserTrail>> getLogPaged(@RequestParam Pageable pageable) {
 		return ResponseEntity.ok(service.getLogPaged(pageable));
 	}
 	
