@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 	)
 @OpenAPIDefinition(security = @SecurityRequirement(name = "OAuth2"),
 	info = @Info(contact = @Contact(email = "ggeler@hotmail.com",name = "Gastón Geler"),description = "TP2 Api Bankend Documentation",title = "TP2 Fintech API Backend",
-	version = "1.0", license = @License(name = "Apache 2.0",url = "lhttps://www.apache.org/licenses/LICENSE-2.0\""))
+	version = "0.3", license = @License(name = "Apache 2.0",url = "https://www.apache.org/licenses/LICENSE-2.0"))
 )
 public class CustomOpenApiUI {
 //
