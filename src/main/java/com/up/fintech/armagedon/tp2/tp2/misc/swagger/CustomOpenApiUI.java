@@ -27,6 +27,10 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 				authorizationUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/auth",
 				tokenUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/token",
 				refreshUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/token",
+				scopes = {@OAuthScope(name = "email")}),
+		password = @OAuthFlow(
+				authorizationUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/auth",
+				tokenUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/token",
 				scopes = {@OAuthScope(name = "email")})
 		)
 	)
