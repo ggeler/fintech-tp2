@@ -24,9 +24,9 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 				scopes = {@OAuthScope(name = "email")})
 		)
 )
-@SecurityScheme(name = "OIDC", type = SecuritySchemeType.OPENIDCONNECT, scheme = "bearer", bearerFormat = "jwt", in = SecuritySchemeIn.HEADER, 
-	openIdConnectUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/.well-known/openid-configuration"
-)
+//@SecurityScheme(name = "OIDC", type = SecuritySchemeType.OPENIDCONNECT, scheme = "bearer", bearerFormat = "jwt", in = SecuritySchemeIn.HEADER, 
+//	openIdConnectUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/.well-known/openid-configuration"
+//)
 @OpenAPIDefinition(security = @SecurityRequirement(name = "OAuth2"),
 	info = @Info(contact = @Contact(email = "ggeler@hotmail.com",name = "Gastón Geler"),description = "TP2 Api Bankend Documentation",title = "TP2 Fintech API Backend",
 	version = "0.3", license = @License(name = "Apache 2.0",url = "https://www.apache.org/licenses/LICENSE-2.0")),
