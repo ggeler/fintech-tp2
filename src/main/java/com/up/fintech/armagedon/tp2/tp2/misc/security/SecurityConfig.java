@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.anonymous().disable()
 			.formLogin().disable()
 			.httpBasic().disable()
-			.oauth2Client().and()
+//			.oauth2Client().and()
 			.oauth2ResourceServer().jwt();
 	}
 	
