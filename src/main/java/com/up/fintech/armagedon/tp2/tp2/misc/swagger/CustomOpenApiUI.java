@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 @Configuration
-@SecurityScheme(name = "OAuth2", type = SecuritySchemeType.OAUTH2, scheme = "bearer",bearerFormat = "jwt", in = SecuritySchemeIn.HEADER, flows = @OAuthFlows(
+@SecurityScheme(name = "OAuth2", type = SecuritySchemeType.OPENIDCONNECT, scheme = "bearer",bearerFormat = "jwt", in = SecuritySchemeIn.HEADER, flows = @OAuthFlows(
 		authorizationCode = @OAuthFlow(
 				authorizationUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/auth",
 				tokenUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/token",
