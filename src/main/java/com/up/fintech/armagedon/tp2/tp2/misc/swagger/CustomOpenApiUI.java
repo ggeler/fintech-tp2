@@ -15,19 +15,23 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 @Configuration
-@SecurityScheme(name = "OAuth2", type = SecuritySchemeType.OPENIDCONNECT, scheme = "bearer",bearerFormat = "jwt", in = SecuritySchemeIn.HEADER, flows = @OAuthFlows(
-		authorizationCode = @OAuthFlow(
-				authorizationUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/auth",
-				tokenUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/token",
-				refreshUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/token",
-				scopes = {@OAuthScope(name = "email")})
+//@SecurityScheme(name = "OAuth2", type = SecuritySchemeType.OAUTH2, scheme = "bearer",bearerFormat = "jwt", in = SecuritySchemeIn.HEADER, flows = @OAuthFlows(
+//		authorizationCode = @OAuthFlow(
+//				authorizationUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/auth",
+//				tokenUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/token",
+//				refreshUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/token",
+//				scopes = {@OAuthScope(name = "email")})
 //		,password = @OAuthFlow(
 //				tokenUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/token",
 //				refreshUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/token",
 //				scopes = {@OAuthScope(name = "email")})
-		)
-	)
-@OpenAPIDefinition(security = @SecurityRequirement(name = "OAuth2"),
+//		)
+//)
+@SecurityScheme(name = "OIDC", type = SecuritySchemeType.OPENIDCONNECT, scheme = "bearer",bearerFormat = "jwt", in = SecuritySchemeIn.HEADER, 
+	openIdConnectUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/")
+		
+		
+@OpenAPIDefinition(security = @SecurityRequirement(name = "OIDC"),
 	info = @Info(contact = @Contact(email = "ggeler@hotmail.com",name = "Gastón Geler"),description = "TP2 Api Bankend Documentation",title = "TP2 Fintech API Backend",
 	version = "0.3", license = @License(name = "Apache 2.0",url = "https://www.apache.org/licenses/LICENSE-2.0"))
 )
