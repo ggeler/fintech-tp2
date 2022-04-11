@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +53,11 @@ public class EchoTestController {
 	@GetMapping("/log")
 	public ResponseEntity<List<UserTrail>> getLog() {
 		return ResponseEntity.ok(service.getLog());
+	}
+	
+	@GetMapping("/log/paged")
+	public ResponseEntity<Page<UserTrail>> getLogPaged(Pageable pageable) {
+		return ResponseEntity.ok(service.getLogPaged(pageable));
 	}
 	
 	@PostMapping(value = "/json", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE )

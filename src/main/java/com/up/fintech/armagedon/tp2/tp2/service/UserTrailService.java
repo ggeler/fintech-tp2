@@ -3,6 +3,8 @@ package com.up.fintech.armagedon.tp2.tp2.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.up.fintech.armagedon.tp2.tp2.dao.UserTrail;
@@ -24,5 +26,9 @@ public class UserTrailService {
 
 	public List<UserTrail> getLog() {
 		return repository.findAll();
+	}
+
+	public Page<UserTrail> getLogPaged(Pageable pageable) {
+		return repository.findAll(pageable);
 	}
 }
