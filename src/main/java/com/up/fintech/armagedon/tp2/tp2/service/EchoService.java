@@ -5,9 +5,9 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.up.fintech.armagedon.tp2.tp2.dto.Data;
-import com.up.fintech.armagedon.tp2.tp2.dto.Request;
-import com.up.fintech.armagedon.tp2.tp2.dto.Response;
+import com.up.fintech.armagedon.tp2.tp2.entity.Data;
+import com.up.fintech.armagedon.tp2.tp2.entity.Request;
+import com.up.fintech.armagedon.tp2.tp2.entity.Response;
 
 @Service
 public class EchoService {

@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.up.fintech.armagedon.tp2.tp2.dao.UserTrail;
-import com.up.fintech.armagedon.tp2.tp2.dto.Request;
-import com.up.fintech.armagedon.tp2.tp2.dto.Response;
 import com.up.fintech.armagedon.tp2.tp2.entity.Iso8583;
-import com.up.fintech.armagedon.tp2.tp2.service.Decoder8583;
+import com.up.fintech.armagedon.tp2.tp2.entity.Request;
+import com.up.fintech.armagedon.tp2.tp2.entity.Response;
+import com.up.fintech.armagedon.tp2.tp2.entity.UserTrail;
+import com.up.fintech.armagedon.tp2.tp2.service.Decoder8583Service;
 import com.up.fintech.armagedon.tp2.tp2.service.EchoService;
 import com.up.fintech.armagedon.tp2.tp2.service.UserTrailService;
 
@@ -35,11 +35,11 @@ import lombok.extern.log4j.Log4j2;
 public class EchoTestController {
 
 	private final EchoService echoService;
-	private final Decoder8583 decoder;
+	private final Decoder8583Service decoder;
 	private final UserTrailService service;
 	
 	@Autowired
-	public EchoTestController(EchoService echoService, Decoder8583 decoder, UserTrailService service) {
+	public EchoTestController(EchoService echoService, Decoder8583Service decoder, UserTrailService service) {
 		this.echoService = echoService;
 		this.decoder = decoder;
 		this.service = service;

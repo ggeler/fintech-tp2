@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.tp2.tp2.dto;
+package com.up.fintech.armagedon.tp2.tp2.entity;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 

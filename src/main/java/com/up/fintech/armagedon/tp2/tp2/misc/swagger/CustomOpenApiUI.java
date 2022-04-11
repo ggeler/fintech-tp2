@@ -15,10 +15,18 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 @Configuration
+//@SecurityScheme(name = "OAuth2", type = SecuritySchemeType.OAUTH2, scheme = "bearer",bearerFormat = "jwt", in = SecuritySchemeIn.HEADER, flows = @OAuthFlows(
+//		password = @OAuthFlow(
+//				authorizationUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/auth",
+//				tokenUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/token",
+//				scopes = {@OAuthScope(name = "email")})
+//		)
+//	)
 @SecurityScheme(name = "OAuth2", type = SecuritySchemeType.OAUTH2, scheme = "bearer",bearerFormat = "jwt", in = SecuritySchemeIn.HEADER, flows = @OAuthFlows(
-		password = @OAuthFlow(
+		authorizationCode = @OAuthFlow(
 				authorizationUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/auth",
 				tokenUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/protocol/openid-connect/token",
+				
 				scopes = {@OAuthScope(name = "email")})
 		)
 	)

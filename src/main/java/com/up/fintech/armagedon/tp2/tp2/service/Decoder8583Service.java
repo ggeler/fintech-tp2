@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.up.fintech.armagedon.tp2.tp2.entity.Iso8583;
 
 @Service
-public class Decoder8583 {
+public class Decoder8583Service {
 	private String[] memo = new String[16];
 	
 	private Iso8583 converterHelper(String msg, int value, Iso8583 str) {
