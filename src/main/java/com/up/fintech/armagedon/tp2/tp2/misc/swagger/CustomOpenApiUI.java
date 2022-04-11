@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 //		)
 //)
 @SecurityScheme(name = "OIDC", type = SecuritySchemeType.OPENIDCONNECT, scheme = "bearer",bearerFormat = "jwt", in = SecuritySchemeIn.HEADER, 
-	openIdConnectUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/")
+	openIdConnectUrl = "https://oauth2-fintech-palermo.herokuapp.com/auth/realms/fintech/.well-known/openid-configuration")
 		
 		
 @OpenAPIDefinition(security = @SecurityRequirement(name = "OIDC"),
