@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class Data {
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
-	String internalData;
+	private String internalData;
 	
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
-	String interfaceFrom;
+	private String interfaceFrom;
 }
