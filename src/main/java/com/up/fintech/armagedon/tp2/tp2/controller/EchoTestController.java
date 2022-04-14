@@ -2,7 +2,13 @@ package com.up.fintech.armagedon.tp2.tp2.controller;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +47,26 @@ public class EchoTestController {
 		this.service = service;
 	}
 	
+	
+	static class CustomRepresentationModel extends RepresentationModel<CustomRepresentationModel> {
+		public CustomRepresentationModel(Iterable<Link> initialLinks) {
+			super(initialLinks);
+		}
+	}
+	
+	@GetMapping 
+	public CustomRepresentationModel index() {
+		
+		List<Link> initialLinks = new ArrayList<>();
+		
+		initialLinks.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EchoTestController.class).index()).withSelfRel());
+		initialLinks.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EchoTestController.class).getMe(null)).withRel("me"));
+		initialLinks.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EchoTestController.class).iso8583(null,null)).withRel("iso8583"));
+		initialLinks.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(EchoTestController.class).json(null)).withRel("json"));
+		
+		return new CustomRepresentationModel(initialLinks);
+	}
+	
 	@GetMapping("/me")
 	public ResponseEntity<Principal> getMe(Principal principal) {
 		return ResponseEntity.ok(principal);
@@ -61,7 +87,7 @@ public class EchoTestController {
 	}
 	
 	@PostMapping(value = "/iso8583", produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.ALL_VALUE)
-	public ResponseEntity<String> iso8583(@RequestParam(required=true) String param, @RequestParam (required = false) String request) {
+	public ResponseEntity<String> iso8583(@RequestParam(defaultValue = "bits", required=true) String param, @RequestParam (name = "request", defaultValue = "FFFFFFFFFFFFFFFF", required = false) String request) {
 		
 		var principal = SecurityContextHolder.getContext().getAuthentication().getName();
 		

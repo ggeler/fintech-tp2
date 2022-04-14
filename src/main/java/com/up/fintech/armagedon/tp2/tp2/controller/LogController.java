@@ -2,7 +2,9 @@ package com.up.fintech.armagedon.tp2.tp2.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +17,13 @@ import com.up.fintech.armagedon.tp2.tp2.misc.assembler.UserTrailAssembler;
 import com.up.fintech.armagedon.tp2.tp2.service.UserTrailService;
 
 @RestController
-@RequestMapping("/fintech/log")
+@RequestMapping("/fintech/logs")
 public class LogController {
 	
 	private final UserTrailService service;
 	private final UserTrailAssembler assembler;
 	
+	@Autowired
 	public LogController(UserTrailService service, UserTrailAssembler assembler) {
 		this.service = service;
 		this.assembler = assembler;

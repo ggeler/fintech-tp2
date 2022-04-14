@@ -1,56 +1,54 @@
-package com.up.fintech.armagedon.tp2.tp2.misc.encryption;
+package com.up.fintech.armagedon.tp2.tp2.service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.Security;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import com.up.fintech.armagedon.tp2.tp2.entity.User;
+import com.up.fintech.armagedon.tp2.tp2.entity.RsaPublicKey;
 
 @Service
-public class CryptoService {
+public class CryptoAsyncService {
 
 	private static final String signature = "SHA256withRSA";
 	private static final String alghoritm = "RSA";
-	private static final String cipher = "AES";
+	private static final String messageDigest = "SHA-256";
 	
-	public User assignRsaKeyPair() throws NoSuchAlgorithmException   {
-		
-		var keyPair = generateRsaKeyPair();
+	private final KeyPair keyPair;
+	private final String rsaPublicKeyBase64;
+	private final String privateKey;
+	
+	public CryptoAsyncService() throws NoSuchAlgorithmException {
+		keyPair = generateRsaKeyPair();
 		var publicKey = keyPair.getPublic().getEncoded();
 		var privateKey = keyPair.getPrivate().getEncoded();
-		var rsaPublicKeyBase64 = new String(Base64.getEncoder().encode(publicKey));
-		var rsaPrivateKeyBase64 = new String(Base64.getEncoder().encode(privateKey));
-		
-		var authentication = SecurityContextHolder.getContext().getAuthentication();
-		
-		var user = new User();
-		user.setId(authentication.getName());
-		user.setRsaPrivateKey(rsaPrivateKeyBase64);
-		user.setRsaPublicKey(rsaPublicKeyBase64);
-		return user;
+		this.rsaPublicKeyBase64 = new String(Base64.getEncoder().encode(publicKey));
+		this.privateKey = new String(Base64.getEncoder().encode(privateKey));
 	}
+	
+	public RsaPublicKey getPublicKey() {
+		return new RsaPublicKey(rsaPublicKeyBase64);
+	}
+	
 	private KeyPair generateRsaKeyPair() throws NoSuchAlgorithmException {
 		KeyPairGenerator keyGen = KeyPairGenerator.getInstance(alghoritm);
 		keyGen.initialize(1024);
@@ -76,23 +74,47 @@ public class CryptoService {
 
 	public boolean verifySignature(String signature, String data, String rsaPublicKey) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, InvalidKeySpecException {
 		PublicKey publicKey = getRsaPublicKey(rsaPublicKey);
-		Signature sign = Signature.getInstance(CryptoService.signature);
+		Signature sign = Signature.getInstance(CryptoAsyncService.signature);
 		sign.initVerify(publicKey);
 		sign.update(data.getBytes()); //StandardCharsets.UTF_8
 		var verify = sign.verify(Base64.getDecoder().decode(signature));
 		return verify;
 	}
 	
-	public String sign(String data, String rsaPrivateKey) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, InvalidKeySpecException {
+	String sign(String data) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, InvalidKeySpecException {
+		var rsaPrivateKey = this.privateKey;
 		PrivateKey privateKey = getRsaPrivateKey(rsaPrivateKey);
 		Signature sign = Signature.getInstance(signature);
 		sign.initSign(privateKey);
-		sign.update(data.getBytes());
+		sign.update(Base64.getDecoder().decode(data.getBytes()));
 		var signature = Base64.getEncoder().encodeToString(sign.sign());
 		return signature;
 	}
 	
-	public String decryptWithPrivaterKey(String data, String base64PrivateKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException {
+//	String sign(Object data) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, InvalidKeySpecException, IOException {
+//		var rsaPrivateKey = this.privateKey;
+//		PrivateKey privateKey = getRsaPrivateKey(rsaPrivateKey);
+//		Signature sign = Signature.getInstance(signature);
+//		
+//		sign.initSign(privateKey);
+//		sign.update(Base64.getDecoder().decode(digest(data)));
+//		
+//		var signature = Base64.getEncoder().encodeToString(sign.sign());
+//		return signature;
+//	}
+	
+	String digest(Object data) throws NoSuchAlgorithmException, IOException {
+		var md = MessageDigest.getInstance(messageDigest);
+		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ObjectOutputStream stream = new ObjectOutputStream(out);
+		stream.writeObject(data);
+		stream.flush();
+		var hash = md.digest(out.toByteArray());
+		
+		return Base64.getEncoder().encodeToString(hash);
+	}
+	private String decryptWithPrivaterKey(String data, String base64PrivateKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException {
 		Cipher cipher = Cipher.getInstance(alghoritm);///ECB/PKCS1Padding");
 		cipher.init(Cipher.DECRYPT_MODE, getRsaPrivateKey(base64PrivateKey));
 		var encodedData = Base64.getDecoder().decode(data);
@@ -100,7 +122,7 @@ public class CryptoService {
 		return new String(decryptedData);
 	}
 	
-	public String decryptWithPublicKey(String data, String base64PublicKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException {
+	private String decryptWithPublicKey(String data, String base64PublicKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException {
 		Cipher cipher = Cipher.getInstance(alghoritm);///ECB/PKCS1Padding");
 		cipher.init(Cipher.DECRYPT_MODE, getRsaPublicKey(base64PublicKey));
 		var encodedData = Base64.getDecoder().decode(data);
@@ -108,7 +130,8 @@ public class CryptoService {
 		return new String(decryptedData);
 	}
 
-	public String encryptWithPrivateKey(String data, String base64PrivateKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException {
+	String encryptWithPrivateKey(String data) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException {
+		var base64PrivateKey = this.privateKey;
 		Cipher cipher = Cipher.getInstance(alghoritm); ///ECB/PKCS1Padding
 		cipher.init(Cipher.ENCRYPT_MODE, getRsaPrivateKey(base64PrivateKey));
 		var encryptedData = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
@@ -116,26 +139,11 @@ public class CryptoService {
 		return encodedData;
 	}
 	
-	public String encryptWithPublicKey(String data, String base64PublicKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException {
+	private String encryptWithPublicKey(String data, String base64PublicKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException {
 		Cipher cipher = Cipher.getInstance(alghoritm); ///ECB/PKCS1Padding
 		cipher.init(Cipher.ENCRYPT_MODE, getRsaPublicKey(base64PublicKey));
 		var encryptedData = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
 		var encodedData = Base64.getEncoder().encodeToString(encryptedData); 
 		return encodedData;
 	}
-	
-	public SecretKey generateAESKey(int keySize) throws NoSuchAlgorithmException {
-		KeyGenerator keyGenerator = KeyGenerator.getInstance(cipher);
-		keyGenerator.init(keySize);
-		var key = keyGenerator.generateKey();
-		return key;
-	}
-	
-	
-//	public byte[] decryptWithAes(byte[] data, byte[] aesKey, byte[] iv) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-//		Cipher cipher = Cipher.getInstance("RSA/CBC/PKCSSPadding");
-//		cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(aesKey, "AES"), new IvParameterSpec(iv));
-//		var decryptedData = cipher.doFinal(data);
-//		return decryptedData;
-//	}
 }
