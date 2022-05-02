@@ -43,7 +43,7 @@ public class Wallet {
 	private Cvu cvu = new Cvu(this);
 	@JsonProperty(access = Access.READ_ONLY) 
 	private double balance = 0.0;
-	@JsonProperty(access = Access.READ_ONLY) @OneToMany(cascade = CascadeType.ALL) @JoinColumn(name = "fk_wallet_id", nullable = false) 
+	@JsonIgnore @OneToMany(cascade = CascadeType.ALL) @JoinColumn(name = "fk_wallet_id", nullable = false) 
 	private List<Transaction> transactions = new ArrayList<>();
 	@JsonProperty(access = Access.READ_ONLY) 
 	private Instant creationTime = Instant.now();
@@ -57,10 +57,13 @@ public class Wallet {
 			var newAmount = this.balance+transaction.getAmount();
 			balance = newAmount;
 			transaction.getState().changeState();
+			transaction.setNote("Deposit transaction completed");
 		} else {
 			transaction.getState().reject();
 			transactions.add(transaction);
-			throw new TransactionException("Rejecte: amount to deposit cant be negative or zero "+transaction.getAmount());
+			var note = "Rejecte: amount to deposit cant be negative or zero "+transaction.getAmount();
+			transaction.setNote(note);
+			throw new TransactionException(note);
 		}
 	}
 
@@ -71,10 +74,13 @@ public class Wallet {
 			var newAmount = this.balance-transaction.getAmount();
 			balance = newAmount;
 			transaction.getState().changeState();
+			transaction.setNote("Debit transaction completed");
 		} else {
 			transaction.getState().reject();
 			transactions.add(transaction);
-			throw new TransactionException("Rejected: balance less than requested transaction or zero/negative amount requests "+transaction.getAmount());
+			var note = "Rejected: balance less than requested transaction or zero/negative amount requests "+transaction.getAmount();
+			transaction.setNote(note);
+			throw new TransactionException(note);
 		}
 	}
 	

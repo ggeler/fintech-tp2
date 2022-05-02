@@ -35,7 +35,7 @@ public abstract class Transaction {
 	@JsonIgnore @Transient private ITransactionState state = new NewState(this);
 	private double amount;
 	@JsonProperty(access = Access.READ_ONLY) @Type(type = "org.hibernate.type.UUIDCharType") private UUID transactionId = UUID.randomUUID();
-	
+	@JsonProperty(access = Access.READ_ONLY) private String note;
 	@JsonIgnore @OneToOne private Wallet wallet;
 	
 	public void setAmount(double amount) {

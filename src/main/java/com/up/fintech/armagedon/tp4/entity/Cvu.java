@@ -16,6 +16,9 @@ import lombok.Data;
 @Entity
 @Table(name = "cvus")
 public class Cvu {
+	
+	@JsonIgnore private static final String codigoPsp = "1234";
+	@JsonIgnore private static final String codigoClaveVirtual = "000";
 
 	@JsonIgnore @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -30,7 +33,31 @@ public class Cvu {
 		this.wallet = wallet;
 		var cvu = new String();
 		var uuid = wallet.getWalletId().toString();
-		cvu = "000"+"1111"+"9"+"0"+uuid.substring(uuid.length()-12, uuid.length())+"9";
+		String account = new String();
+		for (int i=0;i<uuid.length();i++) {
+			var digit = uuid.charAt(i);
+			var decimal = Character.digit(digit,16);
+			account += String.valueOf(decimal);
+		}
+		String block1 = codigoClaveVirtual+codigoPsp; 
+		String block2 = account.substring(account.length()-12, account.length());
+		
+		cvu = block1+digitoVerificador(block1)+"0"+block2+digitoVerificador(block2);
 		this.cvu = cvu;
+	}
+	private String digitoVerificador(String s) {
+		int verificador = 0;
+		int[] primos = {3,1,7,9};
+		int indexPrimos = 0;
+		for (int i = s.length()-1; i>=0; i--) {
+			if (indexPrimos > primos.length-1)
+				indexPrimos = 0;
+			verificador += Character.getNumericValue(s.charAt(i))*primos[indexPrimos];
+			indexPrimos++;
+		}
+		int lastDigit = verificador % 10;
+		int diferencial = 10 - lastDigit;
+		if (diferencial == 10) diferencial = 0;
+		return Integer.toString(diferencial);
 	}
 }

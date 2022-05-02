@@ -10,7 +10,6 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
-import com.up.fintech.armagedon.tp1.controller.EchoTestController;
 import com.up.fintech.armagedon.tp2.controller.LogController;
 import com.up.fintech.armagedon.tp2.entity.UserTrail;
 
