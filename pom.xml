@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.up.fintech.armagedon.tp2</groupId>
 	<artifactId>tp2</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>tp2</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -101,7 +101,7 @@
 		<url>https://github.com/ggeler/fintech-tp2</url>
 		<connection>scm:git:git://github.com/ggeler/fintech-tp2.git</connection>
 		<developerConnection>scm:git:https://github.com/ggeler/fintech-tp2.git</developerConnection>
-	  <tag>tp2-0.0.2</tag>
+	  <tag>HEAD</tag>
   </scm>
 	<issueManagement>
 		<url>https://github.com/ggeler/fintech-tp2/issues</url>
