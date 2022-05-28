@@ -18,9 +18,12 @@ import com.up.fintech.armagedon.tp4.misc.error.ExternalBankException;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 import com.up.fintech.armagedon.tp4.service.TransferService;
 
+import lombok.extern.log4j.Log4j2;
+
 @RestController
 @RequestMapping("/fintech/external/bank/transfer")
 //@PreAuthorize("permitAll()")
+@Log4j2
 public class ExternalTransferController {
 
 	private final TransferService service;
@@ -33,6 +36,8 @@ public class ExternalTransferController {
 	@PostMapping
 	public ResponseEntity<ResponseStatusWrapper<?>> receiveTransfer(@RequestBody  @JsonView( Views.Public.class) ExternalReceiveTransfer externalTransfer) {
 		try {
+			log.info("External bank recieve transfer");
+			log.info("Request amount: "+externalTransfer.getAmount()+" - from:"+externalTransfer.getFromCvu()+" to:"+externalTransfer.getToCvu());
 			var transfer = service.externalTransferReceive(externalTransfer);
 			var response = new ResponseStatusWrapper<>(transfer,true,0,"Transfer completed");
 			return ResponseEntity.ok(response);
