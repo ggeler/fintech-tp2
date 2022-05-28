@@ -13,7 +13,6 @@ import com.up.fintech.armagedon.tp4.misc.error.ExternalBankException;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 import com.up.fintech.armagedon.tp4.misc.error.UserNotFoundException;
 import com.up.fintech.armagedon.tp4.misc.error.WalletNotFoundException;
-import com.up.fintech.armagedon.tp4.misc.state.TransactionStatus;
 import com.up.fintech.armagedon.tp4.repository.IWalletRepository;
 
 @Service

@@ -21,8 +21,10 @@ public class ExternalBankService {
 	}
 
 	private String getBankCvuFromAccountCvu(String cvu) {
+		if (cvu == null || cvu.isEmpty() || cvu.isBlank() || cvu.length()<8) 
+			throw new ExternalBankException("Invalid CVU");
 		log.info("External CVU: "+cvu);
-		log.info("Extenal Bank: "+cvu.substring(0, 6));
+		log.info("Extenal Bank: "+cvu.substring(0, 7));
 		return cvu.substring(0, 7);
 	}
 	public ExternalBank getExternalBank(String cvu) throws ExternalBankException {

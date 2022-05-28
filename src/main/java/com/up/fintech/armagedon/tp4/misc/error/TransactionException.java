@@ -1,6 +1,6 @@
 package com.up.fintech.armagedon.tp4.misc.error;
 
-public class TransactionException extends Exception {
+public class TransactionException extends RuntimeException {
 
 	private static final long serialVersionUID = 3378583517756137370L;
 
