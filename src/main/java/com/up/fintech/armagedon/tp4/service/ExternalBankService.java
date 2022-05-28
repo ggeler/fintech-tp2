@@ -18,7 +18,7 @@ public class ExternalBankService {
 	}
 
 	private String getBankCvuFromAccountCvu(String cvu) {
-		return cvu.substring(0, 4);
+		return cvu.substring(0, 6);
 	}
 	public ExternalBank getExternalBank(String cvu) throws ExternalBankException {
 		
