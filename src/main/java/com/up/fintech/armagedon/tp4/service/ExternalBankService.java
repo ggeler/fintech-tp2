@@ -23,7 +23,7 @@ public class ExternalBankService {
 	private String getBankCvuFromAccountCvu(String cvu) {
 		log.info("External CVU: "+cvu);
 		log.info("Extenal Bank: "+cvu.substring(0, 6));
-		return cvu.substring(0, 6);
+		return cvu.substring(0, 7);
 	}
 	public ExternalBank getExternalBank(String cvu) throws ExternalBankException {
 		return repository.getBankByCvu(getBankCvuFromAccountCvu(cvu)).orElseThrow(() -> new ExternalBankException("External Bank not found"));
