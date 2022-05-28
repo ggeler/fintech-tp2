@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Data
@@ -15,6 +17,7 @@ import lombok.Data;
 @Table(name = "external_banks")
 public class ExternalBank {
 
+	@JsonIgnore
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	@NotNull @Column(unique = true) private String cvu;

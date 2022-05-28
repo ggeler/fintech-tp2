@@ -36,7 +36,7 @@ public class TransferController {
 	@PostMapping
 	public ResponseEntity<ResponseStatusWrapper<?>> transferMoney(@PathVariable UUID wallet, @RequestBody InternalSendTransfer transfer) {
 		try {
-			var internalTransfer = service.transfer(wallet, transfer);
+			var internalTransfer = service.internalTransfer(wallet, transfer);
 			var model = assembler.toModel(internalTransfer);
 			var response = new ResponseStatusWrapper<>(model,true,0,"Transfer completed");
 			return ResponseEntity.created(null).body(response);

@@ -24,30 +24,36 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Data
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "wallets")
 public class Wallet {
 
-	@JsonIgnore @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Setter(value = AccessLevel.NONE) @JsonIgnore @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	@JsonProperty(access = Access.READ_ONLY) @Column(unique = true) @Type(type = "org.hibernate.type.UUIDCharType") @NotNull 
+	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) @Column(unique = true) @Type(type = "org.hibernate.type.UUIDCharType") @NotNull 
 	private UUID walletId = UUID.randomUUID();
-	@JsonProperty(access = Access.READ_ONLY) @OneToOne(cascade = CascadeType.ALL) @NotNull 
+	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) @OneToOne(cascade = CascadeType.ALL) @NotNull 
 	private User user = new User();
-	@JsonProperty(access = Access.READ_ONLY) @OneToOne(cascade = CascadeType.ALL) @JoinColumn(unique = true) @NotNull 
+	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) @OneToOne(cascade = CascadeType.ALL) @JoinColumn(unique = true) @NotNull 
 	private Cvu cvu = new Cvu(this);
-	@JsonProperty(access = Access.READ_ONLY) 
+	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) 
 	private double balance = 0.0;
-	@JsonIgnore @OneToMany(cascade = CascadeType.ALL) @JoinColumn(name = "fk_wallet_id", nullable = false) 
+	@Setter(value = AccessLevel.NONE) @JsonIgnore @OneToMany(cascade = CascadeType.ALL) @JoinColumn(name = "fk_wallet_id", nullable = false) 
 	private List<Transaction> transactions = new ArrayList<>();
-	@JsonProperty(access = Access.READ_ONLY) 
+	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) 
 	private Instant creationTime = Instant.now();
-	@JsonProperty(access = Access.READ_ONLY) 
+	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) 
 	private Instant lastTransactionTime = transactions.stream().map(Transaction::getTimeStampt).max(Instant::compareTo).orElse(Instant.EPOCH); 
 	
 	public void deposit(Transaction transaction) throws TransactionException {
@@ -61,7 +67,7 @@ public class Wallet {
 		} else {
 			transaction.getState().reject();
 			transactions.add(transaction);
-			var note = "Rejecte: amount to deposit cant be negative or zero "+transaction.getAmount();
+			var note = "Rejected: amount to deposit cant be negative or zero "+transaction.getAmount();
 			transaction.setNote(note);
 			throw new TransactionException(note);
 		}

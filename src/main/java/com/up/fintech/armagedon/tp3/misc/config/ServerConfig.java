@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.misc.config;
+package com.up.fintech.armagedon.tp3.misc.config;
 
 import java.security.NoSuchAlgorithmException;
 

@@ -13,7 +13,7 @@ import com.up.fintech.armagedon.tp4.misc.error.WalletNotFoundException;
 import com.up.fintech.armagedon.tp4.repository.ITransactionRepository;
 
 @Service
-public class CashService {
+public class CashService  {
 
 	private final WalletService service;
 	private final ITransactionRepository repository;
@@ -41,4 +41,5 @@ public class CashService {
 	
 	public void withdraw(Wallet wallet, double amount) {
 	}
+
 }
