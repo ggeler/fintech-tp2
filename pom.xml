@@ -111,11 +111,11 @@
 		<system>Git</system>
 		<url>scm:git:git://github.com/ggeler/fintech-tp2.git</url>
 	</ciManagement>
-		<distributionManagement>
+	<distributionManagement>
 		<repository>
 			<id>github</id>
 			<name>GitHub Ggeler Apache Maven Packages</name>
-			<url>https://git.heroku.com/up-fintech-prod-api-backend.git</url>
+			<url>git://github.com/ggeler/fintech-tp2.git</url>
 		</repository>
 	</distributionManagement>
 </project>

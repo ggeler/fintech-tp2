@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.up.fintech.armagedon.tp2</groupId>
 	<artifactId>tp2</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>tp2</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -115,7 +115,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub Ggeler Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/ggeler/fintech-tp2</url>
+			<url>https://git.heroku.com/up-fintech-prod-api-backend.git</url>
 		</repository>
 	</distributionManagement>
 </project>
