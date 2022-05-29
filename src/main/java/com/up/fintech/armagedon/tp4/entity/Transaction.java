@@ -21,6 +21,7 @@ import com.up.fintech.armagedon.tp4.misc.component.Views;
 import com.up.fintech.armagedon.tp4.misc.state.ITransactionState;
 import com.up.fintech.armagedon.tp4.misc.state.NewState;
 import com.up.fintech.armagedon.tp4.misc.state.TransactionStatus;
+import com.up.fintech.armagedon.tp4.misc.strategy.ITransactionStrategy;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -44,6 +45,11 @@ public abstract class Transaction {
 	@JsonProperty(access = Access.READ_ONLY) @Type(type = "org.hibernate.type.UUIDCharType") private UUID transactionId = UUID.randomUUID();
 	@JsonProperty(access = Access.READ_ONLY) private String note;
 	@JsonIgnore @OneToOne private Wallet wallet;
+
+	@Transient @JsonIgnore private ITransactionStrategy strategy;
 	
+	public Transaction execute(Wallet wallet) {
+		return strategy.execute(wallet, this);
+	}
 }
 

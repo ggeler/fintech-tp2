@@ -29,53 +29,35 @@ public class WalletController {
 
 	private final WalletService service;
 	private final WalletAssembler assembler;
-	
+
 	@Autowired
 	public WalletController(WalletService service, WalletAssembler assembler) {
 		this.service = service;
 		this.assembler = assembler;
 	}
-	
+
 	@GetMapping()
 	public ResponseEntity<ResponseStatusWrapper<EntityModel<Wallet>>> getWalletByUser(@RequestParam UUID user) {
-//		try {
-			var wallet = service.getWalletByUserUuid(user);
-			var model = assembler.toModel(wallet);
-			var response = new ResponseStatusWrapper<>(model, true, 0, "Wallet found");
-			return ResponseEntity.ok(response);
-//		} catch (UserNotFoundException | WalletNotFoundException e) {
-//			var response = new ResponseStatusWrapper<>(new EmptyResponse(), false, HttpStatus.NOT_FOUND.value(), "Wallet not found, submit POST to create wallet to this URL");
-////			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-//			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Wallet not found, submit POST to create wallet to this URL");
-//		}
+		var wallet = service.getWalletByUserUuid(user);
+		var model = assembler.toModel(wallet);
+		var response = new ResponseStatusWrapper<>(model, true, 0, "Wallet found");
+		return ResponseEntity.ok(response);
 	}
-	
+
 	@GetMapping("/{wallet}")
 	public ResponseEntity<ResponseStatusWrapper<EntityModel<Wallet>>> getWallet(@PathVariable UUID wallet) {
-//		try {
-			var tmp = service.getWalletByWalletId(wallet);
-			var model = assembler.toModel(tmp);
-			var response = new ResponseStatusWrapper<>(model, true, 0, "Wallet found");
-			return ResponseEntity.ok(response);
-//		} catch (UserNotFoundException | WalletNotFoundException e) {
-////			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage()).;
-//			var response = new ResponseStatusWrapper<>(new EmptyResponse(), false, HttpStatus.NOT_FOUND.value(), "Wallet not found, submit POST to create wallet to this URL");
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-//		}
+		var tmp = service.getWallet(wallet);
+		var model = assembler.toModel(tmp);
+		var response = new ResponseStatusWrapper<>(model, true, 0, "Wallet found");
+		return ResponseEntity.ok(response);
 	}
-	
+
 	@PostMapping @Valid
 	public ResponseEntity<ResponseStatusWrapper<EntityModel<Wallet>>> createWallet(@RequestParam @NotNull UUID user, @RequestParam @Email String email) {
 		Wallet wallet;
-//		try {
-			wallet = service.addWallet(new User(user,email));
-			var model = assembler.toModel(wallet);
-			var response = new ResponseStatusWrapper<>(model, true, 0, "Wallet Succesfully created");
-			return ResponseEntity.status(HttpStatus.CREATED).body(response);
-//		} catch (WalletAlreadyExistsException e) {
-//			var response = new ResponseStatusWrapper<>(new EmptyResponse(), true, HttpStatus.CONFLICT.value(), e.getMessage());
-//			return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-//		}
-		
+		wallet = service.addWallet(new User(user,email));
+		var model = assembler.toModel(wallet);
+		var response = new ResponseStatusWrapper<>(model, true, 0, "Wallet Succesfully created");
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 }

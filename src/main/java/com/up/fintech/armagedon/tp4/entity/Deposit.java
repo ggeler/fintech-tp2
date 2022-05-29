@@ -2,6 +2,9 @@ package com.up.fintech.armagedon.tp4.entity;
 
 import javax.persistence.Entity;
 
+import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
+import com.up.fintech.armagedon.tp4.misc.strategy.CashServiceStrategy;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,6 +17,8 @@ public class Deposit extends Transaction {
 	public Deposit() {
 		super();
 		super.setType(TransactionType.DEPOSIT);
+		setStrategy(SpringContext.getBean(CashServiceStrategy.class));
+		setNote("Deposito por Ventanilla Completedo Correctamente");
 	}
 	
 	@Override

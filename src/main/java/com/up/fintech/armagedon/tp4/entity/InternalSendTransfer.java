@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 
 import org.hibernate.annotations.Type;
 
+import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
+import com.up.fintech.armagedon.tp4.misc.strategy.InternalSendTransferServiceStrategy;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,5 +23,7 @@ public class InternalSendTransfer extends Transaction {
 	public InternalSendTransfer() {
 		super();
 		super.setType(TransactionType.INTERNAL_SEND);
+		setStrategy(SpringContext.getBean(InternalSendTransferServiceStrategy.class));
+		setNote("Transferencia a Billetera Misma Compañía Completeda");
 	}
 }

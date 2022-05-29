@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -57,13 +56,13 @@ public class Wallet {
 	private Instant lastTransactionTime = transactions.stream().map(Transaction::getTimeStampt).max(Instant::compareTo).orElse(Instant.EPOCH); 
 	
 	public void deposit(Transaction transaction) throws TransactionException {
-		if (transaction.getAmount() >0) {
+		if (transaction.getAmount()>0) {
 			transaction.getState().changeState();
 			transactions.add(transaction);
 			var newAmount = this.balance+transaction.getAmount();
 			balance = newAmount;
 			transaction.getState().changeState();
-			transaction.setNote("Deposit transaction completed");
+//			transaction.setNote("Deposit transaction completed");
 		} else {
 			transaction.getState().reject();
 			transactions.add(transaction);
@@ -80,14 +79,18 @@ public class Wallet {
 			var newAmount = this.balance-transaction.getAmount();
 			balance = newAmount;
 			transaction.getState().changeState();
-			transaction.setNote("Debit transaction completed");
+//			transaction.setNote("Debit transaction completed");
 		} else {
 			transaction.getState().reject();
 			transactions.add(transaction);
-			var note = "Rejected: balance less than requested transaction or zero/negative amount requests "+transaction.getAmount();
+			var note = "Rejected: balance less than requested transaction or zero/negative amount requested "+transaction.getAmount();
 			transaction.setNote(note);
 			throw new TransactionException(note);
 		}
+	}
+	
+	public Transaction execute(Transaction transaction) {
+		return transaction.execute(this);
 	}
 	
 }

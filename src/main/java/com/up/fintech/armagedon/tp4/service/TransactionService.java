@@ -25,13 +25,13 @@ public class TransactionService {
 		this.repository = repository;
 	}
 	public List<Transaction> getTransactions(UUID uuid) throws UserNotFoundException, WalletNotFoundException {
-		var wallet = service.getWalletByWalletId(uuid);
+		var wallet = service.getWallet(uuid);
 		var transactions = wallet.getTransactions();
 		return transactions;
 	}
 	
 	public Page<Transaction> getTransactions(UUID uuid, Pageable pageable) throws UserNotFoundException, WalletNotFoundException {
-		var wallet = service.getWalletByWalletId(uuid);
+		var wallet = service.getWallet(uuid);
 		var transactions = repository.findAllByWallet(wallet,pageable);
 		return transactions;
 	}

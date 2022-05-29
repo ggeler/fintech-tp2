@@ -7,6 +7,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
 
+import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
+import com.up.fintech.armagedon.tp4.misc.strategy.CashServiceStrategy;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,6 +23,17 @@ public class InternalReceiveTransfer extends Transaction {
 	public InternalReceiveTransfer() {
 		super();
 		super.setType(TransactionType.INTERNAL_RECEIVE);
+		super.setStrategy(SpringContext.getBean(CashServiceStrategy.class));
+		setNote("Transferencia desde Billetera misma Compañia Recibida Correctamente");
+	}
+
+	public InternalReceiveTransfer(InternalSendTransfer transfer, Wallet wallet) {
+//		InternalReceiveTransfer();
+		this();
+		this.setAmount(transfer.getAmount());
+		this.setFromWallet(transfer.getWallet().getWalletId());
+		this.setTransactionId(transfer.getTransactionId());
+		this.setWallet(wallet);
 	}
 	
 	

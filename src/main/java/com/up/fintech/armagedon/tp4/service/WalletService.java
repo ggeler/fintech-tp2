@@ -35,12 +35,12 @@ public class WalletService {
 		return wallet;
 	}
 	
-	public Wallet getWalletByWalletId(UUID uuid) throws UserNotFoundException, WalletNotFoundException  {
+	public Wallet getWallet(UUID uuid) throws UserNotFoundException, WalletNotFoundException  {
 		var wallet = repository.getWalletByWalletId(uuid).orElseThrow(() -> new WalletNotFoundException("Wallet not found for walletId "+uuid));
 		return wallet;
 	}
 	
-	public Wallet getWalletByCvu(String toCvu) throws CvuException {
+	public Wallet getWallet(String toCvu) throws CvuException {
 		var cvu = cvuRepository.getCvuByCvu(toCvu).orElseThrow(() -> new CvuException("Cvu not found "+toCvu));
 		return cvu.getWallet();
 	}
@@ -56,7 +56,7 @@ public class WalletService {
 		}
 	}
 	
-	public Wallet updateWallet(Wallet wallet) {
+	public Wallet save(Wallet wallet) {
 		return repository.save(wallet);
 	}
 }

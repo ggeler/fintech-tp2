@@ -15,7 +15,6 @@ import javax.crypto.NoSuchPaddingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +25,6 @@ import com.up.fintech.armagedon.tp3.entity.RsaPublicKey;
 import com.up.fintech.armagedon.tp3.entity.SyncSecretKey;
 import com.up.fintech.armagedon.tp3.service.CryptoAesService;
 import com.up.fintech.armagedon.tp3.service.CryptoRsaService;
-import com.up.fintech.armagedon.tp4.entity.Transaction;
 
 @RestController
 @RequestMapping("/fintech/crypto")
