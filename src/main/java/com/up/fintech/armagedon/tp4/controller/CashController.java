@@ -5,6 +5,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +33,7 @@ public class CashController {
 	}
 	
 	@PostMapping("/deposit")
+	@Transactional(label = "CashDeposit", isolation = Isolation.SERIALIZABLE) 
 	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> depositMoney(@PathVariable UUID wallet, @RequestBody Deposit deposit) {
 		var savedDeposit = walletService.getWallet(wallet).execute(deposit);
 		var model = assembler.toModel(savedDeposit);

@@ -47,6 +47,7 @@ public class WalletService {
 		cvu.getWallet().setWalletState();
 		return cvu.getWallet();
 	}
+	
 	public Wallet addWallet(User user) throws WalletAlreadyExistsException {
 		try {
 			getWalletByUserUuid(user.getUuid());

@@ -15,12 +15,10 @@ import com.up.fintech.armagedon.tp4.service.ExternalBankService;
 public final class ExternalReceiveTransferServiceStrategy implements ITransactionStrategy {
 
 	private final IWalletRepository repository;
-//	private final WalletService service;
 	private final ExternalBankService bankService;
 	
 	public ExternalReceiveTransferServiceStrategy(IWalletRepository repository, ExternalBankService bankService) {
 		this.repository = repository;
-//		this.service = service;
 		this.bankService = bankService;
 	}
 	

@@ -116,8 +116,8 @@ public class Wallet {
 	}
 	
 	public Transaction execute(Transaction transaction) {
-		if (transaction instanceof InternalSendTransfer) {
-			var tmp = (InternalSendTransfer) transaction;
+		if (transaction instanceof InternalSendTransfer tmp) {
+//			var tmp = (InternalSendTransfer) transaction;
 			if (tmp.getToCvu()!=null && !tmp.getToCvu().isEmpty() && !Cvu.isInternal(tmp.getToCvu())) {
 				transaction = new ExternalSendTransfer(tmp);
 			}

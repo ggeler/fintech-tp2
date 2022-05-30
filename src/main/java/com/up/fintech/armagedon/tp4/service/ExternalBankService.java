@@ -3,6 +3,7 @@ package com.up.fintech.armagedon.tp4.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.up.fintech.armagedon.tp4.entity.Cvu;
 import com.up.fintech.armagedon.tp4.entity.ExternalBank;
 import com.up.fintech.armagedon.tp4.misc.error.ExternalBankException;
 import com.up.fintech.armagedon.tp4.repository.IExternalBankRepository;
@@ -24,8 +25,15 @@ public class ExternalBankService {
 		if (cvu == null || cvu.isEmpty() || cvu.isBlank() || cvu.length()<8) 
 			throw new ExternalBankException("Invalid CVU");
 		log.info("External CVU: "+cvu);
-		log.info("Extenal Bank: "+cvu.substring(0, 7));
-		return cvu.substring(0, 7);
+		log.info("Extenal Bank: "+Cvu.getPspCode(cvu));
+		return Cvu.getPspCode(cvu);
+	}
+	
+	public ExternalBank isExternalValid(String cvu) throws ExternalBankException {
+		if (Cvu.isInternal(cvu))
+			throw new ExternalBankException("Código de PSP es interno");
+		var psp = Cvu.getPspCode(cvu);
+		return repository.findByCvu(psp).orElseThrow(()->new ExternalBankException("Código de PSP Inexistente"));
 	}
 	
 	public ExternalBank getExternalBank(String cvu) throws ExternalBankException {
