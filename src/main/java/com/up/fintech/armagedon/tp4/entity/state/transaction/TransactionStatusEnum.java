@@ -1,6 +1,6 @@
-package com.up.fintech.armagedon.tp4.misc.state;
+package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
-public enum TransactionStatus {
+public enum TransactionStatusEnum {
 
 	SENDING("enviando"),
 	RECEIVING("recibiendo"),
@@ -13,7 +13,7 @@ public enum TransactionStatus {
 	
 	public String status;
 	
-	private TransactionStatus(String status) {
+	private TransactionStatusEnum(String status) {
 		
 		this.status = status;
 	}

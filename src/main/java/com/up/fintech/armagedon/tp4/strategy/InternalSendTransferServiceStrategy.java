@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.tp4.misc.strategy;
+package com.up.fintech.armagedon.tp4.strategy;
 
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import com.up.fintech.armagedon.tp4.repository.IWalletRepository;
 import com.up.fintech.armagedon.tp4.service.WalletService;
 
 @Service
-public class InternalSendTransferServiceStrategy implements ITransactionStrategy {
+public final class InternalSendTransferServiceStrategy implements ITransactionStrategy {
 
 	private final IWalletRepository repository;
 	private final WalletService service;
@@ -48,9 +48,13 @@ public class InternalSendTransferServiceStrategy implements ITransactionStrategy
 			throw e;
 		} 
 	}
-
+	
 	@Override
 	public Transaction execute(Wallet wallet, Transaction transaction) {
-		return internalTransfer(wallet, (InternalSendTransfer) transaction);
+		if (transaction instanceof InternalSendTransfer) {
+				return internalTransfer(wallet, (InternalSendTransfer) transaction);
+		} else {
+			throw new TransactionException("Error: tipo de objeto no es de transferencia");
+		}
 	}
 }

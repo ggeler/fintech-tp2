@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.up.fintech.armagedon.tp4.controller.assembler.TransactionAssembler;
 import com.up.fintech.armagedon.tp4.entity.Deposit;
 import com.up.fintech.armagedon.tp4.entity.ResponseStatusWrapper;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
-import com.up.fintech.armagedon.tp4.misc.assembler.TransactionAssembler;
 import com.up.fintech.armagedon.tp4.service.WalletService;
 
 @RestController

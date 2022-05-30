@@ -3,7 +3,7 @@ package com.up.fintech.armagedon.tp4.entity;
 import javax.persistence.Entity;
 
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
-import com.up.fintech.armagedon.tp4.misc.strategy.CashServiceStrategy;
+import com.up.fintech.armagedon.tp4.strategy.CashServiceStrategy;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

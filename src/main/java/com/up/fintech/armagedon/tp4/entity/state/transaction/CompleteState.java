@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.tp4.misc.state;
+package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 
@@ -16,8 +16,8 @@ public class CompleteState extends AbstractTransactionState {
 	}
 
 	@Override
-	public TransactionStatus getState() {
-		return TransactionStatus.COMPLETED;
+	public TransactionStatusEnum getState() {
+		return TransactionStatusEnum.COMPLETED;
 	}
 
 }

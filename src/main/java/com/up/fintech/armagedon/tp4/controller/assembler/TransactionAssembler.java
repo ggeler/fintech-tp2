@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.tp4.misc.assembler;
+package com.up.fintech.armagedon.tp4.controller.assembler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.tp4.misc.state;
+package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 
@@ -6,31 +6,6 @@ public class NewState extends AbstractTransactionState {
 
 	public NewState(Transaction transaction) {
 		super(transaction);
-//		switch (transaction.getStatus()) {
-//		case CANCEL:
-//			transaction.setState(new CancelState(transaction));
-//			break;
-//		case COMPLETED:
-//			transaction.setState(new CompleteState(transaction));
-//			break;
-//		case DEPOSITING:
-//			transaction.setState(new DepositState(transaction));
-//			break;
-//		case RECEIVING:
-//			transaction.setState(new ReceivingState(transaction));
-//			break;
-//		case REJECTED:
-//			transaction.setState(new RejectedState(transaction));
-//			break;
-//		case SENDING:
-//			transaction.setState(new SendingState(transaction));
-//			break;
-//		case WITHDRAWING:
-//			transaction.setState(new WithDrawingState(transaction));
-//			break;
-//		case NEW:
-//			break;
-//		}
 	}
 	
 	@Override
@@ -61,7 +36,7 @@ public class NewState extends AbstractTransactionState {
 	}
 
 	@Override
-	public TransactionStatus getState() {
-		return TransactionStatus.NEW;
+	public TransactionStatusEnum getState() {
+		return TransactionStatusEnum.NEW;
 	}
 }

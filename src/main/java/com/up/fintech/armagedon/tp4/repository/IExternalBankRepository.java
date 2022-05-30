@@ -12,4 +12,6 @@ public interface IExternalBankRepository extends JpaRepository<ExternalBank, Lon
 
 	public Optional<ExternalBank> getBankByCvu(String cvu);
 
+	public Optional<ExternalBank> findByCvu(String psp);
+
 }

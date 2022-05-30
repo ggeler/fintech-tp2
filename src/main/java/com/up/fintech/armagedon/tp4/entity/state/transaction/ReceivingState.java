@@ -1,12 +1,11 @@
-package com.up.fintech.armagedon.tp4.misc.state;
+package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 
-public class SendingState extends AbstractTransactionState {
+public class ReceivingState extends AbstractTransactionState {
 
-	public SendingState(Transaction transaction) {
+	public ReceivingState(Transaction transaction) {
 		super(transaction);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -14,11 +13,11 @@ public class SendingState extends AbstractTransactionState {
 		var type = transaction.getType();
 		AbstractTransactionState newState = null;
 		switch (type) {
-			case EXTERNAL_SEND:
-			case INTERNAL_SEND:
+			case EXTERNAL_RECEIVE:
+			case INTERNAL_RECEIVE:
 				newState = new CompleteState(transaction);
 				break;
-			default: 
+			default:
 				newState = new InvalidState(transaction);
 				break;
 		}
@@ -26,8 +25,8 @@ public class SendingState extends AbstractTransactionState {
 	}
 
 	@Override
-	public TransactionStatus getState() {
-		return TransactionStatus.SENDING;
+	public TransactionStatusEnum getState() {
+		return TransactionStatusEnum.RECEIVING;
 	}
 
 }

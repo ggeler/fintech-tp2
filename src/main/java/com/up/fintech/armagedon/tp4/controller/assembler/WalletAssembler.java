@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.tp4.misc.assembler;
+package com.up.fintech.armagedon.tp4.controller.assembler;
 
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;

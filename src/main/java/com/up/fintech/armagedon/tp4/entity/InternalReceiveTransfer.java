@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Type;
 
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
-import com.up.fintech.armagedon.tp4.misc.strategy.CashServiceStrategy;
+import com.up.fintech.armagedon.tp4.strategy.CashServiceStrategy;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,7 +20,7 @@ public class InternalReceiveTransfer extends Transaction {
 	
 	@Type(type = "org.hibernate.type.UUIDCharType") @NotNull private UUID fromWallet;
 	
-	public InternalReceiveTransfer() {
+	private InternalReceiveTransfer() {
 		super();
 		super.setType(TransactionType.INTERNAL_RECEIVE);
 		super.setStrategy(SpringContext.getBean(CashServiceStrategy.class));

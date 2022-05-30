@@ -1,10 +1,10 @@
-package com.up.fintech.armagedon.tp4.misc.state;
+package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 
-public class DepositState extends AbstractTransactionState {
+public class WithDrawingState extends AbstractTransactionState {
 
-	public DepositState(Transaction transaction) {
+	public WithDrawingState(Transaction transaction) {
 		super(transaction);
 	}
 
@@ -13,7 +13,7 @@ public class DepositState extends AbstractTransactionState {
 		var type = transaction.getType();
 		AbstractTransactionState newState = null;
 		switch (type) {
-			case DEPOSIT:
+			case WITHDRAW:
 				newState = new CompleteState(transaction);
 				break;
 			default:
@@ -24,8 +24,8 @@ public class DepositState extends AbstractTransactionState {
 	}
 
 	@Override
-	public TransactionStatus getState() {
-		return TransactionStatus.DEPOSITING;
+	public TransactionStatusEnum getState() {
+		return TransactionStatusEnum.WITHDRAWING;
 	}
 
 }

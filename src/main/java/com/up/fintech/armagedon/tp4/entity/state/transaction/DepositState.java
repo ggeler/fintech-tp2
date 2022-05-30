@@ -1,10 +1,10 @@
-package com.up.fintech.armagedon.tp4.misc.state;
+package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 
-public class ReceivingState extends AbstractTransactionState {
+public class DepositState extends AbstractTransactionState {
 
-	public ReceivingState(Transaction transaction) {
+	public DepositState(Transaction transaction) {
 		super(transaction);
 	}
 
@@ -13,8 +13,7 @@ public class ReceivingState extends AbstractTransactionState {
 		var type = transaction.getType();
 		AbstractTransactionState newState = null;
 		switch (type) {
-			case EXTERNAL_RECEIVE:
-			case INTERNAL_RECEIVE:
+			case DEPOSIT:
 				newState = new CompleteState(transaction);
 				break;
 			default:
@@ -25,8 +24,8 @@ public class ReceivingState extends AbstractTransactionState {
 	}
 
 	@Override
-	public TransactionStatus getState() {
-		return TransactionStatus.RECEIVING;
+	public TransactionStatusEnum getState() {
+		return TransactionStatusEnum.DEPOSITING;
 	}
 
 }

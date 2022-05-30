@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.tp4.controller;
+package com.up.fintech.armagedon.tp4.controller.error;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,6 +11,11 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.up.fintech.armagedon.tp4.controller.CashController;
+import com.up.fintech.armagedon.tp4.controller.ExternalTransferController;
+import com.up.fintech.armagedon.tp4.controller.TransactionController;
+import com.up.fintech.armagedon.tp4.controller.TransferController;
+import com.up.fintech.armagedon.tp4.controller.WalletController;
 import com.up.fintech.armagedon.tp4.entity.EmptyResponse;
 import com.up.fintech.armagedon.tp4.entity.ResponseStatusWrapper;
 import com.up.fintech.armagedon.tp4.misc.error.CvuException;

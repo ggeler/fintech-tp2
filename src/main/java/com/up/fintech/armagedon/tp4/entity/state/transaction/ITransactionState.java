@@ -1,9 +1,9 @@
-package com.up.fintech.armagedon.tp4.misc.state;
+package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 public interface ITransactionState {
 
 	public void changeState();
-	public TransactionStatus getState();
+	public TransactionStatusEnum getState();
 	public void cancel();
 	public void reject(); 
 }

@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.tp4.misc.state;
+package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 
@@ -16,7 +16,7 @@ public class InvalidState extends AbstractTransactionState {
 	}
 
 	@Override
-	public TransactionStatus getState() {
+	public TransactionStatusEnum getState() {
 		// TODO Auto-generated method stub
 		return null;
 	}

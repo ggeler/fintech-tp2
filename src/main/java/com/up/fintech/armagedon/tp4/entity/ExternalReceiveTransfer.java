@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
 import com.up.fintech.armagedon.tp4.misc.component.Views;
-import com.up.fintech.armagedon.tp4.misc.strategy.ExternalReceiveTransferServiceStrategy;
+import com.up.fintech.armagedon.tp4.strategy.ExternalReceiveTransferServiceStrategy;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

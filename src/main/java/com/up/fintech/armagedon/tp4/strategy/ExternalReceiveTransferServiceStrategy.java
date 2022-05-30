@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.tp4.misc.strategy;
+package com.up.fintech.armagedon.tp4.strategy;
 
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import com.up.fintech.armagedon.tp4.repository.IWalletRepository;
 import com.up.fintech.armagedon.tp4.service.ExternalBankService;
 
 @Service
-public class ExternalReceiveTransferServiceStrategy implements ITransactionStrategy {
+public final class ExternalReceiveTransferServiceStrategy implements ITransactionStrategy {
 
 	private final IWalletRepository repository;
 //	private final WalletService service;

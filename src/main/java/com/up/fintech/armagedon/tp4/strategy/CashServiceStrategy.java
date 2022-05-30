@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.tp4.misc.strategy;
+package com.up.fintech.armagedon.tp4.strategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import com.up.fintech.armagedon.tp4.repository.ITransactionRepository;
 import com.up.fintech.armagedon.tp4.service.WalletService;
 
 @Service
-public class CashServiceStrategy implements ITransactionStrategy {
+public final class CashServiceStrategy implements ITransactionStrategy {
 
 	private final WalletService service;
 	private final ITransactionRepository repository;

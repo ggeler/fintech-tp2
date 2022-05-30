@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import org.hibernate.annotations.Type;
 
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
-import com.up.fintech.armagedon.tp4.misc.strategy.InternalSendTransferServiceStrategy;
+import com.up.fintech.armagedon.tp4.strategy.InternalSendTransferServiceStrategy;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

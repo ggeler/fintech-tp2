@@ -60,4 +60,12 @@ public class Cvu {
 		if (diferencial == 10) diferencial = 0;
 		return Integer.toString(diferencial);
 	}
+
+	public static String getPspCode(String cvu) {
+		return cvu.substring(0, 7);
+	}
+	public static boolean isInternal(String cvu) {
+		var block1 = codigoClaveVirtual+codigoPsp;
+		return getPspCode(cvu).equals(block1);
+	}
 }
