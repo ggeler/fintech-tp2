@@ -23,4 +23,6 @@ public class ExternalBank {
 	@NotNull @Column(unique = true) private String cvu;
 	@NotNull @Column(unique = true) private String name;
 	@NotNull private String address;
+	@JsonIgnore private String url;
+	@JsonIgnore private String secretPrefix;
 }

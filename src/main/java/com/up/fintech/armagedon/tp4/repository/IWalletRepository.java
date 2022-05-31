@@ -14,8 +14,10 @@ import com.up.fintech.armagedon.tp4.entity.Wallet;
 
 @Repository
 public interface IWalletRepository extends JpaRepository<Wallet, Long>{
+	
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public Optional<Wallet> getWalletByUser(User user);
+	
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public Optional<Wallet> getWalletByWalletId(UUID uuid);
 }

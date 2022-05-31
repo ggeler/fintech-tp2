@@ -43,6 +43,7 @@ public final class InternalSendTransferServiceStrategy implements ITransactionSt
 			
 			transfer.setAmount(transfer.getAmount()*-1);
 			repository.save(fromWallet);
+			transfer.setAmount(transfer.getAmount()*-1);
 			return transfer;
 		} catch (TransactionException e) {
 			throw e;

@@ -7,7 +7,8 @@ public enum TransactionType {
 	INTERNAL_SEND("Transferencia Interna"),
 	INTERNAL_RECEIVE("Recibo Interno"),
 	EXTERNAL_SEND("Transferencia Externa"),
-	EXTERNAL_RECEIVE("Recibo Externo");
+	EXTERNAL_RECEIVE("Recibo Externo"),
+	EXTERNAL_RECEIVE_WITHCONFIRM("Recibo externo con confirmación");
 	
 	public final String value;
 	

@@ -18,7 +18,8 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class InternalReceiveTransfer extends Transaction {
 	
-	@Type(type = "org.hibernate.type.UUIDCharType") @NotNull private UUID fromWallet;
+	@Type(type = "org.hibernate.type.UUIDCharType") @NotNull 
+	private UUID fromWallet;
 	
 	private InternalReceiveTransfer() {
 		super();

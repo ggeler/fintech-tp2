@@ -96,6 +96,44 @@ public class Wallet {
 		}
 	}
 
+	public void receiveDeposit(Transaction transaction) throws TransactionException {
+		if (this.getStatus()==WalletStatusEnum.BLOCKED || this.getStatus()==WalletStatusEnum.BLOCKED_RECEIVE)
+			throw new TransactionException("Cuenta bloqueada para depósito");
+		if (transaction.getAmount()>0) {
+			transaction.getState().changeState();
+			transactions.add(transaction);
+			transaction.getState().changeState();
+			transaction.setNote("Receive transaction pending confirmation");
+		} else {
+			transaction.getState().reject();
+			transactions.add(transaction);
+			var note = "Rejected: amount to deposit cant be negative or zero "+transaction.getAmount();
+			transaction.setNote(note);
+			throw new TransactionException(note);
+		}
+	}
+	public void cancelDeposit(Transaction transaction) {
+		transaction.getState().cancel();
+		transaction.setNote("Transacción Externa Cancelada");
+	}
+	
+	public void confirmDeposit(Transaction transaction) throws TransactionException {
+		if (this.getStatus()==WalletStatusEnum.BLOCKED || this.getStatus()==WalletStatusEnum.BLOCKED_RECEIVE)
+			throw new TransactionException("Cuenta bloqueada para depósito");
+		if (transaction.getAmount()>0) {
+			transaction.getState().changeState();
+			var newAmount = this.balance+transaction.getAmount();
+			balance = newAmount;
+			transaction.setNote("Transacción Externa Confirmada");
+		} else {
+			transaction.getState().reject();
+			transactions.add(transaction);
+			var note = "Rejected: amount to deposit cant be negative or zero "+transaction.getAmount();
+			transaction.setNote(note);
+			throw new TransactionException(note);
+		}
+	}
+	
 	public void debit(Transaction transaction) throws TransactionException {
 		if (this.getStatus()==WalletStatusEnum.BLOCKED || this.getStatus()==WalletStatusEnum.BLOCKED_SEND)
 			throw new TransactionException("Cuenta bloqueada para débito");
@@ -105,7 +143,6 @@ public class Wallet {
 			var newAmount = this.balance-transaction.getAmount();
 			balance = newAmount;
 			transaction.getState().changeState();
-//			transaction.setNote("Debit transaction completed");
 		} else {
 			transaction.getState().reject();
 			transactions.add(transaction);
@@ -117,7 +154,6 @@ public class Wallet {
 	
 	public Transaction execute(Transaction transaction) {
 		if (transaction instanceof InternalSendTransfer tmp) {
-//			var tmp = (InternalSendTransfer) transaction;
 			if (tmp.getToCvu()!=null && !tmp.getToCvu().isEmpty() && !Cvu.isInternal(tmp.getToCvu())) {
 				transaction = new ExternalSendTransfer(tmp);
 			}
@@ -146,4 +182,5 @@ public class Wallet {
 			}
 		}
 	}
+
 }

@@ -6,7 +6,6 @@ public class CancelState extends AbstractTransactionState {
 
 	public CancelState(Transaction transaction) {
 		super(transaction);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

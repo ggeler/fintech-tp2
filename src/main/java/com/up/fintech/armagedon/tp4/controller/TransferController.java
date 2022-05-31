@@ -4,9 +4,6 @@ import java.util.UUID;
 
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,17 +28,11 @@ public class TransferController {
 		this.assembler = assembler;
 	}
 	
-	@PostMapping
-	@Transactional(label = "TransferExternalOrInternal", isolation = Isolation.SERIALIZABLE) 
+	@PostMapping 
 	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> transferMoney(@PathVariable UUID wallet, @RequestBody InternalSendTransfer transfer) {
-		var internalTransfer = walletService.getWallet(wallet).execute(transfer);
+		var internalTransfer = walletService.execute(wallet, transfer);
 		var model = assembler.toModel(internalTransfer);
 		var response = new ResponseStatusWrapper<>(model,true,0,"Transfer completed");
 		return ResponseEntity.created(null).body(response);
-	}
-
-	@GetMapping
-	public InternalSendTransfer confirmTransfer() {
-		return null;
 	}
 }

@@ -4,7 +4,10 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.User;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
 import com.up.fintech.armagedon.tp4.misc.error.CvuException;
@@ -29,6 +32,7 @@ public class WalletService {
 		this.cvuRepository = cvuRepository;
 	}
 	
+	@Transactional(label = "WalletTransaction", isolation = Isolation.DEFAULT, readOnly = false)
 	public Wallet getWalletByUserUuid(UUID uuid) throws UserNotFoundException, WalletNotFoundException  {
 		var user = userRepository.getUserByUuid(uuid).orElseThrow(() -> new UserNotFoundException("User UUID not found "+uuid));
 		var wallet = repository.getWalletByUser(user).orElseThrow(() -> new WalletNotFoundException("Wallet not found for userId "+user.getUuid()));
@@ -36,18 +40,21 @@ public class WalletService {
 		return wallet;
 	}
 	
+	@Transactional(label = "WalletTransaction", isolation = Isolation.DEFAULT, readOnly = false)
 	public Wallet getWallet(UUID uuid) throws UserNotFoundException, WalletNotFoundException  {
 		var wallet = repository.getWalletByWalletId(uuid).orElseThrow(() -> new WalletNotFoundException("Wallet not found for walletId "+uuid));
 		wallet.setWalletState();
 		return wallet;
 	}
 	
+	@Transactional(label = "WalletTransaction", isolation = Isolation.DEFAULT, readOnly = false)
 	public Wallet getWallet(String toCvu) throws CvuException {
 		var cvu = cvuRepository.getCvuByCvu(toCvu).orElseThrow(() -> new CvuException("Cvu not found "+toCvu));
 		cvu.getWallet().setWalletState();
 		return cvu.getWallet();
 	}
 	
+	@Transactional(label = "WalletTransaction", isolation = Isolation.REPEATABLE_READ)
 	public Wallet addWallet(User user) throws WalletAlreadyExistsException {
 		try {
 			getWalletByUserUuid(user.getUuid());
@@ -60,7 +67,20 @@ public class WalletService {
 		}
 	}
 	
+	/* https://stackoverflow.com/questions/56902108/spring-data-how-to-lock-a-row-in-a-transaction-and-make-other-transactions-wait
+	 * Transaction Management to avoid dirty reads
+	 */
+	@Transactional(label = "WalletTransaction", isolation = Isolation.REPEATABLE_READ)
+	public Transaction execute(UUID uuid, Transaction transaction) {
+		 return getWallet(uuid).execute(transaction);
+	}
+	
 	public Wallet save(Wallet wallet) {
 		return repository.save(wallet);
+	}
+	
+	@Transactional(label = "WalletTransaction", isolation = Isolation.REPEATABLE_READ)
+	public Transaction submit(String uuid, Transaction transaction) {
+		return getWallet(uuid).execute(transaction);
 	}
 }

@@ -3,8 +3,6 @@ package com.up.fintech.armagedon.tp4.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,14 +30,10 @@ public class ExternalTransferController {
 	}
 	
 	@PostMapping
-	@Transactional(label = "ExternalReceive", isolation = Isolation.SERIALIZABLE) 
-	/* https://stackoverflow.com/questions/56902108/spring-data-how-to-lock-a-row-in-a-transaction-and-make-other-transactions-wait
-	 * Transaction Management to avoid dirty reads
-	 */
-	public ResponseEntity<ResponseStatusWrapper<Transaction>> receiveTransfer(@RequestBody  @JsonView( Views.Public.class) ExternalReceiveTransfer externalTransfer) {
+	public ResponseEntity<ResponseStatusWrapper<Transaction>> receiveTransfer(@RequestBody  @JsonView(Views.Public.class) ExternalReceiveTransfer externalTransfer) {
 		log.info("External bank recieve transfer");
 		log.info("Request amount: "+externalTransfer.getAmount()+" - from:"+externalTransfer.getFromCvu()+" to:"+externalTransfer.getToCvu());
-		var transfer = walletService.getWallet(externalTransfer.getToCvu()).execute(externalTransfer);
+		var transfer = walletService.submit(externalTransfer.getToCvu(), externalTransfer);
 		var response = new ResponseStatusWrapper<>(transfer,true,0,"Transfer completed");
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}

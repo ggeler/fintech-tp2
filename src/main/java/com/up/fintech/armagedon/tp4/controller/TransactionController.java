@@ -1,5 +1,6 @@
 package com.up.fintech.armagedon.tp4.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.up.fintech.armagedon.tp4.controller.assembler.TransactionAssembler;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
+import com.up.fintech.armagedon.tp4.misc.component.Views;
 import com.up.fintech.armagedon.tp4.service.TransactionService;
 
 @RestController
@@ -31,11 +34,15 @@ public class TransactionController {
 		this.assembler = assembler;
 	}
 
-	@GetMapping()
+	@GetMapping() //@JsonView(Views.Public.class) 
 	public ResponseEntity<PagedModel<EntityModel<Transaction>>> getTransactionsPaged(@PathVariable @NotNull UUID wallet, Pageable pageable) {
 		var transactions = service.getTransactions(wallet, pageable);
 		return ResponseEntity.ok().body(assembler.toModel(transactions));
 	}
-
+	
+	@GetMapping("/test") @JsonView(Views.Internal.class) 
+	public List<Transaction> getTransactions(@PathVariable @NotNull UUID wallet) {
+		return service.getTransactions(wallet);
+	}
 
 }

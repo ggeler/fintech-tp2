@@ -25,6 +25,9 @@ public class NewState extends AbstractTransactionState {
 			case EXTERNAL_RECEIVE:
 				newState = new ReceivingState(transaction);
 				break;
+			case EXTERNAL_RECEIVE_WITHCONFIRM:
+				newState = new ReceivingWithConfirmationState(transaction);
+				break;
 			case INTERNAL_RECEIVE:
 				newState = new ReceivingState(transaction);
 				break;
