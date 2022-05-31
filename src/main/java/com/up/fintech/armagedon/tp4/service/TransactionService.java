@@ -32,14 +32,14 @@ public class TransactionService {
 		this.repository = repository;
 	}
 	
-	@Transactional(label = "WalletTransactionConfirmation", isolation = Isolation.DEFAULT, readOnly = true)
+	@Transactional(label = "WalletTransactionConfirmation", isolation = Isolation.DEFAULT)
 	public List<Transaction> getTransactions(UUID uuid) throws UserNotFoundException, WalletNotFoundException {
 		var wallet = service.getWallet(uuid);
 		var transactions = wallet.getTransactions();
 		return transactions;
 	}
 	
-	@Transactional(label = "WalletTransactionConfirmation", isolation = Isolation.DEFAULT, readOnly = true)
+	@Transactional(label = "WalletTransactionConfirmation", isolation = Isolation.DEFAULT)
 	public Page<Transaction> getTransactions(UUID uuid, Pageable pageable) throws UserNotFoundException, WalletNotFoundException {
 		var wallet = service.getWallet(uuid);
 		var transactions = repository.findAllByWallet(wallet,pageable);

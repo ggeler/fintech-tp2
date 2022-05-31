@@ -40,14 +40,14 @@ public class WalletService {
 		return wallet;
 	}
 	
-	@Transactional(label = "WalletTransaction", isolation = Isolation.DEFAULT, readOnly = false)
+	@Transactional(label = "WalletTransaction", isolation = Isolation.DEFAULT)
 	public Wallet getWallet(UUID uuid) throws UserNotFoundException, WalletNotFoundException  {
 		var wallet = repository.getWalletByWalletId(uuid).orElseThrow(() -> new WalletNotFoundException("Wallet not found for walletId "+uuid));
 		wallet.setWalletState();
 		return wallet;
 	}
 	
-	@Transactional(label = "WalletTransaction", isolation = Isolation.DEFAULT, readOnly = false)
+	@Transactional(label = "WalletTransaction", isolation = Isolation.DEFAULT)
 	public Wallet getWallet(String toCvu) throws CvuException {
 		var cvu = cvuRepository.getCvuByCvu(toCvu).orElseThrow(() -> new CvuException("Cvu not found "+toCvu));
 		cvu.getWallet().setWalletState();
