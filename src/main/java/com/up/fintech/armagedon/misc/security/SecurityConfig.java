@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 //import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -33,10 +35,21 @@ public class SecurityConfig  {
 //			.anonymous().disable()
 			.formLogin().disable()
 			.httpBasic().disable()
-			.oauth2ResourceServer().jwt();
+			.oauth2ResourceServer().jwt()
+		;
 		return http.build();
 	}
 	
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/fintech").allowedOrigins("https://mapa-bits-calculator.web.app/");
+				
+			}
+		};
+	}
 //	@Override
 //	public void configure(WebSecurity web) throws Exception {
 //		web.ignoring().antMatchers("/actuator/**","/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html","/favicon.ico"); //,"/index/**","/**");
