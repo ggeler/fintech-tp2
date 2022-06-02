@@ -45,7 +45,7 @@ public class SecurityConfig  {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/fintech").allowedOrigins("https://mapa-bits-calculator.web.app/");
+				registry.addMapping("/fintech/**").allowedOrigins("https://mapa-bits-calculator.web.app/");
 				
 			}
 		};
