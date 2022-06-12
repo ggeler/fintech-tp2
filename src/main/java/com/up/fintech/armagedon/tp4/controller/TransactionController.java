@@ -35,9 +35,15 @@ public class TransactionController {
 	}
 
 	@GetMapping() //@JsonView(Views.Public.class) 
-	public ResponseEntity<PagedModel<EntityModel<Transaction>>> getTransactionsPaged(@PathVariable @NotNull UUID wallet, Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> getTransactionsPaged(@PathVariable @NotNull UUID wallet, Pageable pageable) {
 		var transactions = service.getTransactions(wallet, pageable);
-		return ResponseEntity.ok().body(assembler.toModel(transactions));
+		return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
+	}
+	
+	@GetMapping("/{transaction}") //@JsonView(Views.Public.class) 
+	public ResponseEntity<EntityModel<Transaction>> getTransaction(@PathVariable @NotNull UUID wallet, @PathVariable @NotNull UUID transaction) {
+		var tx = service.getTransaction(wallet, transaction);
+		return ResponseEntity.ok().body(assembler.toModel(tx));
 	}
 	
 	@GetMapping("/test") @JsonView(Views.Internal.class) 

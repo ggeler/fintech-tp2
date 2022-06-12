@@ -32,8 +32,14 @@ public class User {
 
 	@JsonIgnore @Id @GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private long id;
+	
 	@JsonProperty(access = Access.READ_ONLY) @NonNull @NotNull @Column(unique = true) @Type(type = "org.hibernate.type.UUIDCharType") 
 	private UUID uuid;
+	
 	@JsonProperty(access = Access.READ_ONLY) @Valid @NonNull @NotNull @Email @Column(unique = true) 
 	private String email;
+	
+	@NonNull @NotNull @Column(unique = true) 
+	private String cuit;
+	
 }

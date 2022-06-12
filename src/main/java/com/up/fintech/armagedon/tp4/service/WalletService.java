@@ -80,7 +80,7 @@ public class WalletService {
 	}
 	
 	@Transactional(label = "WalletTransaction", isolation = Isolation.REPEATABLE_READ)
-	public Transaction submit(String uuid, Transaction transaction) {
+	public Transaction execute(String uuid, Transaction transaction) {
 		return getWallet(uuid).execute(transaction);
 	}
 }

@@ -26,20 +26,20 @@ public class EnabledState extends AbstractWalletState {
 	}
 
 	@Override
-	public void block() {
+	public void blocked() {
 		var state = new BlockedState(this.wallet);
 		wallet.setState(state);
 	}
 
 	@Override
-	public void blockForSend() {
-		var state = new BlockedForSendState(this.wallet);
+	public void blockWithdraw() {
+		var state = new BlockedWithdrawState(this.wallet);
 		wallet.setState(state);
 	}
 
 	@Override
-	public void blockForReceive() {
-		var state = new BlockedForReceiveState(this.wallet);
+	public void blockDeposit() {
+		var state = new BlockedDepositState(this.wallet);
 		wallet.setState(state);
 	}
 

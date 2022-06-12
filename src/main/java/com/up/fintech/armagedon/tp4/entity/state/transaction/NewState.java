@@ -1,6 +1,7 @@
 package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
+import com.up.fintech.armagedon.tp4.entity.Wallet;
 
 public class NewState extends AbstractTransactionState {
 
@@ -41,5 +42,10 @@ public class NewState extends AbstractTransactionState {
 	@Override
 	public TransactionStatusEnum getState() {
 		return TransactionStatusEnum.NEW;
+	}
+
+	@Override
+	public Transaction execute(Wallet wallet) {
+		return transaction.getStrategy().execute(wallet, this.transaction);
 	}
 }

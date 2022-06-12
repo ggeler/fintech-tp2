@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.tp4.entity;
+package com.up.fintech.armagedon.tp4.entity.credit;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.up.fintech.armagedon.tp4.entity.ExternalBank;
+import com.up.fintech.armagedon.tp4.entity.TransactionType;
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
 import com.up.fintech.armagedon.tp4.misc.component.Views;
 import com.up.fintech.armagedon.tp4.strategy.ExternalReceiveTransferServiceStrategy;
@@ -20,7 +22,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-public class ExternalReceiveTransfer extends Transaction {
+public class ExternalIn extends Credit {
 	
 	@JsonView(Views.Public.class)
 	private String fromCvu;
@@ -48,7 +50,7 @@ public class ExternalReceiveTransfer extends Transaction {
 		}
 	}
 	
-	public ExternalReceiveTransfer() {
+	public ExternalIn() {
 		super();
 		super.setType(TransactionType.EXTERNAL_RECEIVE);
 		setStrategy(SpringContext.getBean(ExternalReceiveTransferServiceStrategy.class));

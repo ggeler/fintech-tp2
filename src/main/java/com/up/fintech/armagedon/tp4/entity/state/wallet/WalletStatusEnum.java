@@ -4,8 +4,8 @@ public enum WalletStatusEnum {
 
 	ENABLED("Habilitada"),
 	BLOCKED("Bloqueada"),
-	BLOCKED_SEND("Bloqueada para Transferir"),
-	BLOCKED_RECEIVE("Bloqueada para Recibir/Depositar"),
+	BLOCKED_WITHDRAW("Bloqueada para Transferir/Retirar"),
+	BLOCKED_DEPOSIT("Bloqueada para Recibir/Depositar"),
 	CLOSED("Cerrada");
 	
 	public String status;

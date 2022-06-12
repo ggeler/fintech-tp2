@@ -23,8 +23,12 @@ import org.hibernate.annotations.Type;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-import com.up.fintech.armagedon.tp4.entity.state.wallet.BlockedForReceiveState;
-import com.up.fintech.armagedon.tp4.entity.state.wallet.BlockedForSendState;
+import com.up.fintech.armagedon.tp4.entity.credit.Credit;
+import com.up.fintech.armagedon.tp4.entity.debit.Debit;
+import com.up.fintech.armagedon.tp4.entity.debit.ExternalOut;
+import com.up.fintech.armagedon.tp4.entity.debit.InternalOut;
+import com.up.fintech.armagedon.tp4.entity.state.wallet.BlockedDepositState;
+import com.up.fintech.armagedon.tp4.entity.state.wallet.BlockedWithdrawState;
 import com.up.fintech.armagedon.tp4.entity.state.wallet.BlockedState;
 import com.up.fintech.armagedon.tp4.entity.state.wallet.ClosedState;
 import com.up.fintech.armagedon.tp4.entity.state.wallet.EnabledState;
@@ -77,85 +81,43 @@ public class Wallet {
 	@JsonIgnore @Transient 
 	private IWalletState state = new EnabledState(this);
 	
-	public void deposit(Transaction transaction) throws TransactionException {
-		if (this.getStatus()==WalletStatusEnum.BLOCKED || this.getStatus()==WalletStatusEnum.BLOCKED_RECEIVE)
-			throw new TransactionException("Cuenta bloqueada para depósito");
-		if (transaction.getAmount()>0) {
-			transaction.getState().changeState();
-			transactions.add(transaction);
-			var newAmount = this.balance+transaction.getAmount();
-			balance = newAmount;
-			transaction.getState().changeState();
-//			transaction.setNote("Deposit transaction completed");
-		} else {
-			transaction.getState().reject();
-			transactions.add(transaction);
-			var note = "Rejected: amount to deposit cant be negative or zero "+transaction.getAmount();
-			transaction.setNote(note);
-			throw new TransactionException(note);
-		}
-	}
-
-	public void receiveDeposit(Transaction transaction) throws TransactionException {
-		if (this.getStatus()==WalletStatusEnum.BLOCKED || this.getStatus()==WalletStatusEnum.BLOCKED_RECEIVE)
-			throw new TransactionException("Cuenta bloqueada para depósito");
-		if (transaction.getAmount()>0) {
-			transaction.getState().changeState();
-			transactions.add(transaction);
-			transaction.getState().changeState();
-			transaction.setNote("Receive transaction pending confirmation");
-		} else {
-			transaction.getState().reject();
-			transactions.add(transaction);
-			var note = "Rejected: amount to deposit cant be negative or zero "+transaction.getAmount();
-			transaction.setNote(note);
-			throw new TransactionException(note);
-		}
-	}
-	public void cancelDeposit(Transaction transaction) {
-		transaction.getState().cancel();
-		transaction.setNote("Transacción Externa Cancelada");
+//	public void directDeposit(Credit transaction) throws TransactionException {
+//		balance = transaction.directDeposit();
+//	}
+//	
+//	public void depositRequest(Credit transaction) throws TransactionException {
+//		transaction.depositRequest();
+//	}
+//
+//	public void cancelDepositRequest(Credit transaction) throws TransactionException {
+//		transaction.cancelDepositRequest();
+//	}
+//	
+	public void confirmDepositRequest(Credit transaction) throws TransactionException {
+		balance = transaction.confirmDepositRequest();
 	}
 	
-	public void confirmDeposit(Transaction transaction) throws TransactionException {
-		if (this.getStatus()==WalletStatusEnum.BLOCKED || this.getStatus()==WalletStatusEnum.BLOCKED_RECEIVE)
-			throw new TransactionException("Cuenta bloqueada para depósito");
-		if (transaction.getAmount()>0) {
-			transaction.getState().changeState();
-			var newAmount = this.balance+transaction.getAmount();
-			balance = newAmount;
-			transaction.setNote("Transacción Externa Confirmada");
-		} else {
-			transaction.getState().reject();
-			transactions.add(transaction);
-			var note = "Rejected: amount to deposit cant be negative or zero "+transaction.getAmount();
-			transaction.setNote(note);
-			throw new TransactionException(note);
-		}
+	public void directWithdraw(Debit transaction) throws TransactionException {
+		balance = transaction.directWithdraw();
 	}
-	
-	public void debit(Transaction transaction) throws TransactionException {
-		if (this.getStatus()==WalletStatusEnum.BLOCKED || this.getStatus()==WalletStatusEnum.BLOCKED_SEND)
-			throw new TransactionException("Cuenta bloqueada para débito");
-		if (transaction.getAmount()>0 && balance >= transaction.getAmount()) {
-			transaction.getState().changeState();
-			transactions.add(transaction);
-			var newAmount = this.balance-transaction.getAmount();
-			balance = newAmount;
-			transaction.getState().changeState();
-		} else {
-			transaction.getState().reject();
-			transactions.add(transaction);
-			var note = "Rejected: balance less than requested transaction or zero/negative amount requested "+transaction.getAmount();
-			transaction.setNote(note);
-			throw new TransactionException(note);
-		}
+//
+//	public void withdrawRequest(Debit transaction) {
+//		transaction.withdrawRequest();
+//	}
+//	
+//	public void withdrawCancelRequest(Debit transaction) {
+//		transaction.cancelWithdrawRequest();
+//		
+//	}
+//	
+	public void confirmWithdrawRequest(Debit transaction) {
+		balance = transaction.confirmWithdrawRequest();
 	}
 	
 	public Transaction execute(Transaction transaction) {
-		if (transaction instanceof InternalSendTransfer tmp) {
+		if (transaction instanceof InternalOut tmp) {
 			if (tmp.getToCvu()!=null && !tmp.getToCvu().isEmpty() && !Cvu.isInternal(tmp.getToCvu())) {
-				transaction = new ExternalSendTransfer(tmp);
+				transaction = new ExternalOut(tmp);
 			}
 		}
 		return state.executeTransaction(transaction);
@@ -167,11 +129,11 @@ public class Wallet {
 			case BLOCKED: 
 				this.setState(new BlockedState(this));
 				break;
-			case BLOCKED_RECEIVE:
-				this.setState(new BlockedForReceiveState(this));
+			case BLOCKED_DEPOSIT:
+				this.setState(new BlockedDepositState(this));
 				break;
-			case BLOCKED_SEND:
-				this.setState(new BlockedForSendState(this));
+			case BLOCKED_WITHDRAW:
+				this.setState(new BlockedWithdrawState(this));
 				break;
 			case CLOSED:
 				this.setState(new ClosedState(this));
@@ -182,5 +144,4 @@ public class Wallet {
 			}
 		}
 	}
-
 }

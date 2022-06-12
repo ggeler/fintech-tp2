@@ -54,9 +54,9 @@ public class WalletController {
 	}
 
 	@PostMapping @Valid
-	public ResponseEntity<ResponseStatusWrapper<EntityModel<Wallet>>> createWallet(@RequestParam @NotNull UUID user, @RequestParam @Email String email) {
+	public ResponseEntity<ResponseStatusWrapper<EntityModel<Wallet>>> createWallet(@RequestParam @NotNull UUID user, @RequestParam @Email String email, @RequestParam String cuit) {
 		Wallet wallet;
-		wallet = service.addWallet(new User(user,email));
+		wallet = service.addWallet(new User(user,email, cuit));
 		var model = assembler.toModel(wallet);
 		var response = new ResponseStatusWrapper<>(model, true, 0, "Wallet Succesfully created");
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);

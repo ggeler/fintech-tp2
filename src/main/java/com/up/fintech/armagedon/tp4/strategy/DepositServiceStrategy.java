@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
+import com.up.fintech.armagedon.tp4.entity.credit.Credit;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 import com.up.fintech.armagedon.tp4.misc.error.UserNotFoundException;
 import com.up.fintech.armagedon.tp4.misc.error.WalletNotFoundException;
@@ -12,21 +13,22 @@ import com.up.fintech.armagedon.tp4.repository.ITransactionRepository;
 import com.up.fintech.armagedon.tp4.service.WalletService;
 
 @Service
-public final class CashServiceStrategy implements ITransactionStrategy {
+public final class DepositServiceStrategy implements ITransactionStrategy {
 
 	private final WalletService service;
 	private final ITransactionRepository repository;
 	
 	@Autowired
-	public CashServiceStrategy(WalletService service, ITransactionRepository repository) {
+	public DepositServiceStrategy(WalletService service, ITransactionRepository repository) {
 		this.service = service;
 		this.repository = repository;
 	}
 	
-	private Transaction deposit(Wallet wallet, Transaction deposit) throws UserNotFoundException, WalletNotFoundException, TransactionException {
+	private Transaction deposit(Wallet wallet, Credit deposit) throws UserNotFoundException, WalletNotFoundException, TransactionException {
 		deposit.setWallet(wallet);
 		try {
-			wallet.deposit(deposit);
+			deposit.depositRequest();
+//			wallet.depositRequest(deposit);
 			var savedDeposit = repository.save(deposit);
 			service.save(wallet);
 			return savedDeposit;
@@ -35,12 +37,9 @@ public final class CashServiceStrategy implements ITransactionStrategy {
 		} 
 	}
 	
-	private void withdraw(Wallet wallet, double amount) {
-	}
-
 	@Override
 	public Transaction execute(Wallet wallet, Transaction transaction) {
-		return deposit(wallet, transaction);
+		return deposit(wallet, (Credit) transaction);
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
+import com.up.fintech.armagedon.tp4.entity.Wallet;
 
 public class PendingConfirmationState extends AbstractTransactionState {
 
@@ -15,6 +16,8 @@ public class PendingConfirmationState extends AbstractTransactionState {
 		switch (type) {
 			case EXTERNAL_RECEIVE_WITHCONFIRM:
 			case INTERNAL_RECEIVE:
+			case WITHDRAW:
+			case DEPOSIT:
 				newState = new CompleteState(transaction);
 				break;
 			default:
@@ -27,6 +30,11 @@ public class PendingConfirmationState extends AbstractTransactionState {
 	@Override
 	public TransactionStatusEnum getState() {
 		return TransactionStatusEnum.PENDING_CONFIRMATION;
+	}
+
+	@Override
+	public Transaction execute(Wallet wallet) {
+		return this.transaction.getStrategy().execute(wallet, this.transaction);
 	}
 
 }

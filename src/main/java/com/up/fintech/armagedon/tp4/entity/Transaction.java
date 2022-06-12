@@ -15,10 +15,10 @@ import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.CancelState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.CompleteState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.DepositState;
@@ -36,7 +36,6 @@ import com.up.fintech.armagedon.tp4.strategy.ITransactionStrategy;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import lombok.Setter;
 
 @Data
@@ -72,14 +71,16 @@ public abstract class Transaction {
 	@JsonProperty(access = Access.READ_ONLY) @JsonInclude(Include.NON_NULL)
 	private String note;
 	
-	@JsonIgnore @OneToOne 
-	private Wallet wallet;
+	@JsonIgnore @OneToOne
+	protected Wallet wallet;
 
-	@Getter(value = AccessLevel.NONE) @Transient @JsonIgnore 
+//	@Getter(value = AccessLevel.NONE) 
+	@Transient @JsonIgnore 
 	private ITransactionStrategy strategy;
 	
 	public Transaction execute(Wallet wallet) {
-		return strategy.execute(wallet, this);
+		return state.execute(wallet);
+//		return strategy.execute(wallet, this);
 	}
 
 	public void setTransactionState() {

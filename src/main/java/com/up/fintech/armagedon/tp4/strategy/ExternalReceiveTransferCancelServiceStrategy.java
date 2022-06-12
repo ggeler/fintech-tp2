@@ -2,9 +2,9 @@ package com.up.fintech.armagedon.tp4.strategy;
 
 import org.springframework.stereotype.Service;
 
-import com.up.fintech.armagedon.tp4.entity.ExternalReceiveTransfer;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
+import com.up.fintech.armagedon.tp4.entity.credit.ExternalIn;
 import com.up.fintech.armagedon.tp4.misc.error.CvuException;
 import com.up.fintech.armagedon.tp4.misc.error.ExternalBankException;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
@@ -19,15 +19,16 @@ public final class ExternalReceiveTransferCancelServiceStrategy implements ITran
 		this.transactionRepository = transactionRepository;
 	}
 	
-	private ExternalReceiveTransfer cancelExternalTransferReceive(Wallet wallet, ExternalReceiveTransfer transfer) throws CvuException, ExternalBankException, TransactionException {
-		wallet.cancelDeposit(transfer);
+	private ExternalIn cancelDepositRequest(Wallet wallet, ExternalIn transfer) throws CvuException, ExternalBankException, TransactionException {
+		transfer.cancelDepositRequest();
+//		wallet.cancelDepositRequest(transfer);
 		transfer.setWalletInformation(wallet.getUser().getEmail());
 		return transactionRepository.save(transfer);
 	}
 
 	@Override
 	public Transaction execute(Wallet wallet, Transaction transaction) {
-		return cancelExternalTransferReceive(wallet, (ExternalReceiveTransfer) transaction);
+		return cancelDepositRequest(wallet, (ExternalIn) transaction);
 	}
 
 }

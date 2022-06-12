@@ -5,10 +5,11 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
-import com.up.fintech.armagedon.tp4.controller.CashController;
+import com.up.fintech.armagedon.tp4.controller.DepositController;
 import com.up.fintech.armagedon.tp4.controller.TransactionController;
 import com.up.fintech.armagedon.tp4.controller.TransferController;
 import com.up.fintech.armagedon.tp4.controller.WalletController;
+import com.up.fintech.armagedon.tp4.controller.WithdrawController;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
 import com.up.fintech.armagedon.tp4.entity.state.wallet.WalletStatusEnum;
 
@@ -23,18 +24,18 @@ public class WalletAssembler implements RepresentationModelAssembler<Wallet, Ent
 		
 		model = EntityModel.of(entity, walletLink, transactionlink);
 		
-		if (entity.getStatus()!=WalletStatusEnum.BLOCKED || entity.getStatus()!=WalletStatusEnum.BLOCKED_RECEIVE || entity.getStatus()!=WalletStatusEnum.BLOCKED_SEND) {
-			var depositLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CashController.class).depositMoney(entity.getWalletId(),null)).withRel("deposit");
+		if (entity.getStatus()!=WalletStatusEnum.BLOCKED && entity.getStatus()!=WalletStatusEnum.BLOCKED_DEPOSIT ) {
+			var depositLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).deposit(entity.getWalletId(),null)).withRel("deposit");
 			model.add(depositLink);
 		}
-		
-		if (entity.getBalance()>0) {
-			var transferLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TransferController.class).transferMoney(entity.getWalletId(),null)).withRel("transfer");
-			var withdrawLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CashController.class).withdrawMoney()).withRel("withdraw");
-			model.add(transferLink);
-			model.add(withdrawLink);
+		if (entity.getStatus()!=WalletStatusEnum.BLOCKED &&  entity.getStatus()!=WalletStatusEnum.BLOCKED_WITHDRAW) {
+			if (entity.getBalance()>0) {
+				var transferLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TransferController.class).transfer(entity.getWalletId(),null)).withRel("transfer");
+				var withdrawLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).withdraw(entity.getWalletId(),null)).withRel("withdraw");
+				model.add(transferLink);
+				model.add(withdrawLink);
+			}
 		}
-		
 		return model;
 	}
 

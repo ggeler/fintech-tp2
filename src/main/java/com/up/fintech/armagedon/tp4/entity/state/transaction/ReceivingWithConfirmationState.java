@@ -1,6 +1,7 @@
 package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
+import com.up.fintech.armagedon.tp4.entity.Wallet;
 
 public class ReceivingWithConfirmationState extends AbstractTransactionState {
 
@@ -27,6 +28,12 @@ public class ReceivingWithConfirmationState extends AbstractTransactionState {
 	@Override
 	public TransactionStatusEnum getState() {
 		return TransactionStatusEnum.RECEIVING_WITH_CONFIRMATION;
+	}
+
+	@Override
+	public Transaction execute(Wallet wallet) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

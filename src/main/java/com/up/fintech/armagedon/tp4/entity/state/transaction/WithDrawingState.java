@@ -1,6 +1,7 @@
 package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
+import com.up.fintech.armagedon.tp4.entity.Wallet;
 
 public class WithDrawingState extends AbstractTransactionState {
 
@@ -14,7 +15,7 @@ public class WithDrawingState extends AbstractTransactionState {
 		AbstractTransactionState newState = null;
 		switch (type) {
 			case WITHDRAW:
-				newState = new CompleteState(transaction);
+				newState = new PendingConfirmationState(transaction);
 				break;
 			default:
 				newState = new InvalidState(transaction);
@@ -26,6 +27,12 @@ public class WithDrawingState extends AbstractTransactionState {
 	@Override
 	public TransactionStatusEnum getState() {
 		return TransactionStatusEnum.WITHDRAWING;
+	}
+
+	@Override
+	public Transaction execute(Wallet wallet) {
+//		return transaction.getStrategy().execute(wallet, this.transaction);
+		return null;
 	}
 
 }

@@ -2,10 +2,10 @@ package com.up.fintech.armagedon.tp4.strategy;
 
 import org.springframework.stereotype.Service;
 
-import com.up.fintech.armagedon.tp4.entity.InternalReceiveTransfer;
-import com.up.fintech.armagedon.tp4.entity.InternalSendTransfer;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
+import com.up.fintech.armagedon.tp4.entity.credit.InternalIn;
+import com.up.fintech.armagedon.tp4.entity.debit.InternalOut;
 import com.up.fintech.armagedon.tp4.misc.error.CvuException;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 import com.up.fintech.armagedon.tp4.misc.error.UserNotFoundException;
@@ -24,7 +24,7 @@ public final class InternalSendTransferServiceStrategy implements ITransactionSt
 		this.service = service;
 	}
 	
-	private InternalSendTransfer internalTransfer(Wallet fromWallet, InternalSendTransfer transfer) throws UserNotFoundException, WalletNotFoundException, TransactionException, CvuException {
+	private InternalOut internalTransfer(Wallet fromWallet, InternalOut transfer) throws UserNotFoundException, WalletNotFoundException, TransactionException, CvuException {
 		Wallet toWallet;
 		if (transfer.getAmount()<=0) 
 			throw new TransactionException("Amount to Transfer must be > 0");
@@ -37,8 +37,8 @@ public final class InternalSendTransferServiceStrategy implements ITransactionSt
 		}
 		try {
 			transfer.setWallet(fromWallet);
-			var receiveTransfer = new InternalReceiveTransfer(transfer,toWallet);
-			fromWallet.debit(transfer);
+			var receiveTransfer = new InternalIn(transfer,toWallet);
+			fromWallet.directWithdraw(transfer);
 			toWallet.execute(receiveTransfer);
 			
 			transfer.setAmount(transfer.getAmount()*-1);
@@ -52,8 +52,8 @@ public final class InternalSendTransferServiceStrategy implements ITransactionSt
 	
 	@Override
 	public Transaction execute(Wallet wallet, Transaction transaction) {
-		if (transaction instanceof InternalSendTransfer) {
-				return internalTransfer(wallet, (InternalSendTransfer) transaction);
+		if (transaction instanceof InternalOut) {
+				return internalTransfer(wallet, (InternalOut) transaction);
 		} else {
 			throw new TransactionException("Error: tipo de objeto no es de transferencia");
 		}

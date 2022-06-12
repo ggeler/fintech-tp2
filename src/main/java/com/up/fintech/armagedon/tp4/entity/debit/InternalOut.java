@@ -1,4 +1,4 @@
-package com.up.fintech.armagedon.tp4.entity;
+package com.up.fintech.armagedon.tp4.entity.debit;
 
 import java.util.UUID;
 
@@ -8,6 +8,7 @@ import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.up.fintech.armagedon.tp4.entity.TransactionType;
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
 import com.up.fintech.armagedon.tp4.strategy.InternalSendTransferServiceStrategy;
 
@@ -17,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-public class InternalSendTransfer extends Transaction {
+public class InternalOut extends Debit {
 	
 	@Type(type = "org.hibernate.type.UUIDCharType") @JsonInclude(Include.NON_NULL) 
 	private UUID toWallet;
@@ -25,7 +26,7 @@ public class InternalSendTransfer extends Transaction {
 	@JsonInclude(Include.NON_NULL)
 	private String toCvu;
 	
-	public InternalSendTransfer() {
+	public InternalOut() {
 		super();
 		super.setType(TransactionType.INTERNAL_SEND);
 		setStrategy(SpringContext.getBean(InternalSendTransferServiceStrategy.class));

@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.up.fintech.armagedon.tp4.entity.ExternalReceiveTransfer;
 import com.up.fintech.armagedon.tp4.entity.ResponseStatusWrapper;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
+import com.up.fintech.armagedon.tp4.entity.credit.ExternalIn;
 import com.up.fintech.armagedon.tp4.misc.component.Views;
 import com.up.fintech.armagedon.tp4.service.WalletService;
 
@@ -30,10 +30,10 @@ public class ExternalTransferController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<ResponseStatusWrapper<Transaction>> receiveTransfer(@RequestBody  @JsonView(Views.Public.class) ExternalReceiveTransfer externalTransfer) {
+	public ResponseEntity<ResponseStatusWrapper<Transaction>> receiveTransfer(@RequestBody  @JsonView(Views.Public.class) ExternalIn externalTransfer) {
 		log.info("External bank recieve transfer");
 		log.info("Request amount: "+externalTransfer.getAmount()+" - from:"+externalTransfer.getFromCvu()+" to:"+externalTransfer.getToCvu());
-		var transfer = walletService.submit(externalTransfer.getToCvu(), externalTransfer);
+		var transfer = walletService.execute(externalTransfer.getToCvu(), externalTransfer);
 		var response = new ResponseStatusWrapper<>(transfer,true,0,"Transfer completed");
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}

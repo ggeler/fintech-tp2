@@ -1,20 +1,21 @@
 package com.up.fintech.armagedon.tp4.entity.state.wallet;
 
-import com.up.fintech.armagedon.tp4.entity.ExternalSendTransfer;
-import com.up.fintech.armagedon.tp4.entity.InternalSendTransfer;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
+import com.up.fintech.armagedon.tp4.entity.debit.Withdraw;
+import com.up.fintech.armagedon.tp4.entity.debit.ExternalOut;
+import com.up.fintech.armagedon.tp4.entity.debit.InternalOut;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 
-public class BlockedForSendState extends AbstractWalletState {
+public class BlockedWithdrawState extends AbstractWalletState {
 
-	public BlockedForSendState(Wallet wallet) {
+	public BlockedWithdrawState(Wallet wallet) {
 		super(wallet);
 	}
 
 	@Override
 	public WalletStatusEnum getState() {
-		return WalletStatusEnum.BLOCKED_SEND;
+		return WalletStatusEnum.BLOCKED_WITHDRAW;
 	}
 
 	@Override
@@ -24,18 +25,18 @@ public class BlockedForSendState extends AbstractWalletState {
 	}
 
 	@Override
-	public void block() {
+	public void blocked() {
 		var state = new ClosedState(this.wallet);
 		wallet.setState(state);
 	}
 
 	@Override
-	public void blockForSend() {
+	public void blockWithdraw() {
 	}
 
 	@Override
-	public void blockForReceive() {
-		var state = new BlockedForReceiveState(this.wallet);
+	public void blockDeposit() {
+		var state = new BlockedDepositState(this.wallet);
 		wallet.setState(state);
 	}
 
@@ -47,7 +48,7 @@ public class BlockedForSendState extends AbstractWalletState {
 
 	@Override
 	public Transaction executeTransaction(Transaction transaction) {
-		if (transaction instanceof InternalSendTransfer || transaction instanceof ExternalSendTransfer)
+		if (transaction instanceof InternalOut || transaction instanceof ExternalOut || transaction instanceof Withdraw)
 			throw new TransactionException("No se puede Transferir/Retirar dinero sobre una cta bloqueada");
 		else
 			return transaction.execute(this.wallet);

@@ -1,6 +1,7 @@
 package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
+import com.up.fintech.armagedon.tp4.entity.Wallet;
 
 public class SendingState extends AbstractTransactionState {
 
@@ -28,6 +29,12 @@ public class SendingState extends AbstractTransactionState {
 	@Override
 	public TransactionStatusEnum getState() {
 		return TransactionStatusEnum.SENDING;
+	}
+
+	@Override
+	public Transaction execute(Wallet wallet) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

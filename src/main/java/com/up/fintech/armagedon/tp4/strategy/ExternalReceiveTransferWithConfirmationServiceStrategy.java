@@ -2,10 +2,10 @@ package com.up.fintech.armagedon.tp4.strategy;
 
 import org.springframework.stereotype.Service;
 
-import com.up.fintech.armagedon.tp4.entity.ExternalReceiveTransfer;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.TransactionType;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
+import com.up.fintech.armagedon.tp4.entity.credit.ExternalIn;
 import com.up.fintech.armagedon.tp4.misc.error.CvuException;
 import com.up.fintech.armagedon.tp4.misc.error.ExternalBankException;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
@@ -23,11 +23,12 @@ public final class ExternalReceiveTransferWithConfirmationServiceStrategy implem
 		this.bankService = bankService;
 	}
 	
-	private ExternalReceiveTransfer externalTransferReceive(Wallet wallet, ExternalReceiveTransfer transfer) throws CvuException, ExternalBankException, TransactionException {
+	private ExternalIn depositRequest(Wallet wallet, ExternalIn transfer) throws CvuException, ExternalBankException, TransactionException {
 		var externalBank = bankService.getExternalBank(transfer.getFromCvu());
 		transfer.setType(TransactionType.EXTERNAL_RECEIVE_WITHCONFIRM);
 		transfer.setExternalBank(externalBank);
-		wallet.receiveDeposit(transfer);
+		transfer.depositRequest();
+//		wallet.depositRequest(transfer);
 		transfer.setWallet(wallet);
 		transfer.setWalletInformation(wallet.getUser().getEmail());
 		return transactionRepository.save(transfer);
@@ -35,7 +36,7 @@ public final class ExternalReceiveTransferWithConfirmationServiceStrategy implem
 
 	@Override
 	public Transaction execute(Wallet wallet, Transaction transaction) {
-		return externalTransferReceive(wallet, (ExternalReceiveTransfer) transaction);
+		return depositRequest(wallet, (ExternalIn) transaction);
 	}
 
 }

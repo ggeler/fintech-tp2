@@ -24,15 +24,15 @@ public class ClosedState extends AbstractWalletState {
 	}
 
 	@Override
-	public void block() {
+	public void blocked() {
 	}
 
 	@Override
-	public void blockForSend() {
+	public void blockWithdraw() {
 	}
 
 	@Override
-	public void blockForReceive() {
+	public void blockDeposit() {
 	}
 
 	@Override

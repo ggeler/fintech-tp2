@@ -1,6 +1,7 @@
 package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
+import com.up.fintech.armagedon.tp4.entity.Wallet;
 
 public class DepositState extends AbstractTransactionState {
 
@@ -14,7 +15,7 @@ public class DepositState extends AbstractTransactionState {
 		AbstractTransactionState newState = null;
 		switch (type) {
 			case DEPOSIT:
-				newState = new CompleteState(transaction);
+				newState = new PendingConfirmationState(transaction);
 				break;
 			default:
 				newState = new InvalidState(transaction);
@@ -26,6 +27,11 @@ public class DepositState extends AbstractTransactionState {
 	@Override
 	public TransactionStatusEnum getState() {
 		return TransactionStatusEnum.DEPOSITING;
+	}
+
+	@Override
+	public Transaction execute(Wallet wallet) {
+		return null;
 	}
 
 }

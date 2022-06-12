@@ -11,11 +11,12 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.up.fintech.armagedon.tp4.controller.CashController;
+import com.up.fintech.armagedon.tp4.controller.DepositController;
 import com.up.fintech.armagedon.tp4.controller.ExternalTransferController;
 import com.up.fintech.armagedon.tp4.controller.TransactionController;
 import com.up.fintech.armagedon.tp4.controller.TransferController;
 import com.up.fintech.armagedon.tp4.controller.WalletController;
+import com.up.fintech.armagedon.tp4.controller.WithdrawController;
 import com.up.fintech.armagedon.tp4.entity.EmptyResponse;
 import com.up.fintech.armagedon.tp4.entity.ResponseStatusWrapper;
 import com.up.fintech.armagedon.tp4.misc.error.CvuException;
@@ -25,7 +26,8 @@ import com.up.fintech.armagedon.tp4.misc.error.UserNotFoundException;
 import com.up.fintech.armagedon.tp4.misc.error.WalletAlreadyExistsException;
 import com.up.fintech.armagedon.tp4.misc.error.WalletNotFoundException;
 
-@RestControllerAdvice(assignableTypes = {CashController.class, ExternalTransferController.class, WalletController.class, TransferController.class, TransactionController.class})
+@RestControllerAdvice(assignableTypes = {DepositController.class, ExternalTransferController.class, WalletController.class, TransferController.class, TransactionController.class
+		, WithdrawController.class})
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler({ExternalBankException.class, CvuException.class, WalletNotFoundException.class, UserNotFoundException.class})
