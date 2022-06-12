@@ -50,7 +50,7 @@ public abstract class Transaction {
 	
 	@Setter(value = AccessLevel.NONE) 
 	@JsonProperty(access = Access.READ_ONLY) 
-	private Instant timeStampt = Instant.now();
+	private Instant timestamp = Instant.now();
 	
 //	@Setter(value = AccessLevel.PROTECTED) 
 	@JsonProperty(access = Access.READ_ONLY) 
@@ -85,7 +85,7 @@ public abstract class Transaction {
 
 	public void setTransactionState() {
 		switch (status) {
-		case CANCEL:
+		case CANCELED:
 			state = new CancelState(this);
 			break;
 		case COMPLETED:

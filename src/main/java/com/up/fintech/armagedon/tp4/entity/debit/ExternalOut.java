@@ -3,10 +3,13 @@ package com.up.fintech.armagedon.tp4.entity.debit;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.up.fintech.armagedon.tp4.entity.ExternalBank;
 import com.up.fintech.armagedon.tp4.entity.TransactionType;
+import com.up.fintech.armagedon.tp4.misc.component.RandomConfirmationCode;
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
 import com.up.fintech.armagedon.tp4.strategy.ExternalSendTransferServiceStrategy;
 
@@ -22,9 +25,11 @@ public class ExternalOut extends Debit {
 	
 //	@JsonProperty(access = Access.READ_ONLY) private String fromCvu;
 	private String toCvu;
-	@JsonProperty(access = Access.READ_ONLY) @OneToOne private ExternalBank externalBank;
 	
-	@Setter(value = AccessLevel.NONE) 
+	@JsonProperty(access = Access.READ_ONLY) @OneToOne 
+	private ExternalBank externalBank;
+	
+	@Setter(value = AccessLevel.NONE) @JsonInclude(Include.NON_NULL)
 	private String confirmationCode;
 	
 	public ExternalOut() {
@@ -39,7 +44,7 @@ public class ExternalOut extends Debit {
 	}
 	
 	public void setConfirmationCode() {
-		confirmationCode = "ABCDEF";
+		confirmationCode = RandomConfirmationCode.generateRandomCode();
 	}
 
 	@Override

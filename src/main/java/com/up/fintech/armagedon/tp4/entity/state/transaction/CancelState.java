@@ -17,7 +17,7 @@ public class CancelState extends AbstractTransactionState {
 
 	@Override
 	public TransactionStatusEnum getState() {
-		return TransactionStatusEnum.CANCEL;
+		return TransactionStatusEnum.CANCELED;
 	}
 
 	@Override

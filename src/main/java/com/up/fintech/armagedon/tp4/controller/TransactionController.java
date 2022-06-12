@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.SortDefault;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,8 @@ public class TransactionController {
 	}
 
 	@GetMapping() //@JsonView(Views.Public.class) 
-	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> getTransactionsPaged(@PathVariable @NotNull UUID wallet, Pageable pageable) {
+	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> getTransactionsPaged(@PathVariable @NotNull UUID wallet, 
+			@SortDefault(sort = "timestamp", direction = Direction.DESC) Pageable pageable) {
 		var transactions = service.getTransactions(wallet, pageable);
 		return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
 	}

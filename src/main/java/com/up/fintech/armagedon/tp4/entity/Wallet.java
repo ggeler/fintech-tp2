@@ -73,7 +73,7 @@ public class Wallet {
 	private Instant creationTime = Instant.now();
 	
 	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) 
-	private Instant lastTransactionTime = transactions.stream().map(Transaction::getTimeStampt).max(Instant::compareTo).orElse(Instant.EPOCH); 
+	private Instant lastTransactionTime = transactions.stream().map(Transaction::getTimestamp).max(Instant::compareTo).orElse(Instant.EPOCH); 
 	
 	@JsonProperty(access = Access.READ_ONLY) 
 	private WalletStatusEnum status;
@@ -84,15 +84,7 @@ public class Wallet {
 //	public void directDeposit(Credit transaction) throws TransactionException {
 //		balance = transaction.directDeposit();
 //	}
-//	
-//	public void depositRequest(Credit transaction) throws TransactionException {
-//		transaction.depositRequest();
-//	}
-//
-//	public void cancelDepositRequest(Credit transaction) throws TransactionException {
-//		transaction.cancelDepositRequest();
-//	}
-//	
+
 	public void confirmDepositRequest(Credit transaction) throws TransactionException {
 		balance = transaction.confirmDepositRequest();
 	}
@@ -100,21 +92,12 @@ public class Wallet {
 	public void directWithdraw(Debit transaction) throws TransactionException {
 		balance = transaction.directWithdraw();
 	}
-//
-//	public void withdrawRequest(Debit transaction) {
-//		transaction.withdrawRequest();
-//	}
-//	
-//	public void withdrawCancelRequest(Debit transaction) {
-//		transaction.cancelWithdrawRequest();
-//		
-//	}
-//	
-	public void confirmWithdrawRequest(Debit transaction) {
+
+	public void confirmWithdrawRequest(Debit transaction) throws TransactionException {
 		balance = transaction.confirmWithdrawRequest();
 	}
 	
-	public Transaction execute(Transaction transaction) {
+	public Transaction execute(Transaction transaction) throws TransactionException {
 		if (transaction instanceof InternalOut tmp) {
 			if (tmp.getToCvu()!=null && !tmp.getToCvu().isEmpty() && !Cvu.isInternal(tmp.getToCvu())) {
 				transaction = new ExternalOut(tmp);

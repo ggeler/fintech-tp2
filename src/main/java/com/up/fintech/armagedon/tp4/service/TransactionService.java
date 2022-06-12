@@ -126,17 +126,25 @@ public class TransactionService {
 	}
 
 	public BufferedImage getQr(UUID walletId, UUID transactionId) throws WriterException {
-		var transaction = (Withdraw) getTransaction(transactionId);
+		
+		
+		var transaction = getTransaction(transactionId);
 		var wallet = service.getWallet(walletId);
 		
 		var json = new JSONObject();
 		json.appendField("type", transaction.getType());
 		json.appendField("walletId", wallet.getWalletId().toString());
 		json.appendField("transactionId", transaction.getTransactionId().toString());
-		json.appendField("confirmationCode", transaction.getConfirmationCode());
+		
+		if (transaction instanceof Deposit ) 
+				json.appendField("confirmationCode", ( (Deposit) transaction).getConfirmationCode());
+		if (transaction instanceof Withdraw ) 
+			json.appendField("confirmationCode", ( (Withdraw) transaction).getConfirmationCode());
+		
 		json.appendField("amount", transaction.getAmount());
 		json.appendField("email", wallet.getUser().getEmail());
 		json.appendField("cuit", wallet.getUser().getCuit());
+		json.appendField("timestamp", transaction.getTimestamp());
 		
 		QRCodeWriter barcodeWriter = new QRCodeWriter();
 		BitMatrix bitMatrix = barcodeWriter.encode(json.toJSONString(), BarcodeFormat.QR_CODE, 200, 200);

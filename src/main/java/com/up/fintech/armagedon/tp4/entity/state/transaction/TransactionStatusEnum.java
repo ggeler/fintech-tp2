@@ -7,7 +7,7 @@ public enum TransactionStatusEnum {
 	RECEIVING_WITH_CONFIRMATION("Recibiendo con Confirmación"),
 	DEPOSITING("Depositando"),
 	WITHDRAWING("Extrayendo"),
-	CANCEL("cancelada"),
+	CANCELED("cancelada"),
 	REJECTED("rechazada"),
 	COMPLETED("completada"),
 	NEW("nueva"), 
