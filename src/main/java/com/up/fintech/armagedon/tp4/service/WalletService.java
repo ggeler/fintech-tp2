@@ -63,6 +63,7 @@ public class WalletService {
 			var wallet = new Wallet();
 			wallet.getUser().setEmail(user.getEmail());
 			wallet.getUser().setUuid(user.getUuid());
+			wallet.getUser().setCuit(user.getCuit());
 			return repository.save(wallet);
 		}
 	}
