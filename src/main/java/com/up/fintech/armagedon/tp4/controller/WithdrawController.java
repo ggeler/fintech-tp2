@@ -45,7 +45,7 @@ public class WithdrawController {
 	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> withdraw(@PathVariable UUID wallet, @RequestBody Withdraw withdraw) {
 		var savedWithdraw = walletService.execute(wallet, withdraw);
 		var model = assembler.toModel(savedWithdraw);
-		var response = new ResponseStatusWrapper<>(model,true,0,"Deposit completed");
+		var response = new ResponseStatusWrapper<>(model,true,0,"Solicitud de retiro ingresada correctamente");
 		return ResponseEntity.created(null).body(response);
 	}
 	
@@ -53,7 +53,7 @@ public class WithdrawController {
 	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> cancelWithdraw(@PathVariable UUID wallet, @PathVariable UUID transaction, @RequestBody ExternalTransferDto confirm) {
 		var withdraw = transactionService.cancel(wallet, transaction, confirm);
 		var model = assembler.toModel(withdraw);
-		var response = new ResponseStatusWrapper<>(model,true,0,"Deposit completed");
+		var response = new ResponseStatusWrapper<>(model,true,0,"Retiro cancelado");
 		return ResponseEntity.ok().body(response);
 	}
 	
@@ -61,7 +61,7 @@ public class WithdrawController {
 	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> confirmWithdraw(@PathVariable UUID wallet, @PathVariable UUID transaction, @RequestBody ExternalTransferDto confirm) {
 		var withdraw = transactionService.confirm(wallet, transaction, confirm);
 		var model = assembler.toModel(withdraw);
-		var response = new ResponseStatusWrapper<>(model,true,0,"Deposit completed");
+		var response = new ResponseStatusWrapper<>(model,true,0,"Retiro confirmado");
 		return ResponseEntity.ok().body(response);
 	}
 	

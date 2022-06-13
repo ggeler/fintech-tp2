@@ -38,7 +38,7 @@ public class TransactionController {
 
 	@GetMapping() //@JsonView(Views.Public.class) 
 	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> getTransactionsPaged(@PathVariable @NotNull UUID wallet, 
-			@SortDefault(sort = "timestamp", direction = Direction.DESC) Pageable pageable) {
+			@SortDefault(sort = "createdTime", direction = Direction.DESC) Pageable pageable) {
 		var transactions = service.getTransactions(wallet, pageable);
 		return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
 	}

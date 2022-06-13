@@ -73,7 +73,7 @@ public class Wallet {
 	private Instant creationTime = Instant.now();
 	
 	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) 
-	private Instant lastTransactionTime = transactions.stream().map(Transaction::getTimestamp).max(Instant::compareTo).orElse(Instant.EPOCH); 
+	private Instant lastTransactionTime = transactions.stream().map(Transaction::getCreatedTime).max(Instant::compareTo).orElse(Instant.EPOCH); 
 	
 	@JsonProperty(access = Access.READ_ONLY) 
 	private WalletStatusEnum status;

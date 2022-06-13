@@ -1,5 +1,7 @@
 package com.up.fintech.armagedon.tp4.entity.debit;
 
+import java.time.Instant;
+
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.TransactionStatusEnum;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
@@ -40,6 +42,7 @@ public abstract class Debit extends Transaction {
 		if (transaction.getAmount()>0 && wallet.getBalance()-transaction.getAmount() >= 0) {
 			transaction.getState().changeState();
 			var newAmount = wallet.getBalance()-transaction.getAmount();
+			transaction.setConfirmedTime(Instant.now());
 			transaction.setNote("Retiro Confirmado");
 			return newAmount;
 		} else {
@@ -56,6 +59,7 @@ public abstract class Debit extends Transaction {
 		if (transaction.getStatus()!=TransactionStatusEnum.PENDING_CONFIRMATION)
 			throw new TransactionException("Transacción/Débito debe estar pendiente de confirmación para cancelar");
 		transaction.getState().cancel();
+		transaction.setCanceledTime(Instant.now());
 		transaction.setNote("Retiro Cancelado");
 	}
 	

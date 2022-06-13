@@ -144,7 +144,7 @@ public class TransactionService {
 		json.appendField("amount", transaction.getAmount());
 		json.appendField("email", wallet.getUser().getEmail());
 		json.appendField("cuit", wallet.getUser().getCuit());
-		json.appendField("timestamp", transaction.getTimestamp());
+		json.appendField("timestamp", transaction.getCreatedTime());
 		
 		QRCodeWriter barcodeWriter = new QRCodeWriter();
 		BitMatrix bitMatrix = barcodeWriter.encode(json.toJSONString(), BarcodeFormat.QR_CODE, 200, 200);

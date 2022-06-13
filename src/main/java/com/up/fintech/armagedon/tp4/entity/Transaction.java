@@ -50,7 +50,13 @@ public abstract class Transaction {
 	
 	@Setter(value = AccessLevel.NONE) 
 	@JsonProperty(access = Access.READ_ONLY) 
-	private Instant timestamp = Instant.now();
+	private Instant createdTime = Instant.now();
+	
+	@JsonProperty(access = Access.READ_ONLY) @JsonInclude(Include.NON_NULL)
+	private Instant confirmedTime;
+	
+	@JsonProperty(access = Access.READ_ONLY) @JsonInclude(Include.NON_NULL)
+	private Instant canceledTime;
 	
 //	@Setter(value = AccessLevel.PROTECTED) 
 	@JsonProperty(access = Access.READ_ONLY) 

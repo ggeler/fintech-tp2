@@ -1,5 +1,7 @@
 package com.up.fintech.armagedon.tp4.entity.credit;
 
+import java.time.Instant;
+
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.TransactionStatusEnum;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
@@ -18,6 +20,7 @@ public abstract class Credit extends Transaction {
 			throw new TransactionException("Transacción/Credito debe estar pendiente de confirmación para cancelar");
 		
 		transaction.getState().cancel();
+		transaction.setCanceledTime(Instant.now());
 		transaction.setNote("Depósito Cancelado");
 	}
 	
@@ -30,6 +33,7 @@ public abstract class Credit extends Transaction {
 		if (transaction.getAmount()>0) {
 			transaction.getState().changeState();
 			var newAmount = wallet.getBalance()+transaction.getAmount();
+			transaction.setConfirmedTime(Instant.now());
 			transaction.setNote("Depósito Confirmado");
 			return newAmount;
 		} else {

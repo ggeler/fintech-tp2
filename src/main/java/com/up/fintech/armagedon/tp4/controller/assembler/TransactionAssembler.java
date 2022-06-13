@@ -1,8 +1,5 @@
 package com.up.fintech.armagedon.tp4.controller.assembler;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -19,6 +16,7 @@ import com.up.fintech.armagedon.tp4.controller.WithdrawController;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.TransactionType;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.TransactionStatusEnum;
+import com.up.fintech.armagedon.tp4.entity.state.wallet.WalletStatusEnum;
 
 @Service
 public class TransactionAssembler implements RepresentationModelAssembler<Transaction, EntityModel<Transaction>> {
@@ -37,18 +35,23 @@ public class TransactionAssembler implements RepresentationModelAssembler<Transa
 		var selfLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TransactionController.class).getTransaction(entity.getWallet().getWalletId(), entity.getTransactionId())).withSelfRel();
 		model = EntityModel.of(entity, selfLink);
 		
-		if (entity.getType() == TransactionType.WITHDRAW && entity.getStatus() == TransactionStatusEnum.PENDING_CONFIRMATION) {
-				var confirmLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).confirmWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId(),null)).withRel("confirm");
-				var cancelLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).cancelWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId(),null)).withRel("cancel");
-				var qrLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).getQrWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId())).withRel("qr");
+		if (entity.getWallet().getStatus()!=WalletStatusEnum.BLOCKED && entity.getWallet().getStatus()!=WalletStatusEnum.BLOCKED_WITHDRAW 
+				&& entity.getWallet().getStatus()!=WalletStatusEnum.CLOSED ) {
+			if (entity.getType() == TransactionType.WITHDRAW && entity.getStatus() == TransactionStatusEnum.PENDING_CONFIRMATION) {
+					var confirmLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).confirmWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId(),null)).withRel("confirm");
+					var cancelLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).cancelWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId(),null)).withRel("cancel");
+					var qrLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).getQrWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId())).withRel("qr");
+					model.add(confirmLink,cancelLink, qrLink);
+			}
+		}	
+		if (entity.getWallet().getStatus()!=WalletStatusEnum.BLOCKED && entity.getWallet().getStatus()!=WalletStatusEnum.BLOCKED_DEPOSIT && 
+				entity.getWallet().getStatus()!=WalletStatusEnum.CLOSED ) {
+			if (entity.getType() == TransactionType.DEPOSIT && entity.getStatus() == TransactionStatusEnum.PENDING_CONFIRMATION) {
+				var confirmLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).confirm(entity.getWallet().getWalletId(),entity.getTransactionId(),null)).withRel("confirm");
+				var cancelLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).cancel(entity.getWallet().getWalletId(),entity.getTransactionId(),null)).withRel("cancel");
+				var qrLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).getQrWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId())).withRel("qr");
 				model.add(confirmLink,cancelLink, qrLink);
-		}
-		
-		if (entity.getType() == TransactionType.DEPOSIT && entity.getStatus() == TransactionStatusEnum.PENDING_CONFIRMATION) {
-			var confirmLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).confirm(entity.getWallet().getWalletId(),entity.getTransactionId(),null)).withRel("confirm");
-			var cancelLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).cancel(entity.getWallet().getWalletId(),entity.getTransactionId(),null)).withRel("cancel");
-			var qrLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).getQrWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId())).withRel("qr");
-			model.add(confirmLink,cancelLink, qrLink);
+			}
 		}
 		return model;
 	}
