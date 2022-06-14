@@ -47,7 +47,10 @@ public class SecurityConfig  {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("https://mapa-bits-calculator.web.app/","http://localhost:4200/");
+				registry.addMapping("/**")
+					.allowedOrigins("https://mapa-bits-calculator.web.app/","http://localhost:4200/")
+					.allowedMethods("POST","PUT","GET","DELETE")
+				;
 				
 			}
 		};
