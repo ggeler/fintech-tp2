@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.zxing.WriterException;
@@ -50,8 +51,8 @@ public class WithdrawController {
 	}
 	
 	@DeleteMapping("/{transaction}/cancel")
-	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> cancelWithdraw(@PathVariable UUID wallet, @PathVariable UUID transaction, @RequestBody ExternalTransferDto confirm) {
-		var withdraw = transactionService.cancel(wallet, transaction, confirm);
+	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> cancelWithdraw(@PathVariable UUID wallet, @PathVariable UUID transaction, @RequestParam String confirm) {
+		var withdraw = transactionService.cancel(wallet, transaction, new ExternalTransferDto(confirm));
 		var model = assembler.toModel(withdraw);
 		var response = new ResponseStatusWrapper<>(model,true,0,"Retiro cancelado");
 		return ResponseEntity.ok().body(response);
