@@ -3,13 +3,18 @@ package com.up.fintech.armagedon.tp4.entity;
 import java.time.Instant;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
 
@@ -40,7 +45,9 @@ import lombok.Setter;
 
 @Data
 @Entity
-@Table(name = "transactions")
+@Table(name = "transactions", indexes = {
+		@Index(columnList = "transactionId, createdTime")		
+})
 //@JsonView(Views.Public.class) 
 public abstract class Transaction {
 
@@ -48,8 +55,7 @@ public abstract class Transaction {
 	@JsonIgnore @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	@Setter(value = AccessLevel.NONE) 
-	@JsonProperty(access = Access.READ_ONLY) 
+	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) @NotNull 
 	private Instant createdTime = Instant.now();
 	
 	@JsonProperty(access = Access.READ_ONLY) @JsonInclude(Include.NON_NULL)
@@ -59,25 +65,25 @@ public abstract class Transaction {
 	private Instant canceledTime;
 	
 //	@Setter(value = AccessLevel.PROTECTED) 
-	@JsonProperty(access = Access.READ_ONLY) 
+	@JsonProperty(access = Access.READ_ONLY) @NotNull
 	private TransactionType type;
 
-	@JsonProperty(access = Access.READ_ONLY) 
+	@JsonProperty(access = Access.READ_ONLY) @NotNull
 	private TransactionStatusEnum status;
 	
 	@JsonIgnore @Transient 
 	private ITransactionState state = new NewState(this);
 	
 	@JsonView(Views.Public.class) 
-	private double amount;
+	private double amount = 0.0;
 	
-	@JsonProperty(access = Access.READ_ONLY) @Type(type = "org.hibernate.type.UUIDCharType") 
+	@JsonProperty(access = Access.READ_ONLY) @Type(type = "org.hibernate.type.UUIDCharType") @NotNull 
 	private UUID transactionId = UUID.randomUUID();
 	
 	@JsonProperty(access = Access.READ_ONLY) @JsonInclude(Include.NON_NULL)
 	private String note;
 	
-	@JsonIgnore @OneToOne
+	@JsonIgnore @ManyToOne(optional = false) //@JoinColumn(name = "fk_wallet_id", insertable = false, updatable = false, unique = false )
 	protected Wallet wallet;
 
 //	@Getter(value = AccessLevel.NONE) 

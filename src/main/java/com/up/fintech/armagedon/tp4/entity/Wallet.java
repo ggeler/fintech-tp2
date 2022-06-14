@@ -66,7 +66,7 @@ public class Wallet {
 	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) 
 	private double balance = 0.0;
 	
-	@Setter(value = AccessLevel.NONE) @JsonIgnore @OneToMany(cascade = CascadeType.ALL) @JoinColumn(name = "fk_wallet_id", nullable = false) 
+	@Setter(value = AccessLevel.NONE) @JsonIgnore @OneToMany(cascade = CascadeType.ALL, mappedBy = "wallet" ) //@JoinColumn(name = "fk_wallet_id", nullable = false) 
 	private List<Transaction> transactions = new ArrayList<>();
 	
 	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) 
