@@ -92,6 +92,10 @@ public class Wallet {
 	public void directWithdraw(Debit transaction) throws TransactionException {
 		balance = transaction.directWithdraw();
 	}
+	
+	public void directDeposit(Credit transaction) throws TransactionException {
+		balance = transaction.directDeposit();
+	}
 
 	public void confirmWithdrawRequest(Debit transaction) throws TransactionException {
 		balance = transaction.confirmWithdrawRequest();

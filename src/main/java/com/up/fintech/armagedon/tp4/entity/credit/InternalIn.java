@@ -13,6 +13,7 @@ import com.up.fintech.armagedon.tp4.entity.debit.Debit;
 import com.up.fintech.armagedon.tp4.entity.debit.InternalOut;
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
 import com.up.fintech.armagedon.tp4.strategy.DepositServiceStrategy;
+import com.up.fintech.armagedon.tp4.strategy.InternalReceiveServiceStrategy;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,7 +21,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-public class InternalIn extends Debit {
+public class InternalIn extends Credit {
 	
 	@Type(type = "org.hibernate.type.UUIDCharType") @NotNull 
 	private UUID fromWallet;
@@ -28,7 +29,7 @@ public class InternalIn extends Debit {
 	private InternalIn() {
 		super();
 		super.setType(TransactionType.INTERNAL_RECEIVE);
-		super.setStrategy(SpringContext.getBean(DepositServiceStrategy.class));
+		super.setStrategy(SpringContext.getBean(InternalReceiveServiceStrategy.class));
 		setNote("Transferencia desde Billetera misma Compañia Recibida Correctamente");
 	}
 

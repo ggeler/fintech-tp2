@@ -17,7 +17,7 @@ public class SendingState extends AbstractTransactionState {
 		switch (type) {
 			case EXTERNAL_SEND:
 			case INTERNAL_SEND:
-				newState = new CompleteState(transaction);
+				newState = new PendingConfirmationState(transaction);
 				break;
 			default: 
 				newState = new InvalidState(transaction);

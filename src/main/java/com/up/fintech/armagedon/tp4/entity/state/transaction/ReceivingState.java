@@ -16,7 +16,7 @@ public class ReceivingState extends AbstractTransactionState {
 		switch (type) {
 			case EXTERNAL_RECEIVE:
 			case INTERNAL_RECEIVE:
-				newState = new CompleteState(transaction);
+				newState = new PendingConfirmationState(transaction);
 				break;
 			default:
 				newState = new InvalidState(transaction);

@@ -15,7 +15,9 @@ public class PendingConfirmationState extends AbstractTransactionState {
 		AbstractTransactionState newState = null;
 		switch (type) {
 			case EXTERNAL_RECEIVE_WITHCONFIRM:
+			case EXTERNAL_SEND:
 			case INTERNAL_RECEIVE:
+			case INTERNAL_SEND:
 			case WITHDRAW:
 			case DEPOSIT:
 				newState = new CompleteState(transaction);
