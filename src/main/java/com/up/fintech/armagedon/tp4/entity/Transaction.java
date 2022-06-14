@@ -48,7 +48,7 @@ import lombok.Setter;
 @Table(name = "transactions", indexes = {
 		@Index(columnList = "transactionId, createdTime")		
 })
-//@JsonView(Views.Public.class) 
+//@JsonView(Views.Public.class)  TEST
 public abstract class Transaction {
 
 	@Setter(value = AccessLevel.NONE) 
