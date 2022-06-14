@@ -1,7 +1,11 @@
 package com.up.fintech.armagedon.tp4.entity.debit;
 
-import javax.persistence.Entity;
+import java.awt.image.BufferedImage;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.up.fintech.armagedon.tp4.entity.TransactionType;
@@ -22,6 +26,9 @@ public class Withdraw extends Debit {
 	
 	@Setter(value = AccessLevel.NONE) @JsonInclude(Include.NON_NULL)
 	private String confirmationCode;
+	
+	@Transient @JsonIgnore
+	private BufferedImage qr;
 	
 	public Withdraw() {
 		super();

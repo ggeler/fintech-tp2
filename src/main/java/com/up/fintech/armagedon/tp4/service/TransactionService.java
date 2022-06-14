@@ -11,12 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-import com.nimbusds.jose.shaded.json.JSONObject;
 import com.up.fintech.armagedon.tp4.dto.ExternalTransferDto;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.credit.Deposit;
@@ -31,6 +26,7 @@ import com.up.fintech.armagedon.tp4.strategy.DepositCancelServiceStrategy;
 import com.up.fintech.armagedon.tp4.strategy.DepositConfirmServiceStrategy;
 import com.up.fintech.armagedon.tp4.strategy.ExternalReceiveTransferCancelServiceStrategy;
 import com.up.fintech.armagedon.tp4.strategy.ExternalReceiveTransferConfirmationServiceStrategy;
+import com.up.fintech.armagedon.tp4.strategy.QrServiceStrategy;
 import com.up.fintech.armagedon.tp4.strategy.WithdrawCancelServiceStrategy;
 import com.up.fintech.armagedon.tp4.strategy.WithdrawConfirmationServiceStrategy;
 
@@ -127,29 +123,15 @@ public class TransactionService {
 
 	public BufferedImage getQr(UUID walletId, UUID transactionId) throws WriterException {
 		
-		
 		var transaction = getTransaction(transactionId);
 		var wallet = service.getWallet(walletId);
 		
-		var json = new JSONObject();
-		json.appendField("type", transaction.getType());
-		json.appendField("walletId", wallet.getWalletId().toString());
-		json.appendField("transactionId", transaction.getTransactionId().toString());
-		
-		if (transaction instanceof Deposit ) 
-				json.appendField("confirmationCode", ( (Deposit) transaction).getConfirmationCode());
-		if (transaction instanceof Withdraw ) 
-			json.appendField("confirmationCode", ( (Withdraw) transaction).getConfirmationCode());
-		
-		json.appendField("amount", transaction.getAmount());
-		json.appendField("email", wallet.getUser().getEmail());
-		json.appendField("cuit", wallet.getUser().getCuit());
-		json.appendField("timestamp", transaction.getCreatedTime());
-		
-		QRCodeWriter barcodeWriter = new QRCodeWriter();
-		BitMatrix bitMatrix = barcodeWriter.encode(json.toJSONString(), BarcodeFormat.QR_CODE, 200, 200);
-		
-		return MatrixToImageWriter.toBufferedImage(bitMatrix);
-		
+		if (transaction instanceof Deposit || transaction instanceof Withdraw)
+		{
+			transaction.setStrategy(SpringContext.getBean(QrServiceStrategy.class));
+			var qr = ((Deposit) wallet.execute(transaction)).getQr();
+			return qr;
+		} else
+			throw new TransactionException("Debe ser deposito o retiro para obtener QR");
 	}
 }
