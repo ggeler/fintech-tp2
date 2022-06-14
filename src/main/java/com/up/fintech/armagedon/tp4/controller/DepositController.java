@@ -50,11 +50,11 @@ public class DepositController {
 	}
 	
 	@PutMapping("/{transaction}/confirm")
-	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> confirm(@PathVariable UUID wallet, @PathVariable UUID transaction, @RequestBody ExternalTransferDto confirm) {
-		var savedDeposit = transactionService.confirm(wallet, transaction, confirm);
+	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> confirm(@PathVariable UUID wallet, @PathVariable UUID transaction, @RequestParam String confirm) {
+		var savedDeposit = transactionService.confirm(wallet, transaction, new ExternalTransferDto(confirm));
 		var model = assembler.toModel(savedDeposit);
 		var response = new ResponseStatusWrapper<>(model,true,0,"Deposit confirmed");
-		return ResponseEntity.created(null).body(response);
+		return ResponseEntity.ok(response);
 	}
 	
 	@DeleteMapping("/{transaction}/cancel")
@@ -62,7 +62,7 @@ public class DepositController {
 		var savedDeposit = transactionService.cancel(wallet, transaction, new ExternalTransferDto(confirm));
 		var model = assembler.toModel(savedDeposit);
 		var response = new ResponseStatusWrapper<>(model,true,0,"Deposit Canceled");
-		return ResponseEntity.created(null).body(response);
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping(value = "/{transaction}/qr", produces = MediaType.IMAGE_PNG_VALUE)

@@ -59,8 +59,8 @@ public class WithdrawController {
 	}
 	
 	@PutMapping("/{transaction}/confirm")
-	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> confirmWithdraw(@PathVariable UUID wallet, @PathVariable UUID transaction, @RequestBody ExternalTransferDto confirm) {
-		var withdraw = transactionService.confirm(wallet, transaction, confirm);
+	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> confirmWithdraw(@PathVariable UUID wallet, @PathVariable UUID transaction, @RequestParam String confirm) {
+		var withdraw = transactionService.confirm(wallet, transaction, new ExternalTransferDto(confirm));
 		var model = assembler.toModel(withdraw);
 		var response = new ResponseStatusWrapper<>(model,true,0,"Retiro confirmado");
 		return ResponseEntity.ok().body(response);
