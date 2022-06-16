@@ -57,7 +57,7 @@ public class Wallet {
 	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) @Column(unique = true) @Type(type = "org.hibernate.type.UUIDCharType") @NotNull 
 	private UUID walletId = UUID.randomUUID();
 	
-	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) @OneToOne(cascade = CascadeType.ALL) @NotNull 
+	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) @OneToOne(cascade = CascadeType.ALL) @JoinColumn(unique = true) @NotNull 
 	private User user = new User();
 	
 	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) @OneToOne(cascade = CascadeType.ALL) @JoinColumn(unique = true) @NotNull 
