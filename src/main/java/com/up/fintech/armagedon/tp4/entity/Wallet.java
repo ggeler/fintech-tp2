@@ -48,7 +48,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "wallets") //Test
+@Table(name = "wallets") //Test te lo saco desde PC 
 public class Wallet {
 
 	@Setter(value = AccessLevel.NONE) @JsonIgnore @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
