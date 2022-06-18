@@ -25,11 +25,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.java.Log;
 
-@AutoConfigureMockMvc(addFilters = false, printOnlyOnFailure = true)
-@SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-@TestPropertySource(locations = "classpath:application-integrationtest.properties")
+
 //@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class, SecurityFilterAutoConfiguration.class, HibernateJpaAutoConfiguration.class, 
 //		OAuth2ClientAutoConfiguration.class, OAuth2ResourceServerAutoConfiguration.class})
+@SpringBootTest(webEnvironment = WebEnvironment.MOCK)
+@AutoConfigureMockMvc(addFilters = false, printOnlyOnFailure = true)
+@TestPropertySource(locations = "classpath:application-integrationtest.properties")
 @TestMethodOrder(OrderAnnotation.class)
 @TestInstance(Lifecycle.PER_CLASS)
 @Log
