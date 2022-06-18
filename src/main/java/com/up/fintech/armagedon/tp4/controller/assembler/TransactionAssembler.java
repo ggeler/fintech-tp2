@@ -15,6 +15,8 @@ import com.up.fintech.armagedon.tp4.controller.TransactionController;
 import com.up.fintech.armagedon.tp4.controller.WithdrawController;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.TransactionType;
+import com.up.fintech.armagedon.tp4.entity.credit.Deposit;
+import com.up.fintech.armagedon.tp4.entity.debit.Withdraw;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.TransactionStatusEnum;
 import com.up.fintech.armagedon.tp4.entity.state.wallet.WalletStatusEnum;
 
@@ -31,15 +33,15 @@ public class TransactionAssembler implements RepresentationModelAssembler<Transa
 	@Override
 	public EntityModel<Transaction> toModel(Transaction entity) {
 		EntityModel<Transaction> model;
-//		var transactionsLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TransactionController.class).getTransactionsPaged(entity.getWallet().getWalletId(),null)).withRel("transactions");
+		
 		var selfLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TransactionController.class).getTransaction(entity.getWallet().getWalletId(), entity.getTransactionId())).withSelfRel();
 		model = EntityModel.of(entity, selfLink);
 		
 		if (entity.getWallet().getStatus()!=WalletStatusEnum.BLOCKED && entity.getWallet().getStatus()!=WalletStatusEnum.BLOCKED_WITHDRAW 
 				&& entity.getWallet().getStatus()!=WalletStatusEnum.CLOSED ) {
 			if (entity.getType() == TransactionType.WITHDRAW && entity.getStatus() == TransactionStatusEnum.PENDING_CONFIRMATION) {
-					var confirmLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).confirmWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId(),null)).withRel("confirm");
-					var cancelLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).cancelWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId(),null)).withRel("cancel");
+					var confirmLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).confirmWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId(),((Withdraw) entity).getConfirmationCode())).withRel("confirm");
+					var cancelLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).cancelWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId(),((Withdraw) entity).getConfirmationCode())).withRel("cancel");
 					var qrLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).getQrWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId())).withRel("qr");
 					model.add(confirmLink,cancelLink, qrLink);
 			}
@@ -47,8 +49,8 @@ public class TransactionAssembler implements RepresentationModelAssembler<Transa
 		if (entity.getWallet().getStatus()!=WalletStatusEnum.BLOCKED && entity.getWallet().getStatus()!=WalletStatusEnum.BLOCKED_DEPOSIT && 
 				entity.getWallet().getStatus()!=WalletStatusEnum.CLOSED ) {
 			if (entity.getType() == TransactionType.DEPOSIT && entity.getStatus() == TransactionStatusEnum.PENDING_CONFIRMATION) {
-				var confirmLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).confirm(entity.getWallet().getWalletId(),entity.getTransactionId(),null)).withRel("confirm");
-				var cancelLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).cancel(entity.getWallet().getWalletId(),entity.getTransactionId(),null)).withRel("cancel");
+				var confirmLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).confirm(entity.getWallet().getWalletId(),entity.getTransactionId(),((Deposit) entity).getConfirmationCode())).withRel("confirm");
+				var cancelLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).cancel(entity.getWallet().getWalletId(),entity.getTransactionId(),((Deposit) entity).getConfirmationCode())).withRel("cancel");
 				var qrLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).getQrWithdraw(entity.getWallet().getWalletId(),entity.getTransactionId())).withRel("qr");
 				model.add(confirmLink,cancelLink, qrLink);
 			}
@@ -58,7 +60,6 @@ public class TransactionAssembler implements RepresentationModelAssembler<Transa
 	
 	
 	public PagedModel<EntityModel<EntityModel<Transaction>>> toModel(Page<EntityModel<Transaction>> entity) {
-		
 		return pagedAssembler.toModel(entity);
 	}
 	

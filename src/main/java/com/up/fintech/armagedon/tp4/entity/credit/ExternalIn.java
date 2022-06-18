@@ -14,7 +14,7 @@ import com.up.fintech.armagedon.tp4.entity.ExternalBank;
 import com.up.fintech.armagedon.tp4.entity.TransactionType;
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
 import com.up.fintech.armagedon.tp4.misc.component.Views;
-import com.up.fintech.armagedon.tp4.strategy.ExternalReceiveTransferServiceStrategy;
+import com.up.fintech.armagedon.tp4.strategy.ExternalReceiveTransferWithConfirmationServiceStrategy;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,7 +53,8 @@ public class ExternalIn extends Credit {
 	public ExternalIn() {
 		super();
 		super.setType(TransactionType.EXTERNAL_RECEIVE);
-		setStrategy(SpringContext.getBean(ExternalReceiveTransferServiceStrategy.class));
+		setStrategy(SpringContext.getBean(ExternalReceiveTransferWithConfirmationServiceStrategy.class));
+//		setStrategy(SpringContext.getBean(ExternalReceiveTransferServiceStrategy.class));
 		setNote("Transferencia desde Billetera Externa Recibida");
 	}
 	

@@ -16,5 +16,4 @@ public interface ITransactionRepository extends JpaRepository<Transaction, Long>
 
 	Page<Transaction> findAllByWallet(Wallet wallet, Pageable pageable);
 	Optional<Transaction> findByTransactionId(UUID transaction);
-
 }

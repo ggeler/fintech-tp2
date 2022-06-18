@@ -9,10 +9,8 @@ import org.hibernate.annotations.Type;
 
 import com.up.fintech.armagedon.tp4.entity.TransactionType;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
-import com.up.fintech.armagedon.tp4.entity.debit.Debit;
 import com.up.fintech.armagedon.tp4.entity.debit.InternalOut;
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
-import com.up.fintech.armagedon.tp4.strategy.DepositServiceStrategy;
 import com.up.fintech.armagedon.tp4.strategy.InternalReceiveServiceStrategy;
 
 import lombok.Data;
@@ -41,6 +39,4 @@ public class InternalIn extends Credit {
 		this.setTransactionId(transfer.getTransactionId());
 		this.setWallet(wallet);
 	}
-	
-	
 }

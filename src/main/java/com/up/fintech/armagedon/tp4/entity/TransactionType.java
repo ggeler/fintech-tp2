@@ -2,13 +2,15 @@ package com.up.fintech.armagedon.tp4.entity;
 
 public enum TransactionType {
 
-	DEPOSIT("Deposito"),
-	WITHDRAW("Retiro"),
-	INTERNAL_SEND("Transferencia Interna"),
-	INTERNAL_RECEIVE("Recibo Interno"),
-	EXTERNAL_SEND("Transferencia Externa"),
-	EXTERNAL_RECEIVE("Recibo Externo"),
-	EXTERNAL_RECEIVE_WITHCONFIRM("Recibo externo con confirmación");
+	DEPOSIT("Deposito por Ventanilla"),
+	WITHDRAW("Retiro por Ventanilla"),
+	INTERNAL_SEND("Transferencia Billetera misma Compañía"),
+	INTERNAL_RECEIVE("Recibo desde Billetera misma Compañía"),
+	EXTERNAL_SEND("Transferencia a Entidad Externa"),
+	EXTERNAL_RECEIVE("Recibo desde Entidad Externa"),
+	EXTERNAL_RECEIVE_WITHCONFIRM("Recibo externo con confirmación"),
+	FEECHARGE("Cargos por Comisión"),
+	FEEPAY("Cobro por Comisión");
 	
 	public final String value;
 	

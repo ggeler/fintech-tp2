@@ -17,28 +17,28 @@ import com.up.fintech.armagedon.tp4.service.WalletService;
 
 import lombok.extern.log4j.Log4j2;
 
-@RestController
-@RequestMapping("/fintech/external/bank/transfer")
-@Log4j2
+//@RestController
+//@RequestMapping("/fintech/external/bank/transfer")
+//@Log4j2
 public class ExternalTransferController {
 
-	private final WalletService walletService;
-	
-	@Autowired
-	public ExternalTransferController(WalletService walletService) {
-		this.walletService = walletService;
-	}
-	
-	@PostMapping
-	public ResponseEntity<ResponseStatusWrapper<Transaction>> receiveTransfer(@RequestBody  @JsonView(Views.Public.class) ExternalIn externalTransfer) {
-		log.info("External bank recieve transfer");
-		log.info("Request amount: "+externalTransfer.getAmount()+" - from:"+externalTransfer.getFromCvu()+" to:"+externalTransfer.getToCvu());
-		var transfer = walletService.execute(externalTransfer.getToCvu(), externalTransfer);
-		var response = new ResponseStatusWrapper<>(transfer,true,0,"Transfer completed");
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
-	}
-	
-	public void confirmTransfer() {
-		
-	}
+//	private final WalletService walletService;
+//	
+//	@Autowired
+//	public ExternalTransferController(WalletService walletService) {
+//		this.walletService = walletService;
+//	}
+//	
+//	@PostMapping
+//	public ResponseEntity<ResponseStatusWrapper<Transaction>> receiveTransfer(@RequestBody  @JsonView(Views.Public.class) ExternalIn externalTransfer) {
+//		log.info("External bank recieve transfer");
+//		log.info("Request amount: "+externalTransfer.getAmount()+" - from:"+externalTransfer.getFromCvu()+" to:"+externalTransfer.getToCvu());
+//		var transfer = walletService.execute(externalTransfer.getToCvu(), externalTransfer);
+//		var response = new ResponseStatusWrapper<>(transfer,true,0,"Transfer completed");
+//		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+//	}
+//	
+//	public void confirmTransfer() {
+//		
+//	}
 }

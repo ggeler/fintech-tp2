@@ -9,5 +9,6 @@ public interface ITransactionState {
 	public TransactionStatusEnum getState();
 	public void cancel();
 	public void reject();
+	public void preview();
 	public Transaction execute(Wallet wallet); //, Transaction transactio 
 }

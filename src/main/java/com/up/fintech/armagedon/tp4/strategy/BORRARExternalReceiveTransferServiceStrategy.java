@@ -12,12 +12,12 @@ import com.up.fintech.armagedon.tp4.repository.IWalletRepository;
 import com.up.fintech.armagedon.tp4.service.ExternalBankService;
 
 @Service
-public final class ExternalReceiveTransferServiceStrategy implements ITransactionStrategy {
+public final class BORRARExternalReceiveTransferServiceStrategy {//implements ITransactionStrategy {
 
 	private final IWalletRepository repository;
 	private final ExternalBankService bankService;
 	
-	public ExternalReceiveTransferServiceStrategy(IWalletRepository repository, ExternalBankService bankService) {
+	public BORRARExternalReceiveTransferServiceStrategy(IWalletRepository repository, ExternalBankService bankService) {
 		this.repository = repository;
 		this.bankService = bankService;
 	}
@@ -34,7 +34,7 @@ public final class ExternalReceiveTransferServiceStrategy implements ITransactio
 		return null;
 	}
 
-	@Override
+//	@Override
 	public Transaction execute(Wallet wallet, Transaction transaction) {
 		return directDeposit(wallet, (ExternalIn) transaction);
 	}

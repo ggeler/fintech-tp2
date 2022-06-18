@@ -134,4 +134,6 @@ public class TransactionService {
 		} else
 			throw new TransactionException("Debe ser deposito o retiro para obtener QR");
 	}
+
+
 }

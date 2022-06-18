@@ -1,17 +1,20 @@
 package com.up.fintech.armagedon.tp4.entity.debit;
 
 import java.awt.image.BufferedImage;
+import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.up.fintech.armagedon.tp4.entity.TransactionType;
+import com.up.fintech.armagedon.tp4.entity.state.transaction.PreviewState;
 import com.up.fintech.armagedon.tp4.misc.component.RandomConfirmationCode;
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
-import com.up.fintech.armagedon.tp4.strategy.WithdrawServiceStrategy;
+import com.up.fintech.armagedon.tp4.strategy.WithdrawRequestServiceStrategy;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -30,15 +33,18 @@ public class Withdraw extends Debit {
 	@Transient @JsonIgnore
 	private BufferedImage qr;
 	
+	@OneToOne @JsonIgnore
+	private FeeCharge feeTransaction;
+	
 	public Withdraw() {
 		super();
 		super.setType(TransactionType.WITHDRAW);
-		setStrategy(SpringContext.getBean(WithdrawServiceStrategy.class));
+		setStrategy(SpringContext.getBean(WithdrawRequestServiceStrategy.class));
 		setNote("Retiro por Ventanilla Completedo Correctamente");
 	}
 	
 	@Override
-	public void setAmount(double amount) {
+	public void setAmount(BigDecimal amount) {
 //		Assert.isTrue(amount > 0, "Amount cant be zero or less");
 		super.setAmount(amount);
 	}
@@ -49,7 +55,8 @@ public class Withdraw extends Debit {
 
 	@Override
 	public void withdrawRequest() {
-		this.setConfirmationCode();
+		if (!(getState() instanceof PreviewState))
+			this.setConfirmationCode();
 		super.withdrawRequest();
 	}
 }

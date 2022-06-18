@@ -33,9 +33,9 @@ public class WalletService {
 	}
 	
 	@Transactional(label = "WalletTransaction", isolation = Isolation.DEFAULT, readOnly = false)
-	public Wallet getWalletByUserUuid(UUID uuid) throws UserNotFoundException, WalletNotFoundException  {
-		var user = userRepository.getUserByUuid(uuid).orElseThrow(() -> new UserNotFoundException("User UUID not found "+uuid));
-		var wallet = repository.getWalletByUser(user).orElseThrow(() -> new WalletNotFoundException("Wallet not found for userId "+user.getUuid()));
+	public Wallet getWalletByUser(User user) throws UserNotFoundException, WalletNotFoundException  {
+		var tmp = userRepository.getUserByUuidOrEmailOrCuit(user.getUuid(), user.getEmail(), user.getCuit()).orElseThrow(() -> new UserNotFoundException("User UUID not found "+user.getUuid()));
+		var wallet = repository.getWalletByUser(tmp).orElseThrow(() -> new WalletNotFoundException("Wallet not found for userId "+user.getUuid()));
 		wallet.setWalletState();
 		return wallet;
 	}
@@ -57,8 +57,8 @@ public class WalletService {
 	@Transactional(label = "WalletTransaction", isolation = Isolation.REPEATABLE_READ)
 	public Wallet addWallet(User user) throws WalletAlreadyExistsException {
 		try {
-			getWalletByUserUuid(user.getUuid());
-			throw new WalletAlreadyExistsException(String.format("Wallet %s already exists",user.getUuid()));
+			getWalletByUser(user);
+			throw new WalletAlreadyExistsException(String.format("Duplicate Wallet for user %s email %s and cuit %s",user.getUuid(), user.getEmail(), user.getCuit()));
 		} catch (UserNotFoundException | WalletNotFoundException e) {
 			var wallet = new Wallet();
 			wallet.getUser().setEmail(user.getEmail());
@@ -68,12 +68,31 @@ public class WalletService {
 		}
 	}
 	
+	@Transactional(label = "WalletTransaction", isolation = Isolation.REPEATABLE_READ)
+	public Wallet addWallet(UUID walletId, User user) throws WalletAlreadyExistsException {
+		try {
+			getWalletByUser(user);
+			throw new WalletAlreadyExistsException(String.format("Wallet %s already exists",user.getUuid()));
+		} catch (UserNotFoundException | WalletNotFoundException e) {
+			var wallet = new Wallet(walletId);
+			wallet.getUser().setEmail(user.getEmail());
+			wallet.getUser().setUuid(user.getUuid());
+			wallet.getUser().setCuit(user.getCuit());
+			return repository.save(wallet);
+		}
+	}
 	/* https://stackoverflow.com/questions/56902108/spring-data-how-to-lock-a-row-in-a-transaction-and-make-other-transactions-wait
 	 * Transaction Management to avoid dirty reads
 	 */
 	@Transactional(label = "WalletTransaction", isolation = Isolation.REPEATABLE_READ)
 	public Transaction execute(UUID uuid, Transaction transaction) {
 		 return getWallet(uuid).execute(transaction);
+	}
+	
+	@Transactional(label = "WalletTransaction", isolation = Isolation.DEFAULT, readOnly =true)
+	public Transaction preview(UUID uuid, Transaction transaction) {
+		transaction.getState().preview();
+		return getWallet(uuid).execute(transaction);
 	}
 	
 	public Wallet save(Wallet wallet) {
@@ -83,5 +102,15 @@ public class WalletService {
 	@Transactional(label = "WalletTransaction", isolation = Isolation.REPEATABLE_READ)
 	public Transaction execute(String uuid, Transaction transaction) {
 		return getWallet(uuid).execute(transaction);
+	}
+
+	public Wallet getFeeWallet() {
+		Wallet wallet;
+		try {
+			wallet = getWallet(new UUID(0,0));
+		} catch (WalletNotFoundException e) {
+			wallet = addWallet(new UUID(0,0), new User(new UUID(0,0),"feewallet@internal.com","0000"));
+		}
+		return wallet;
 	}
 }

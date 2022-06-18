@@ -1,5 +1,7 @@
 package com.up.fintech.armagedon.tp4.strategy;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Service;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
@@ -26,7 +28,7 @@ public final class InternalSendTransferServiceStrategy implements ITransactionSt
 	
 	private InternalOut internalTransfer(Wallet fromWallet, InternalOut transfer) throws UserNotFoundException, WalletNotFoundException, TransactionException, CvuException {
 		Wallet toWallet;
-		if (transfer.getAmount()<=0) 
+		if (transfer.getAmount().compareTo(BigDecimal.ZERO)<=0) 
 			throw new TransactionException("Amount to Transfer must be > 0");
 		try {
 			toWallet = transfer.getToWallet() != null ? service.getWallet(transfer.getToWallet()) : service.getWallet(transfer.getToCvu());
@@ -41,9 +43,9 @@ public final class InternalSendTransferServiceStrategy implements ITransactionSt
 			fromWallet.directWithdraw(transfer);
 			toWallet.execute(receiveTransfer);
 			
-			transfer.setAmount(transfer.getAmount()*-1);
+			transfer.setAmount(transfer.getAmount().negate());
 			repository.save(fromWallet);
-			transfer.setAmount(transfer.getAmount()*-1);
+			transfer.setAmount(transfer.getAmount().negate());
 			return transfer;
 		} catch (TransactionException e) {
 			throw e;

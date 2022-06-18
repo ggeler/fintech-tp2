@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
 import com.up.fintech.armagedon.tp4.entity.debit.Debit;
+import com.up.fintech.armagedon.tp4.entity.debit.Withdraw;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 import com.up.fintech.armagedon.tp4.misc.error.UserNotFoundException;
 import com.up.fintech.armagedon.tp4.misc.error.WalletNotFoundException;
@@ -24,13 +25,16 @@ public final class WithdrawCancelServiceStrategy implements ITransactionStrategy
 		this.repository = repository;
 	}
 	
-	private Transaction cancelWithdraw(Wallet wallet, Debit withdraw) throws UserNotFoundException, WalletNotFoundException, TransactionException {
+	private Transaction cancelWithdraw(Wallet wallet, Withdraw withdraw) throws UserNotFoundException, WalletNotFoundException, TransactionException {
 		withdraw.setWallet(wallet);
 		try {
 			withdraw.cancelWithdrawRequest();
-//			wallet.withdrawCancelRequest(withdraw);
+			var fee = withdraw.getFeeTransaction();
+			fee.setTransactionState();
 			var savedDeposit = repository.save(withdraw);
 			service.save(wallet);
+			fee.cancelWithdrawRequest();
+			repository.save(fee);
 			return savedDeposit;
 		} catch (TransactionException e) {
 			throw e;
@@ -39,7 +43,7 @@ public final class WithdrawCancelServiceStrategy implements ITransactionStrategy
 	
 	@Override
 	public Transaction execute(Wallet wallet, Transaction transaction) {
-		return cancelWithdraw(wallet, (Debit) transaction);
+		return cancelWithdraw(wallet, (Withdraw) transaction);
 	}
 
 }

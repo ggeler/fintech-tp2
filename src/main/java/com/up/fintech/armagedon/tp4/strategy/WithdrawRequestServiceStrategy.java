@@ -5,30 +5,32 @@ import org.springframework.stereotype.Service;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
-import com.up.fintech.armagedon.tp4.entity.debit.Debit;
+import com.up.fintech.armagedon.tp4.entity.debit.FeeCharge;
+import com.up.fintech.armagedon.tp4.entity.debit.Withdraw;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
-import com.up.fintech.armagedon.tp4.misc.error.UserNotFoundException;
-import com.up.fintech.armagedon.tp4.misc.error.WalletNotFoundException;
 import com.up.fintech.armagedon.tp4.repository.ITransactionRepository;
 import com.up.fintech.armagedon.tp4.service.WalletService;
 
 @Service
-public final class WithdrawServiceStrategy implements ITransactionStrategy {
+public final class WithdrawRequestServiceStrategy implements ITransactionStrategy {
 
 	private final WalletService service;
 	private final ITransactionRepository repository;
 	
 	@Autowired
-	public WithdrawServiceStrategy(WalletService service, ITransactionRepository repository) {
+	public WithdrawRequestServiceStrategy(WalletService service, ITransactionRepository repository) {
 		this.service = service;
 		this.repository = repository;
 	}
 	
-	private Transaction withdraw(Wallet wallet, Debit withdraw) throws UserNotFoundException, WalletNotFoundException, TransactionException {
+	private Transaction withdraw(Wallet wallet, Withdraw withdraw) throws TransactionException {
 		withdraw.setWallet(wallet);
 		try {
 			withdraw.withdrawRequest();
-//			wallet.withdrawRequest(withdraw);
+			var fee = new FeeCharge(withdraw,wallet);
+			fee.withdrawRequest();
+			withdraw.setFeeTransaction(fee);
+			repository.save(fee);
 			var savedDeposit = repository.save(withdraw);
 			service.save(wallet);
 			return savedDeposit;
@@ -39,7 +41,7 @@ public final class WithdrawServiceStrategy implements ITransactionStrategy {
 	
 	@Override
 	public Transaction execute(Wallet wallet, Transaction transaction) {
-		return withdraw(wallet, (Debit) transaction);
+		return withdraw(wallet, (Withdraw) transaction);
 	}
 
 }

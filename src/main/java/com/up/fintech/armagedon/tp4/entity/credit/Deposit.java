@@ -1,6 +1,7 @@
 package com.up.fintech.armagedon.tp4.entity.credit;
 
 import java.awt.image.BufferedImage;
+import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -38,7 +39,7 @@ public class Deposit extends Credit {
 	}
 	
 	@Override
-	public void setAmount(double amount) {
+	public void setAmount(BigDecimal amount) {
 //		Assert.isTrue(amount > 0, "Amount cant be zero or less");
 		super.setAmount(amount);
 	}

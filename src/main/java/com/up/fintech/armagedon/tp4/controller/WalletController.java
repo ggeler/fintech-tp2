@@ -39,7 +39,7 @@ public class WalletController {
 
 	@GetMapping()
 	public ResponseEntity<ResponseStatusWrapper<EntityModel<Wallet>>> getWalletByUser(@RequestParam UUID user) {
-		var wallet = service.getWalletByUserUuid(user);
+		var wallet = service.getWalletByUser(new User(user));
 		var model = assembler.toModel(wallet);
 		var response = new ResponseStatusWrapper<>(model, true, 0, "Wallet found");
 		return ResponseEntity.ok(response);

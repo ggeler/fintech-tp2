@@ -1,17 +1,17 @@
 package com.up.fintech.armagedon.tp4.entity;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -29,7 +29,10 @@ import com.up.fintech.armagedon.tp4.entity.state.transaction.CompleteState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.DepositState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.ITransactionState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.NewState;
+import com.up.fintech.armagedon.tp4.entity.state.transaction.FeeChargeState;
+import com.up.fintech.armagedon.tp4.entity.state.transaction.FeePayState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.PendingConfirmationState;
+import com.up.fintech.armagedon.tp4.entity.state.transaction.PreviewState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.ReceivingState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.ReceivingWithConfirmationState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.RejectedState;
@@ -65,17 +68,17 @@ public abstract class Transaction {
 	private Instant canceledTime;
 	
 //	@Setter(value = AccessLevel.PROTECTED) 
-	@JsonProperty(access = Access.READ_ONLY) @NotNull
+	@JsonProperty(access = Access.READ_ONLY) @NotNull @Enumerated(EnumType.STRING)
 	private TransactionType type;
 
-	@JsonProperty(access = Access.READ_ONLY) @NotNull
+	@JsonProperty(access = Access.READ_ONLY) @NotNull @Enumerated(EnumType.STRING)
 	private TransactionStatusEnum status;
 	
 	@JsonIgnore @Transient 
 	private ITransactionState state = new NewState(this);
 	
 	@JsonView(Views.Public.class) 
-	private double amount = 0.0;
+	private BigDecimal amount = new BigDecimal(0.0);
 	
 	@JsonProperty(access = Access.READ_ONLY) @Type(type = "org.hibernate.type.UUIDCharType") @NotNull 
 	private UUID transactionId = UUID.randomUUID();
@@ -92,7 +95,6 @@ public abstract class Transaction {
 	
 	public Transaction execute(Wallet wallet) {
 		return state.execute(wallet);
-//		return strategy.execute(wallet, this);
 	}
 
 	public void setTransactionState() {
@@ -127,6 +129,16 @@ public abstract class Transaction {
 		case WITHDRAWING:
 			state = new WithDrawingState(this);
 			break;
+		case PREVIEW:
+			state = new PreviewState(this);
+			break;
+		case CHARGINGFEE:
+			state = new FeeChargeState(this);
+			break;
+		case PAYINGFEE:
+			state = new FeePayState(this);
+			break;
+		
 		}
 	}
 }

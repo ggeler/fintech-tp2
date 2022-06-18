@@ -20,11 +20,9 @@ import com.up.fintech.armagedon.tp4.dto.ExternalTransferDto;
 import com.up.fintech.armagedon.tp4.entity.ResponseStatusWrapper;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.credit.ExternalIn;
-import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
 import com.up.fintech.armagedon.tp4.misc.component.Views;
 import com.up.fintech.armagedon.tp4.service.TransactionService;
 import com.up.fintech.armagedon.tp4.service.WalletService;
-import com.up.fintech.armagedon.tp4.strategy.ExternalReceiveTransferWithConfirmationServiceStrategy;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -48,7 +46,7 @@ public class ExternalTransferWithConfirmationController {
 	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> receiveTransfer(@PathVariable UUID wallet, @RequestBody  @JsonView(Views.Public.class) ExternalIn externalTransfer) {
 		log.info("External bank recieve transfer");
 		log.info("Request amount: "+externalTransfer.getAmount()+" - from:"+externalTransfer.getFromCvu()+" to:"+externalTransfer.getToCvu());
-		externalTransfer.setStrategy(SpringContext.getBean(ExternalReceiveTransferWithConfirmationServiceStrategy.class));
+//		externalTransfer.setStrategy(SpringContext.getBean(ExternalReceiveTransferWithConfirmationServiceStrategy.class));
 		var transfer = walletService.execute(externalTransfer.getToCvu(), externalTransfer);
 		var model = assembler.toModel(transfer);
 		var response = new ResponseStatusWrapper<>(model,true,0,"Transferencia pendiente confirmación/cancelación");

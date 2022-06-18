@@ -42,4 +42,8 @@ public class User {
 	@NonNull @NotNull @Column(unique = true) 
 	private String cuit;
 	
+	public User(UUID uuid) {
+		super();
+		this.uuid = uuid;
+	}
 }

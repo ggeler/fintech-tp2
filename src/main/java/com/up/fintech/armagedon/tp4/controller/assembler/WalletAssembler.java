@@ -1,5 +1,7 @@
 package com.up.fintech.armagedon.tp4.controller.assembler;
 
+import java.math.BigDecimal;
+
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -29,7 +31,7 @@ public class WalletAssembler implements RepresentationModelAssembler<Wallet, Ent
 			model.add(depositLink);
 		}
 		if (entity.getStatus()!=WalletStatusEnum.BLOCKED &&  entity.getStatus()!=WalletStatusEnum.BLOCKED_WITHDRAW) {
-			if (entity.getBalance()>0) {
+			if (entity.getBalance().compareTo(BigDecimal.ZERO)>0) {
 				var transferLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TransferController.class).transfer(entity.getWalletId(),null)).withRel("transfer");
 				var withdrawLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).withdraw(entity.getWalletId(),null)).withRel("withdraw");
 				model.add(transferLink);

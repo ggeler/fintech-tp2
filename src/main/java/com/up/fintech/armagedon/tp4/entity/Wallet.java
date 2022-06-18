@@ -1,5 +1,6 @@
 package com.up.fintech.armagedon.tp4.entity;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,8 +31,8 @@ import com.up.fintech.armagedon.tp4.entity.debit.Debit;
 import com.up.fintech.armagedon.tp4.entity.debit.ExternalOut;
 import com.up.fintech.armagedon.tp4.entity.debit.InternalOut;
 import com.up.fintech.armagedon.tp4.entity.state.wallet.BlockedDepositState;
-import com.up.fintech.armagedon.tp4.entity.state.wallet.BlockedWithdrawState;
 import com.up.fintech.armagedon.tp4.entity.state.wallet.BlockedState;
+import com.up.fintech.armagedon.tp4.entity.state.wallet.BlockedWithdrawState;
 import com.up.fintech.armagedon.tp4.entity.state.wallet.ClosedState;
 import com.up.fintech.armagedon.tp4.entity.state.wallet.EnabledState;
 import com.up.fintech.armagedon.tp4.entity.state.wallet.IWalletState;
@@ -37,7 +40,6 @@ import com.up.fintech.armagedon.tp4.entity.state.wallet.WalletStatusEnum;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -45,7 +47,7 @@ import lombok.Setter;
 
 @Data
 @EqualsAndHashCode
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "wallets") //Test te lo saco desde PC 
@@ -64,7 +66,7 @@ public class Wallet {
 	private Cvu cvu = new Cvu(this);
 	
 	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) 
-	private double balance = 0.0;
+	private BigDecimal balance = new BigDecimal(0.0);
 	
 	@Setter(value = AccessLevel.NONE) @JsonIgnore @OneToMany(cascade = CascadeType.ALL, mappedBy = "wallet" ) //@JoinColumn(name = "fk_wallet_id", nullable = false) 
 	private List<Transaction> transactions = new ArrayList<>();
@@ -75,16 +77,17 @@ public class Wallet {
 	@Setter(value = AccessLevel.NONE) @JsonProperty(access = Access.READ_ONLY) 
 	private Instant lastTransactionTime = transactions.stream().map(Transaction::getCreatedTime).max(Instant::compareTo).orElse(Instant.EPOCH); 
 	
-	@JsonProperty(access = Access.READ_ONLY) 
+	@JsonProperty(access = Access.READ_ONLY) @Enumerated(EnumType.STRING)
 	private WalletStatusEnum status;
 	
 	@JsonIgnore @Transient 
 	private IWalletState state = new EnabledState(this);
 	
-//	public void directDeposit(Credit transaction) throws TransactionException {
-//		balance = transaction.directDeposit();
-//	}
-
+	public Wallet(UUID walletId) {
+		super();
+		this.walletId = walletId; 
+	}
+	
 	public void confirmDepositRequest(Credit transaction) throws TransactionException {
 		balance = transaction.confirmDepositRequest();
 	}

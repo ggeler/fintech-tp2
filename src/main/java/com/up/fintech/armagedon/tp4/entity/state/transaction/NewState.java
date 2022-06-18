@@ -35,6 +35,12 @@ public class NewState extends AbstractTransactionState {
 			case INTERNAL_SEND:
 				newState = new SendingState(transaction);
 				break;
+			case FEECHARGE:
+				newState = new FeeChargeState(transaction);
+				break;
+			case FEEPAY:
+				newState = new FeePayState(transaction);
+				break;
 		}
 		transaction.setState(newState);
 	}
