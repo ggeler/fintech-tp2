@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.up.fintech.armagedon.tp4.entity.TransactionType;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
+import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 import com.up.fintech.armagedon.tp4.strategy.FeeChargeServiceStrategy;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,14 +35,14 @@ public class FeeCharge extends Debit {
 	public FeeCharge(Debit transaction, Wallet wallet) {
 		this();
 		this.origin = transaction; 
-//		setFee(transaction.getAmount()*percentage);
 		setTotal(transaction.getAmount().multiply(percentage));
 		setAmount(getTotal());
 		if (wallet.getBalance().compareTo(transaction.getAmount()) == 0) 
 			transaction.setAmount(transaction.getAmount().subtract(this.getTotal()));
 		transaction.setTotal(transaction.getAmount().add(this.getTotal()));
 		transaction.setFee(getTotal());
-		
+		if (wallet.getBalance().compareTo(transaction.getTotal())<0)
+			throw new TransactionException(String.format("Error: El total de la transacción no puede dejar el balance en negativo - Balance %f - Total %f",wallet.getBalance(),transaction.getTotal()));
 		setWallet(wallet);
 	}
 	

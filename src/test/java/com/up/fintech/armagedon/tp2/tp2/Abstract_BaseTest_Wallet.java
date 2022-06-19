@@ -148,4 +148,14 @@ abstract class Abstract_BaseTest_Wallet {
 				.andReturn();
 		variables.setTransaction(result);
 	}
+	void withdrawRequest400(BigDecimal amount, BigDecimal fee) throws Exception {
+		log.info("inicio confirmación de retiro a wallet -> 200");
+		var link = variables.getWalletLinkRel("withdraw");
+		var result = mvc.perform(post(link) 
+				.content("{\"amount\":"+amount.doubleValue()+"}").contentType(MediaType.APPLICATION_JSON).characterEncoding(Charset.defaultCharset()))
+				.andExpect(status().isBadRequest())
+				.andReturn();
+		variables.setTransaction(result);
+		log.info("Fin confirmación de retiro a wallet -> 200");
+	}
 }

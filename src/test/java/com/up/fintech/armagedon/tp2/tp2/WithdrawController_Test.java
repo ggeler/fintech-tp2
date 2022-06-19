@@ -117,11 +117,28 @@ class WithdrawController_Test extends Abstract_BaseTest_Wallet {
 	void testWithdratController_getQrFo_then200() throws Exception {
 		log.info("***Test pido QR deposito en wallet -> 200");
 		checkWallet_then200_thenupdateJsonWallet(wallet);
+		depositAmountToWallet(amount);
+		confirmDepositToWallet(amount);
+		checkWallet_then200_thenupdateJsonWallet(wallet);
 		var balance= BigDecimal.valueOf(variables.getWallet().get("balance").asDouble());
 		withdrawRequest(balance, balance);
 		var link = variables.getTransactionLinkRel("qr");
 		mvc.perform(get(link))
 				.andExpect(status().isOk());
+		log.info("***Fin Test pido QR deposito en wallet -> 200");
+	}
+	
+	@Test 
+	@Order(7)
+	void testWithdratController_withdraLimit_then400() throws Exception {
+		log.info("***Test pido QR deposito en wallet -> 200");
+		checkWallet_then200_thenupdateJsonWallet(wallet);
+		depositAmountToWallet(amount);
+		confirmDepositToWallet(amount);
+		checkWallet_then200_thenupdateJsonWallet(wallet);
+		var balance= BigDecimal.valueOf(variables.getWallet().get("balance").asDouble());
+		withdrawRequest400(balance.multiply(BigDecimal.valueOf(0.99)), balance.multiply(BigDecimal.valueOf(0.99)));
+		
 		log.info("***Fin Test pido QR deposito en wallet -> 200");
 	}
 }
