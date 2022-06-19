@@ -1,10 +1,16 @@
 package com.up.fintech.armagedon.tp2.tp2;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.math.BigDecimal;
+import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.UUID;
 
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -17,11 +23,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.java.Log;
 
@@ -43,33 +49,103 @@ abstract class Abstract_BaseTest_Wallet {
 	String email;
 	String cuit;
 	
-	JsonNode links;
-	
 	@Test
 	@Order(0)
-	void baseTest_walletController_createNewWallet_then201() throws Exception {
+	void createSelfNewWallet_then201() throws Exception {
 		log.info("Base test - crear wallet");
 		var result = mvc.perform(post("/fintech/wallet")
 				.queryParam("user", userUuid.toString()).queryParam("email", email).queryParam("cuit", cuit))
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.data.walletId").exists())
-//				.andExpect(jsonPath("$.data.walletId").)
 				.andReturn();
-		
-		var json = new ObjectMapper().readTree(result.getResponse().getContentAsString());
-		var jsonNode = json.get("data");
-		variables.setJsonWallet(jsonNode);
-//		variables.setLink(jsonNode.get("links"));
+		variables.setWallet(result);
 		log.info("Fin Base test - crear wallet "+userUuid.toString()+" "+email+" "+cuit);
 	}
 	
-	void baseTest_walletController_checkExistingWallet_then200_thenupdateJsonWallet() throws Exception {
+	void checkSelfWallet_then200_thenupdateJsonWallet() throws Exception {
 		log.info("Leo wallet para obenetr links wallet -> 201");
-		var link = variables.getLinkRel(variables.getJsonWallet().get("links"), "self");
+		var link = variables.getWalletLinkRel("self");
 		var result = mvc.perform(get(link))
 			.andExpect(status().isOk())
 			.andReturn();
-		var json = new ObjectMapper().readTree(result.getResponse().getContentAsString());
-		variables.setJsonWallet(json.get("data"));
+		variables.setWallet(result);
+	}
+	
+	void checkWallet_then200_thenupdateJsonWallet(UUID wallet) throws Exception {
+		log.info("Leo wallet para obenetr links wallet -> 201");
+		var result = mvc.perform(get("/fintech/wallet/{wallet}",wallet))
+			.andExpect(status().isOk())
+			.andReturn();
+		variables.setWallet(result);
+	}
+	void depositAmountToWallet(BigDecimal amount) throws Exception {
+		log.info("Envío solicitud de deposito a wallet -> 201");
+		var link = variables.getWalletLinkRel("deposit");
+		var result = mvc.perform(post(link)
+				.content("{\"amount\":"+amount.doubleValue()+"}").contentType(MediaType.APPLICATION_JSON).characterEncoding(Charset.defaultCharset()))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("data.amount", is(amount.doubleValue())))
+				.andReturn();
+		variables.setTransaction(result);
+		log.info("Fin  solicitud de deposito a wallet -> 201");
+	}
+	void depositNegativeAmountToWallet(BigDecimal amount) throws Exception {
+		log.info("Envío solicitud de deposito a wallet -> 201");
+		var link = variables.getWalletLinkRel("deposit");
+		var result = mvc.perform(post(link)
+				.content("{\"amount\":"+amount.negate().doubleValue()+"}").contentType(MediaType.APPLICATION_JSON).characterEncoding(Charset.defaultCharset()))
+				.andExpect(status().isBadRequest())
+				.andReturn();
+		variables.setTransaction(result);
+		log.info("Fin  solicitud de deposito a wallet -> 201");
+	}
+	void confirmDepositToWallet(BigDecimal amount) throws Exception {
+		log.info("inicio confirmación de deposito a wallet -> 200");
+		var link = variables.getTransactionLinkRel("confirm");
+		var result = mvc.perform(put(link))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("data.amount", is(amount.doubleValue())))
+			.andReturn();
+		variables.setTransaction(result);
+		log.info("fin confirmación de deposito a wallet -> 200");
+	}
+	void cancelDepositToWallet() throws Exception {
+		log.info("inicio cancelacion de deposito a wallet -> 200");
+		var link = variables.getTransactionLinkRel("cancel");
+		var result = mvc.perform(delete(link))
+			.andExpect(status().isOk())
+			.andReturn();
+		variables.setTransaction(result);
+		log.info("fin cancelación de deposito a wallet -> 200");
+	}
+	
+	void cancelDepositToWallet_then400(String link) throws Exception {
+		log.info("inicio cancelacion de deposito a wallet -> 200");
+		
+		var result = mvc.perform(delete(link))
+			.andExpect(status().isBadRequest())
+			.andReturn();
+		variables.setTransaction(result);
+		log.info("fin cancelación de deposito a wallet -> 200");
+	}
+	void withdrawRequest(BigDecimal amount, BigDecimal fee) throws Exception {
+		log.info("inicio confirmación de retiro a wallet -> 200");
+		var link = variables.getWalletLinkRel("withdraw");
+		var result = mvc.perform(post(link) 
+				.content("{\"amount\":"+amount.doubleValue()+"}").contentType(MediaType.APPLICATION_JSON).characterEncoding(Charset.defaultCharset()))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("data.total", is(fee.doubleValue())))
+				.andReturn();
+		variables.setTransaction(result);
+		log.info("Fin confirmación de retiro a wallet -> 200");
+	}
+	
+	void withdrawConfirmation(BigDecimal amount, BigDecimal fee) throws Exception {
+		var link = variables.getTransactionLinkRel("confirm");
+		var result = mvc.perform(put(link))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("data.total", is(fee.doubleValue())))
+				.andReturn();
+		variables.setTransaction(result);
 	}
 }

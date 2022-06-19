@@ -126,11 +126,16 @@ public class TransactionService {
 		var transaction = getTransaction(transactionId);
 		var wallet = service.getWallet(walletId);
 		
-		if (transaction instanceof Deposit || transaction instanceof Withdraw)
+		if (transaction instanceof Deposit || transaction instanceof Withdraw )
 		{
+			BufferedImage qr = null;
 			transaction.setStrategy(SpringContext.getBean(QrServiceStrategy.class));
-			var qr = ((Deposit) wallet.execute(transaction)).getQr();
-			return qr;
+			if (transaction instanceof Deposit) { 
+				qr = ((Deposit) wallet.execute(transaction)).getQr();
+			} else if (transaction instanceof Withdraw) {
+				qr = ((Withdraw) wallet.execute(transaction)).getQr();
+			}
+			return qr;	
 		} else
 			throw new TransactionException("Debe ser deposito o retiro para obtener QR");
 	}

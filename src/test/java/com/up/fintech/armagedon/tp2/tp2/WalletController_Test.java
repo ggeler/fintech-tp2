@@ -27,7 +27,7 @@ public class WalletController_Test extends Abstract_BaseTest_Wallet {
 	@Order(1)
 	void testWalletController_checkExistingWallet_then200() throws Exception {
 //		var tmp = variables.getWalletId();
-		var link = variables.getLinkRel(variables.getJsonWallet().get("links"), "self");
+		var link = variables.getWalletLinkRel("self");
 		mvc.perform(get(link))
 			.andExpect(status().isOk());
 	}

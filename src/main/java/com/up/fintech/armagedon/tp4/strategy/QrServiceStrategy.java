@@ -45,7 +45,10 @@ public final class QrServiceStrategy implements ITransactionStrategy {
 		BufferedImage qr;
 		try {
 			qr = getQr(wallet, transaction);
-			((Deposit) transaction).setQr(qr);
+			if (transaction instanceof Deposit)
+				((Deposit) transaction).setQr(qr);
+			if (transaction instanceof Withdraw)
+				((Withdraw) transaction).setQr(qr);
 			return transaction;
 		} catch (WriterException e) {
 			throw new TransactionException("No se puede generar QR");
