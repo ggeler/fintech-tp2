@@ -14,7 +14,9 @@ public enum TransactionStatusEnum {
 	PENDING_CONFIRMATION("Pendiente de Confirmacion"),
 	PREVIEW("Previsualización"),
 	CHARGINGFEE("Cobrando fee"),
-	PAYINGFEE("Pagando fee");
+	PAYINGFEE("Pagando fee"),
+	INVALIDSTATE("Estado invalido - revisar"), 
+	GAMBLING("Apostando");
 	
 	public String status;
 	

@@ -10,12 +10,14 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
+import com.up.fintech.armagedon.tp4.controller.BetController;
 import com.up.fintech.armagedon.tp4.controller.DepositController;
 import com.up.fintech.armagedon.tp4.controller.TransactionController;
 import com.up.fintech.armagedon.tp4.controller.WithdrawController;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.TransactionType;
 import com.up.fintech.armagedon.tp4.entity.credit.Deposit;
+import com.up.fintech.armagedon.tp4.entity.debit.Bet;
 import com.up.fintech.armagedon.tp4.entity.debit.Withdraw;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.TransactionStatusEnum;
 import com.up.fintech.armagedon.tp4.entity.state.wallet.WalletStatusEnum;
@@ -55,9 +57,17 @@ public class TransactionAssembler implements RepresentationModelAssembler<Transa
 				model.add(confirmLink,cancelLink, qrLink);
 			}
 		}
+		
+		if (entity.getWallet().getStatus()!=WalletStatusEnum.BLOCKED && entity.getWallet().getStatus()!=WalletStatusEnum.BLOCKED_WITHDRAW && 
+				entity.getWallet().getStatus()!=WalletStatusEnum.CLOSED ) {
+			if (entity.getType() == TransactionType.BET && entity.getStatus() == TransactionStatusEnum.PENDING_CONFIRMATION) {
+				var confirmLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(BetController.class).confirm(entity.getWallet().getWalletId(),entity.getTransactionId(),((Bet) entity).getConfirmationCode())).withRel("confirm");
+				var cancelLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(BetController.class).cancel(entity.getWallet().getWalletId(),entity.getTransactionId(),((Bet) entity).getConfirmationCode())).withRel("cancel");
+				model.add(confirmLink,cancelLink);
+			}
+		}
 		return model;
 	}
-	
 	
 	public PagedModel<EntityModel<EntityModel<Transaction>>> toModel(Page<EntityModel<Transaction>> entity) {
 		return pagedAssembler.toModel(entity);

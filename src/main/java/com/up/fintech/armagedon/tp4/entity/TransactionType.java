@@ -10,7 +10,9 @@ public enum TransactionType {
 	EXTERNAL_RECEIVE("Recibo desde Entidad Externa"),
 	EXTERNAL_RECEIVE_WITHCONFIRM("Recibo externo con confirmación"),
 	FEECHARGE("Cargos por Comisión"),
-	FEEPAY("Cobro por Comisión");
+	FEEPAY("Cobro por Comisión"), 
+	BET("Ingreso Apuesta"),
+	BETBAG("Recaudación por apuesta");
 	
 	public final String value;
 	

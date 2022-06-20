@@ -1,6 +1,7 @@
 package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
+import com.up.fintech.armagedon.tp4.entity.debit.Bet;
 import com.up.fintech.armagedon.tp4.entity.debit.Withdraw;
 
 public abstract class AbstractTransactionState implements ITransactionState {
@@ -24,7 +25,7 @@ public abstract class AbstractTransactionState implements ITransactionState {
 	
 	@Override
 	public void preview() {
-		if (transaction instanceof Withdraw)
+		if (transaction instanceof Withdraw || transaction instanceof Bet)
 			this.transaction.setState(new PreviewState(transaction));
 	}
 }

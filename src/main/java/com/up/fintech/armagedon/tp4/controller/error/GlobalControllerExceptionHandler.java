@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.up.fintech.armagedon.tp4.controller.DepositController;
 import com.up.fintech.armagedon.tp4.controller.BORRARExternalTransferController;
+import com.up.fintech.armagedon.tp4.controller.BetController;
 import com.up.fintech.armagedon.tp4.controller.TransactionController;
 import com.up.fintech.armagedon.tp4.controller.TransferController;
 import com.up.fintech.armagedon.tp4.controller.WalletController;
@@ -27,7 +28,7 @@ import com.up.fintech.armagedon.tp4.misc.error.WalletAlreadyExistsException;
 import com.up.fintech.armagedon.tp4.misc.error.WalletNotFoundException;
 
 @RestControllerAdvice(assignableTypes = {DepositController.class, BORRARExternalTransferController.class, WalletController.class, TransferController.class, TransactionController.class
-		, WithdrawController.class})
+		, WithdrawController.class, BetController.class})
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler({ExternalBankException.class, CvuException.class, WalletNotFoundException.class, UserNotFoundException.class})

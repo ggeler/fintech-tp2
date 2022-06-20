@@ -3,9 +3,9 @@ package com.up.fintech.armagedon.tp4.entity.state.transaction;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
 
-public class PendingConfirmationState extends AbstractTransactionState {
+public class GamblingState extends AbstractTransactionState {
 
-	public PendingConfirmationState(Transaction transaction) {
+	public GamblingState(Transaction transaction) {
 		super(transaction);
 	}
 
@@ -14,17 +14,8 @@ public class PendingConfirmationState extends AbstractTransactionState {
 		var type = transaction.getType();
 		AbstractTransactionState newState = null;
 		switch (type) {
-			case EXTERNAL_RECEIVE_WITHCONFIRM:
-			case EXTERNAL_SEND:
-			case INTERNAL_RECEIVE:
-			case INTERNAL_SEND:
-			case WITHDRAW:
-			case DEPOSIT:
-			case FEECHARGE:
-			case FEEPAY:
 			case BET:
-			case BETBAG:
-				newState = new CompleteState(transaction);
+				newState = new PendingConfirmationState(transaction);
 				break;
 			default:
 				newState = new InvalidState(transaction);
@@ -35,12 +26,12 @@ public class PendingConfirmationState extends AbstractTransactionState {
 
 	@Override
 	public TransactionStatusEnum getState() {
-		return TransactionStatusEnum.PENDING_CONFIRMATION;
+		return TransactionStatusEnum.GAMBLING;
 	}
 
 	@Override
 	public Transaction execute(Wallet wallet) {
-		return this.transaction.getStrategy().execute(wallet, this.transaction);
+		return null;
 	}
 
 }

@@ -7,6 +7,7 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
+import com.up.fintech.armagedon.tp4.controller.BetController;
 import com.up.fintech.armagedon.tp4.controller.DepositController;
 import com.up.fintech.armagedon.tp4.controller.TransactionController;
 import com.up.fintech.armagedon.tp4.controller.TransferController;
@@ -34,8 +35,10 @@ public class WalletAssembler implements RepresentationModelAssembler<Wallet, Ent
 			if (entity.getBalance().compareTo(BigDecimal.ZERO)>0) {
 				var transferLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TransferController.class).transfer(entity.getWalletId(),null)).withRel("transfer");
 				var withdrawLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WithdrawController.class).withdraw(entity.getWalletId(),null)).withRel("withdraw");
+				var betLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(BetController.class).preview(entity.getWalletId(),null)).withRel("bet");
 				model.add(transferLink);
 				model.add(withdrawLink);
+				model.add(betLink);
 			}
 		}
 		return model;

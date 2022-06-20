@@ -14,16 +14,16 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-public class FeePayment extends Credit {
+public class BetBag extends Credit {
 
 	@OneToOne @JsonIgnore
 	private Debit origin;
 	
-	private FeePayment() {
-		super.setType(TransactionType.FEEPAY);
+	private BetBag() {
+		super.setType(TransactionType.BETBAG);
 	}
 	
-	public FeePayment(Debit transaction, Wallet wallet) {
+	public BetBag(Debit transaction, Wallet wallet) {
 		this();
 		this.origin = transaction; 
 		

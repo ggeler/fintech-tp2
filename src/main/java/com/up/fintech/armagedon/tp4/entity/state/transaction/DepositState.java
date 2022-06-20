@@ -15,6 +15,7 @@ public class DepositState extends AbstractTransactionState {
 		AbstractTransactionState newState = null;
 		switch (type) {
 			case DEPOSIT:
+			case BETBAG:
 				newState = new PendingConfirmationState(transaction);
 				break;
 			default:

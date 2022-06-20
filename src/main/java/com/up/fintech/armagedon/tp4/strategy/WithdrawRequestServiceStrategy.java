@@ -8,17 +8,17 @@ import com.up.fintech.armagedon.tp4.entity.Wallet;
 import com.up.fintech.armagedon.tp4.entity.debit.FeeCharge;
 import com.up.fintech.armagedon.tp4.entity.debit.Withdraw;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
-import com.up.fintech.armagedon.tp4.repository.ITransactionRepository;
+import com.up.fintech.armagedon.tp4.service.TransactionService;
 import com.up.fintech.armagedon.tp4.service.WalletService;
 
 @Service
 public final class WithdrawRequestServiceStrategy implements ITransactionStrategy {
 
 	private final WalletService service;
-	private final ITransactionRepository repository;
+	private final TransactionService repository;
 	
 	@Autowired
-	public WithdrawRequestServiceStrategy(WalletService service, ITransactionRepository repository) {
+	public WithdrawRequestServiceStrategy(WalletService service, TransactionService repository) {
 		this.service = service;
 		this.repository = repository;
 	}
@@ -30,7 +30,6 @@ public final class WithdrawRequestServiceStrategy implements ITransactionStrateg
 			var fee = new FeeCharge(withdraw,wallet);
 			fee.withdrawRequest();
 			withdraw.setFeeTransaction(fee);
-//			withdraw.setFee(fee.getTotal());
 			repository.save(fee);
 			var savedDeposit = repository.save(withdraw);
 			service.save(wallet);

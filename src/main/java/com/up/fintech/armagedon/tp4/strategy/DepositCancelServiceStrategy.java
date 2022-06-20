@@ -9,19 +9,20 @@ import com.up.fintech.armagedon.tp4.entity.credit.Credit;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 import com.up.fintech.armagedon.tp4.misc.error.UserNotFoundException;
 import com.up.fintech.armagedon.tp4.misc.error.WalletNotFoundException;
-import com.up.fintech.armagedon.tp4.repository.ITransactionRepository;
+import com.up.fintech.armagedon.tp4.service.TransactionService;
 import com.up.fintech.armagedon.tp4.service.WalletService;
 
 @Service
 public final class DepositCancelServiceStrategy implements ITransactionStrategy {
 
-	private final WalletService service;
-	private final ITransactionRepository repository;
+	private final WalletService walletService;
+	private final TransactionService transactionService;
 	
 	@Autowired
-	public DepositCancelServiceStrategy(WalletService service, ITransactionRepository repository) {
-		this.service = service;
-		this.repository = repository;
+	public DepositCancelServiceStrategy(WalletService walletService, TransactionService transactionService) {
+		this.walletService = walletService;
+		this.transactionService = transactionService;
+
 	}
 	
 	private Transaction cancelDeposit(Wallet wallet, Credit deposit) throws UserNotFoundException, WalletNotFoundException, TransactionException {
@@ -29,8 +30,8 @@ public final class DepositCancelServiceStrategy implements ITransactionStrategy 
 		try {
 			deposit.cancelDepositRequest();
 //			wallet.cancelDepositRequest(deposit);
-			var savedDeposit = repository.save(deposit);
-			service.save(wallet);
+			var savedDeposit = transactionService.save(deposit);
+			walletService.save(wallet);
 			return savedDeposit;
 		} catch (TransactionException e) {
 			throw e;

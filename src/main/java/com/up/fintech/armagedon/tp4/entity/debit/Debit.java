@@ -5,8 +5,6 @@ import java.time.Instant;
 
 import javax.persistence.Entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.TransactionStatusEnum;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;

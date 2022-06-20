@@ -7,7 +7,7 @@ public sealed interface ITransactionStrategy permits DepositServiceStrategy,
 	InternalSendTransferServiceStrategy, ExternalSendTransferServiceStrategy, ExternalReceiveTransferWithConfirmationServiceStrategy, 
 	ExternalReceiveTransferConfirmationServiceStrategy, ExternalReceiveTransferCancelServiceStrategy, WithdrawRequestServiceStrategy, 
 	WithdrawCancelServiceStrategy, WithdrawConfirmationServiceStrategy, DepositCancelServiceStrategy, DepositConfirmServiceStrategy, 
-	QrServiceStrategy, InternalReceiveServiceStrategy, FeeChargeServiceStrategy, WithdrawPreviewServiceStrategy {
+	QrServiceStrategy, InternalReceiveServiceStrategy, FeeChargeServiceStrategy, WithdrawPreviewServiceStrategy, BetPreviewReceiveServiceStrategy, BetRequestReceiveServiceStrategy, BetConfirmServiceStrategy, BetCancelServiceStrategy {
 
 	Transaction execute(Wallet wallet, Transaction transaction);
 }

@@ -1,21 +1,19 @@
 package com.up.fintech.armagedon.tp4.entity.debit;
 
-import java.awt.image.BufferedImage;
-import java.math.BigDecimal;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.up.fintech.armagedon.tp4.entity.IQr;
 import com.up.fintech.armagedon.tp4.entity.TransactionType;
+import com.up.fintech.armagedon.tp4.entity.bet.Event;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.PreviewState;
 import com.up.fintech.armagedon.tp4.misc.component.RandomConfirmationCode;
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
-import com.up.fintech.armagedon.tp4.strategy.WithdrawRequestServiceStrategy;
+import com.up.fintech.armagedon.tp4.strategy.BetRequestReceiveServiceStrategy;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -25,37 +23,26 @@ import lombok.Setter;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Entity
-public class Withdraw extends Debit implements IQr {
-	
-	private static final BigDecimal comissionFee = BigDecimal.valueOf(0.055);   
-	
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Bet extends Debit {
+
 	@Setter(value = AccessLevel.NONE) @JsonInclude(Include.NON_NULL)
 	private String confirmationCode;
 	
-	@Transient @JsonIgnore
-	private BufferedImage qr;
+	@ManyToOne(cascade = CascadeType.ALL) private Event event;
+	private int awayTeamScore;
+	private int homeTeamScore;
 	
-	@OneToOne @JsonIgnore
-	private FeeCharge feeTransaction;
-	
-	public Withdraw() {
+	public Bet() {
 		super();
-		super.setType(TransactionType.WITHDRAW);
-		setStrategy(SpringContext.getBean(WithdrawRequestServiceStrategy.class));
-//		setNote("Retiro por Ventanilla Completedo Correctamente");
-		super.setFeeCharge(comissionFee);
+		super.setType(TransactionType.BET);
+		setStrategy(SpringContext.getBean(BetRequestReceiveServiceStrategy.class));
 	}
-	
-	@Override
-	public void setAmount(BigDecimal amount) {
-//		Assert.isTrue(amount > 0, "Amount cant be zero or less");
-		super.setAmount(amount);
-	}
-	
+
 	public void setConfirmationCode() {
 		confirmationCode = RandomConfirmationCode.generateRandomCode();
 	}
-
+	
 	@Override
 	public void withdrawRequest() {
 		if (!(getState() instanceof PreviewState))

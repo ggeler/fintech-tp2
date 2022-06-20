@@ -109,7 +109,17 @@ public class WalletService {
 		try {
 			wallet = getWallet(new UUID(0,0));
 		} catch (WalletNotFoundException e) {
-			wallet = addWallet(new UUID(0,0), new User(new UUID(0,0),"feewallet@internal.com","0000"));
+			wallet = addWallet(new UUID(0,0), new User(new UUID(0,0),"feepayment@wallet.com","0000"));
+		}
+		return wallet;
+	}
+	
+	public Wallet getBetBagWallet() {
+		Wallet wallet;
+		try {
+			wallet = getWallet(new UUID(1,1));
+		} catch (WalletNotFoundException e) {
+			wallet = addWallet(new UUID(1,1), new User(new UUID(1,1),"betbag@wallet.com","1111"));
 		}
 		return wallet;
 	}

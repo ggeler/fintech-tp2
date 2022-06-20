@@ -4,11 +4,17 @@ import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 public class InvalidState extends AbstractTransactionState {
 
-	public InvalidState(Transaction transaction) {
+	public InvalidState(Transaction transaction) throws TransactionException {
 		super(transaction);
-		// TODO Auto-generated constructor stub
+		log.error(String.format("Entrando en estádo invalidado - %s %s %s", transaction.getTransactionId(), transaction.getStatus(), transaction.getType()));
+		var msg = String.format("Entrando en estádo invalidado - %s %s %s", transaction.getTransactionId(), transaction.getStatus(), transaction.getType());
+		new TransactionException(msg).printStackTrace();
+		throw new TransactionException(msg);
 	}
 
 	@Override
@@ -19,8 +25,7 @@ public class InvalidState extends AbstractTransactionState {
 
 	@Override
 	public TransactionStatusEnum getState() {
-		// TODO Auto-generated method stub
-		return null;
+		return TransactionStatusEnum.INVALIDSTATE;
 	}
 
 	@Override

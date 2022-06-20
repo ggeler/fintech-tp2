@@ -41,6 +41,15 @@ public class NewState extends AbstractTransactionState {
 			case FEEPAY:
 				newState = new FeePayState(transaction);
 				break;
+			case BET:
+				newState = new GamblingState(transaction);
+				break;
+			case BETBAG:
+				newState = new DepositState(transaction);
+				break;
+			default:
+				newState = new InvalidState(transaction);
+				break;
 		}
 		transaction.setState(newState);
 	}

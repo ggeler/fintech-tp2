@@ -5,22 +5,21 @@ import org.springframework.stereotype.Service;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
-import com.up.fintech.armagedon.tp4.entity.debit.Debit;
 import com.up.fintech.armagedon.tp4.entity.debit.Withdraw;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 import com.up.fintech.armagedon.tp4.misc.error.UserNotFoundException;
 import com.up.fintech.armagedon.tp4.misc.error.WalletNotFoundException;
-import com.up.fintech.armagedon.tp4.repository.ITransactionRepository;
+import com.up.fintech.armagedon.tp4.service.TransactionService;
 import com.up.fintech.armagedon.tp4.service.WalletService;
 
 @Service
 public final class WithdrawCancelServiceStrategy implements ITransactionStrategy {
 
 	private final WalletService service;
-	private final ITransactionRepository repository;
+	private final TransactionService repository;
 	
 	@Autowired
-	public WithdrawCancelServiceStrategy(WalletService service, ITransactionRepository repository) {
+	public WithdrawCancelServiceStrategy(WalletService service, TransactionService repository) {
 		this.service = service;
 		this.repository = repository;
 	}

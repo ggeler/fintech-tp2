@@ -28,9 +28,11 @@ import com.up.fintech.armagedon.tp4.entity.state.transaction.CancelState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.CompleteState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.DepositState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.ITransactionState;
+import com.up.fintech.armagedon.tp4.entity.state.transaction.InvalidState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.NewState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.FeeChargeState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.FeePayState;
+import com.up.fintech.armagedon.tp4.entity.state.transaction.GamblingState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.PendingConfirmationState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.PreviewState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.ReceivingState;
@@ -77,7 +79,7 @@ public abstract class Transaction {
 	@JsonIgnore @Transient 
 	private ITransactionState state = new NewState(this);
 	
-	@JsonView(Views.Public.class) 
+	@JsonView(Views.Public.class) @NotNull
 	private BigDecimal amount = new BigDecimal(0.0);
 	
 	@JsonProperty(access = Access.READ_ONLY) @Type(type = "org.hibernate.type.UUIDCharType") @NotNull 
@@ -160,7 +162,12 @@ public abstract class Transaction {
 		case PAYINGFEE:
 			state = new FeePayState(this);
 			break;
-		
+		case GAMBLING:
+			state = new GamblingState(this);
+			break;
+		case INVALIDSTATE:
+			state = new InvalidState(this);
+			break;
 		}
 	}
 }

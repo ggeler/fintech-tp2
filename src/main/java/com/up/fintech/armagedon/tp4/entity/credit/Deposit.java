@@ -9,6 +9,7 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.up.fintech.armagedon.tp4.entity.IQr;
 import com.up.fintech.armagedon.tp4.entity.TransactionType;
 import com.up.fintech.armagedon.tp4.misc.component.RandomConfirmationCode;
 import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
@@ -23,7 +24,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 //@Table(name = "deposits")
-public class Deposit extends Credit {
+public class Deposit extends Credit implements IQr {
 	
 	@Setter(value = AccessLevel.NONE) @JsonInclude(Include.NON_NULL)
 	private String confirmationCode;

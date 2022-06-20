@@ -46,7 +46,7 @@ public class WithdrawController {
 		var preview = walletService.preview(wallet, withdraw);
 		//var model = assembler.toModel(savedWithdraw);
 		var response = new ResponseStatusWrapper<>(preview,true,0,"Previsualización de retiro");
-		return ResponseEntity.created(null).body(response);
+		return ResponseEntity.ok(response);
 	}
 	
 	@PostMapping("")
