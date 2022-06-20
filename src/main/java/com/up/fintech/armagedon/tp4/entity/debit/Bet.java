@@ -29,7 +29,8 @@ public class Bet extends Debit {
 	@Setter(value = AccessLevel.NONE) @JsonInclude(Include.NON_NULL)
 	private String confirmationCode;
 	
-	@ManyToOne(cascade = CascadeType.ALL) private Event event;
+	@ManyToOne(cascade = CascadeType.ALL) 
+	private Event event;
 	private int awayTeamScore;
 	private int homeTeamScore;
 	
@@ -49,4 +50,5 @@ public class Bet extends Debit {
 			this.setConfirmationCode();
 		super.withdrawRequest();
 	}
+
 }

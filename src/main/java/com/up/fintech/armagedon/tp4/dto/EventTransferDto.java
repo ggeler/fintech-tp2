@@ -5,7 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ExternalTransferDto {
-	private String confirmation;
+public class EventTransferDto {
 
+	private long eventKey;
+	private int homeTeamResult;
+	private int awayTeamResult;
 }

@@ -61,30 +61,6 @@ public class BetController {
 		}
 	}
 	
-//	@GetMapping("/all/open")
-//	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> allBetsOpen(@PathVariable UUID wallet, Pageable pageable) {
-//		var transactions = betService.getAllBetsOpened(wallet, pageable);
-//		return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
-//	}
-//	
-//	@GetMapping("/all/closed")
-//	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> allBetsClosed(@PathVariable UUID wallet, Pageable pageable) {
-//		var transactions = betService.getAllBetsClosed(wallet, pageable);
-//		return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
-//	}
-//	
-//	@GetMapping("/all/pending")
-//	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> allBetsPending(@PathVariable UUID wallet, Pageable pageable) {
-//		var transactions = betService.getAllBetsPendingConfirmation(wallet, pageable);
-//		return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
-//	}
-//	
-//	@GetMapping("/all/cancelled")
-//	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> allBetsCancelled(@PathVariable UUID wallet, Pageable pageable) {
-//		var transactions = betService.getAllBetsCanceled(wallet, pageable);
-//		return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
-//	}
-	
 	@PostMapping("")
 	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> request(@PathVariable UUID wallet, @RequestBody Bet bet) {
 		var request = walletService.execute(wallet, bet);

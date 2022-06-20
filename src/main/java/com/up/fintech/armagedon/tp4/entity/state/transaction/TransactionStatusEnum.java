@@ -16,7 +16,7 @@ public enum TransactionStatusEnum {
 	CHARGINGFEE("Cobrando fee"),
 	PAYINGFEE("Pagando fee"),
 	INVALIDSTATE("Estado invalido - revisar"), 
-	GAMBLING("Apostando"), OPEN("Apuesta abierta"), CLOSED("Apuesta cerrada");
+	GAMBLING("Apostando"), OPEN("Apuesta abierta"), CLOSED("Apuesta cerrada"), WIN("Ganó apuesta"), LOSE("Perdió Apuesta"), PAYINGWINNER("Pagando al ganador");
 	
 	public String status;
 	

@@ -1,14 +1,12 @@
 package com.up.fintech.armagedon.tp4.entity.state.transaction;
 
 import com.up.fintech.armagedon.tp4.entity.Transaction;
-import com.up.fintech.armagedon.tp4.entity.TransactionType;
 import com.up.fintech.armagedon.tp4.entity.Wallet;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 
-public class OpenBetState extends AbstractTransactionState {
-	public OpenBetState(Transaction transaction)  {
+public class WinBetState extends AbstractTransactionState {
+	public WinBetState(Transaction transaction)  {
 		super(transaction);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -23,14 +21,9 @@ public class OpenBetState extends AbstractTransactionState {
 		transaction.setState(newState);
 	}
 
-	public void win() {
-		if (transaction.getType()==TransactionType.BET) {
-			transaction.setState(new WinBetState(transaction));
-		}
-	}
 	@Override
 	public TransactionStatusEnum getState() {
-		return TransactionStatusEnum.OPEN;
+		return TransactionStatusEnum.WIN;
 	}
 
 	@Override

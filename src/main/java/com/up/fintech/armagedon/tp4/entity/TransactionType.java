@@ -12,7 +12,7 @@ public enum TransactionType {
 	FEECHARGE("Cargos por Comisión"),
 	FEEPAY("Cobro por Comisión"), 
 	BET("Ingreso Apuesta"),
-	BETBAG("Recaudación por apuesta");
+	BETBAG("Recaudación por apuesta"), PAYBET("Pago de Apuesta"), DEBITBET("Debito de apuesta");
 	
 	public final String value;
 	

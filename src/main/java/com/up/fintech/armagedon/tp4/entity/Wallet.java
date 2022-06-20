@@ -27,7 +27,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.up.fintech.armagedon.tp4.entity.credit.Credit;
+import com.up.fintech.armagedon.tp4.entity.credit.PayBet;
+import com.up.fintech.armagedon.tp4.entity.debit.Bet;
 import com.up.fintech.armagedon.tp4.entity.debit.Debit;
+import com.up.fintech.armagedon.tp4.entity.debit.DebitBet;
 import com.up.fintech.armagedon.tp4.entity.debit.ExternalOut;
 import com.up.fintech.armagedon.tp4.entity.debit.InternalOut;
 import com.up.fintech.armagedon.tp4.entity.state.wallet.BlockedDepositState;
@@ -104,6 +107,15 @@ public class Wallet {
 		balance = transaction.confirmWithdrawRequest();
 	}
 	
+	public void payWinningBet(DebitBet debitWalletTransaction) {
+		balance = debitWalletTransaction.directWithdraw();
+	}
+	
+
+	public void receiveWinningBet(PayBet credit) {
+		balance = credit.directDeposit();
+	}
+	
 	public Transaction execute(Transaction transaction) throws TransactionException {
 		if (transaction instanceof InternalOut tmp) {
 			if (tmp.getToCvu()!=null && !tmp.getToCvu().isEmpty() && !Cvu.isInternal(tmp.getToCvu())) {
@@ -134,4 +146,5 @@ public class Wallet {
 			}
 		}
 	}
+	
 }

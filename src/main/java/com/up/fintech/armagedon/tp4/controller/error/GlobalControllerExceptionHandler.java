@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.up.fintech.armagedon.tp4.controller.DepositController;
+import com.up.fintech.armagedon.tp4.controller.EventController;
 import com.up.fintech.armagedon.tp4.controller.BORRARExternalTransferController;
 import com.up.fintech.armagedon.tp4.controller.BetController;
 import com.up.fintech.armagedon.tp4.controller.TransactionController;
@@ -21,6 +22,7 @@ import com.up.fintech.armagedon.tp4.controller.WithdrawController;
 import com.up.fintech.armagedon.tp4.entity.EmptyResponse;
 import com.up.fintech.armagedon.tp4.entity.ResponseStatusWrapper;
 import com.up.fintech.armagedon.tp4.misc.error.CvuException;
+import com.up.fintech.armagedon.tp4.misc.error.EventException;
 import com.up.fintech.armagedon.tp4.misc.error.ExternalBankException;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 import com.up.fintech.armagedon.tp4.misc.error.UserNotFoundException;
@@ -28,10 +30,10 @@ import com.up.fintech.armagedon.tp4.misc.error.WalletAlreadyExistsException;
 import com.up.fintech.armagedon.tp4.misc.error.WalletNotFoundException;
 
 @RestControllerAdvice(assignableTypes = {DepositController.class, BORRARExternalTransferController.class, WalletController.class, TransferController.class, TransactionController.class
-		, WithdrawController.class, BetController.class})
+		, WithdrawController.class, BetController.class, EventController.class})
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler({ExternalBankException.class, CvuException.class, WalletNotFoundException.class, UserNotFoundException.class})
+	@ExceptionHandler({ExternalBankException.class, CvuException.class, WalletNotFoundException.class, UserNotFoundException.class, EventException.class})
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ResponseEntity<ResponseStatusWrapper<EmptyResponse>> externalTransferException(RuntimeException ex) {
 		var response = new ResponseStatusWrapper<>(new EmptyResponse(),true,HttpStatus.NOT_FOUND.value(),ex.getMessage());

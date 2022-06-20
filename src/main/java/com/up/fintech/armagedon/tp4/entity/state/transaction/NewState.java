@@ -47,6 +47,11 @@ public class NewState extends AbstractTransactionState {
 			case BETBAG:
 				newState = new DepositState(transaction);
 				break;
+			case DEBITBET:
+			case PAYBET:
+				newState = new PayingWinBetState(transaction);
+				break;
+			
 			default:
 				newState = new InvalidState(transaction);
 				break;

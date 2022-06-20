@@ -22,8 +22,7 @@ public class OpenState extends AbstractEventState {
 
 	@Override
 	public void changeState() {
-		// TODO Auto-generated method stub
-		
+		new ClosedState(event);
 	}
 	
 	
