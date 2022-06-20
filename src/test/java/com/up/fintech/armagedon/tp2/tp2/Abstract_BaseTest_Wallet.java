@@ -84,7 +84,7 @@ abstract class Abstract_BaseTest_Wallet {
 		var result = mvc.perform(post(link)
 				.content("{\"amount\":"+amount.doubleValue()+"}").contentType(MediaType.APPLICATION_JSON).characterEncoding(Charset.defaultCharset()))
 				.andExpect(status().isCreated())
-				.andExpect(jsonPath("data.amount", is(amount.doubleValue())))
+				.andExpect(jsonPath("data.total", is(amount.doubleValue())))
 				.andReturn();
 		variables.setTransaction(result);
 		log.info("Fin  solicitud de deposito a wallet -> 201");
@@ -104,7 +104,7 @@ abstract class Abstract_BaseTest_Wallet {
 		var link = variables.getTransactionLinkRel("confirm");
 		var result = mvc.perform(put(link))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("data.amount", is(amount.doubleValue())))
+			.andExpect(jsonPath("data.total", is(amount.doubleValue())))
 			.andReturn();
 		variables.setTransaction(result);
 		log.info("fin confirmación de deposito a wallet -> 200");
@@ -128,27 +128,27 @@ abstract class Abstract_BaseTest_Wallet {
 		variables.setTransaction(result);
 		log.info("fin cancelación de deposito a wallet -> 200");
 	}
-	void withdrawRequest(BigDecimal amount, BigDecimal fee) throws Exception {
+	void withdrawRequest(BigDecimal amount, BigDecimal total) throws Exception {
 		log.info("inicio confirmación de retiro a wallet -> 200");
 		var link = variables.getWalletLinkRel("withdraw");
 		var result = mvc.perform(post(link) 
 				.content("{\"amount\":"+amount.doubleValue()+"}").contentType(MediaType.APPLICATION_JSON).characterEncoding(Charset.defaultCharset()))
 				.andExpect(status().isCreated())
-				.andExpect(jsonPath("data.total", is(fee.doubleValue())))
+				.andExpect(jsonPath("data.total", is(total.doubleValue())))
 				.andReturn();
 		variables.setTransaction(result);
 		log.info("Fin confirmación de retiro a wallet -> 200");
 	}
 	
-	void withdrawConfirmation(BigDecimal amount, BigDecimal fee) throws Exception {
+	void withdrawConfirmation(BigDecimal amount, BigDecimal total) throws Exception {
 		var link = variables.getTransactionLinkRel("confirm");
 		var result = mvc.perform(put(link))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("data.total", is(fee.doubleValue())))
+				.andExpect(jsonPath("data.total", is(total.doubleValue())))
 				.andReturn();
 		variables.setTransaction(result);
 	}
-	void withdrawRequest400(BigDecimal amount, BigDecimal fee) throws Exception {
+	void withdrawRequest400(BigDecimal amount) throws Exception {
 		log.info("inicio confirmación de retiro a wallet -> 200");
 		var link = variables.getWalletLinkRel("withdraw");
 		var result = mvc.perform(post(link) 

@@ -5,6 +5,8 @@ import java.time.Instant;
 
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.TransactionStatusEnum;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
@@ -16,10 +18,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 public abstract class Debit extends Transaction {
-	
-	private BigDecimal fee;
-	
-	private BigDecimal total;
 	
 	public BigDecimal directWithdraw() throws TransactionException {
 		withdrawRequest();
@@ -37,7 +35,8 @@ public abstract class Debit extends Transaction {
 			transaction.setNote(note);
 			throw new TransactionException(note);
 		}
-		if (wallet.getBalance().compareTo(transaction.getAmount()) < 0) {
+		//if (wallet.getBalance().compareTo(transaction.getAmount()) < 0) {
+		if (wallet.getBalance().compareTo(transaction.getTotal()) < 0) {
 			transaction.getState().reject();
 			var note = String.format("Request Rejected: amount %f to withdraw set balance to negative - Balance %f - Transaction type: %s",
 					transaction.getAmount(), wallet.getBalance(), transaction.getType().value);
@@ -62,7 +61,8 @@ public abstract class Debit extends Transaction {
 			transaction.setNote(note);
 			throw new TransactionException(note);
 		}
-		if (wallet.getBalance().compareTo(transaction.getAmount()) < 0) {
+//		if (wallet.getBalance().compareTo(transaction.getAmount()) < 0) {
+		if (wallet.getBalance().compareTo(transaction.getTotal()) < 0) {
 			transaction.getState().reject();
 			var note = String.format("Confirmation Rejected: amount %f to withdraw set balance to negative - Balance %f - Transaction type: %s",
 					transaction.getAmount(), wallet.getBalance(), transaction.getType().value);

@@ -30,6 +30,7 @@ public final class WithdrawRequestServiceStrategy implements ITransactionStrateg
 			var fee = new FeeCharge(withdraw,wallet);
 			fee.withdrawRequest();
 			withdraw.setFeeTransaction(fee);
+//			withdraw.setFee(fee.getTotal());
 			repository.save(fee);
 			var savedDeposit = repository.save(withdraw);
 			service.save(wallet);

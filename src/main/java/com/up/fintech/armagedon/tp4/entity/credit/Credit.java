@@ -32,7 +32,8 @@ public abstract class Credit extends Transaction {
 		if (transaction.getStatus()!=TransactionStatusEnum.PENDING_CONFIRMATION)
 			throw new TransactionException("Transacción/Credito debe estar pendiente de confirmación para confirmar");
 		
-		if (transaction.getAmount().compareTo(BigDecimal.ZERO)>0) {
+//		if (transaction.getAmount().compareTo(BigDecimal.ZERO)>0) {
+		if (transaction.getTotal().compareTo(BigDecimal.ZERO)>0) {
 			transaction.getState().changeState();
 			var newAmount = wallet.getBalance().add(transaction.getAmount());
 			transaction.setConfirmedTime(Instant.now());
@@ -54,7 +55,8 @@ public abstract class Credit extends Transaction {
 		if (transaction.getStatus()!=TransactionStatusEnum.NEW)
 			throw new TransactionException("Transacción de Crédito en proceso, no se puede volver a enviar para re-confirmar");
 
-		if (transaction.getAmount().compareTo(BigDecimal.ZERO)>0) {
+//		if (transaction.getAmount().compareTo(BigDecimal.ZERO)>0) {
+		if (transaction.getTotal().compareTo(BigDecimal.ZERO)>0) {
 			transaction.getState().changeState();
 			wallet.getTransactions().add(transaction);
 			transaction.getState().changeState();

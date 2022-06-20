@@ -27,6 +27,8 @@ import lombok.Setter;
 //@Table(name = "deposits")
 public class Withdraw extends Debit {
 	
+	private static final BigDecimal comissionFee = BigDecimal.valueOf(0.055);   
+	
 	@Setter(value = AccessLevel.NONE) @JsonInclude(Include.NON_NULL)
 	private String confirmationCode;
 	
@@ -40,7 +42,8 @@ public class Withdraw extends Debit {
 		super();
 		super.setType(TransactionType.WITHDRAW);
 		setStrategy(SpringContext.getBean(WithdrawRequestServiceStrategy.class));
-		setNote("Retiro por Ventanilla Completedo Correctamente");
+//		setNote("Retiro por Ventanilla Completedo Correctamente");
+		super.setFeeCharge(comissionFee);
 	}
 	
 	@Override

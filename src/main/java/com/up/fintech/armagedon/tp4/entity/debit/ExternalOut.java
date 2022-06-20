@@ -1,5 +1,7 @@
 package com.up.fintech.armagedon.tp4.entity.debit;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
@@ -22,7 +24,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 public class ExternalOut extends Debit {
-	
+	private static final BigDecimal comissionFee = BigDecimal.valueOf(0.07);  
 //	@JsonProperty(access = Access.READ_ONLY) private String fromCvu;
 	private String toCvu;
 	
@@ -36,7 +38,8 @@ public class ExternalOut extends Debit {
 		super();
 		super.setType(TransactionType.EXTERNAL_SEND);
 		setStrategy(SpringContext.getBean(ExternalSendTransferServiceStrategy.class));
-		setNote("Enviando dinero fuera de la PSP");
+//		setNote("Enviando dinero fuera de la PSP");
+		setFeeCharge(comissionFee);
 	}
 
 	public ExternalOut(InternalOut tmp) {

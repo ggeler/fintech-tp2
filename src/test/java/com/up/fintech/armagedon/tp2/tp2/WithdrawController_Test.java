@@ -60,6 +60,7 @@ class WithdrawController_Test extends Abstract_BaseTest_Wallet {
 		log.info("Envío y confirmo solicitud de retiro a wallet -> 201");
 		checkSelfWallet_then200_thenupdateJsonWallet();
 		var beforeBalance= BigDecimal.valueOf(variables.getWallet().get("balance").asDouble());
+//		var beforeTotal = beforeBalance.multiply(BigDecimal.valueOf(0.98));
 		withdrawRequest(beforeBalance, beforeBalance);
 		withdrawConfirmation(beforeBalance, beforeBalance);
 		checkSelfWallet_then200_thenupdateJsonWallet();
@@ -75,18 +76,18 @@ class WithdrawController_Test extends Abstract_BaseTest_Wallet {
 		testDepositController_addMoneyToWallet_then201();
 		checkSelfWallet_then200_thenupdateJsonWallet();
 		
-		var beforeBalance= BigDecimal.valueOf(variables.getWallet().get("balance").asDouble());
-		var fee = beforeBalance.divide(BigDecimal.valueOf(2)).add(beforeBalance.divide(BigDecimal.valueOf(2)).multiply(BigDecimal.valueOf(0.02)));
+		var beforeBalance= BigDecimal.valueOf(variables.getWallet().get("balance").asDouble()).divide(BigDecimal.valueOf(2));
+		var total = beforeBalance.multiply(BigDecimal.valueOf(1.055));
 		
-		withdrawRequest(beforeBalance.divide(BigDecimal.valueOf(2)),fee);
-		withdrawConfirmation(beforeBalance.divide(BigDecimal.valueOf(2)),fee);
+		withdrawRequest(beforeBalance,total);
+		withdrawConfirmation(beforeBalance,total);
 		
-		fee = BigDecimal.valueOf(variables.getTransaction().get("fee").asDouble());
+		var fee = BigDecimal.valueOf(variables.getTransaction().get("fee").asDouble());
 		
 		checkSelfWallet_then200_thenupdateJsonWallet();
 		var afterBalance= BigDecimal.valueOf(variables.getWallet().get("balance").asDouble());
 		
-		assertEquals(beforeBalance.divide(BigDecimal.valueOf(2)).subtract(fee) , afterBalance);
+		assertEquals(beforeBalance.subtract(fee) , afterBalance);
 		log.info("Fin Envío y confirmo solicitud de retiro a wallet -> 200");
 	}
 	@Test
@@ -137,7 +138,7 @@ class WithdrawController_Test extends Abstract_BaseTest_Wallet {
 		confirmDepositToWallet(amount);
 		checkWallet_then200_thenupdateJsonWallet(wallet);
 		var balance= BigDecimal.valueOf(variables.getWallet().get("balance").asDouble());
-		withdrawRequest400(balance.multiply(BigDecimal.valueOf(0.99)), balance.multiply(BigDecimal.valueOf(0.99)));
+		withdrawRequest400(balance.multiply(BigDecimal.valueOf(0.99)));
 		
 		log.info("***Fin Test pido QR deposito en wallet -> 200");
 	}

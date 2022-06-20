@@ -93,6 +93,28 @@ public abstract class Transaction {
 	@Transient @JsonIgnore 
 	private ITransactionStrategy strategy;
 	
+	@JsonProperty(access = Access.READ_ONLY) 
+	private BigDecimal fee = BigDecimal.valueOf(0.0);
+	
+	@JsonProperty(access = Access.READ_ONLY) @Setter(value = AccessLevel.NONE)  
+	private BigDecimal total = BigDecimal.valueOf(0.0);
+	
+	@JsonProperty(access = Access.READ_ONLY) 
+	private BigDecimal feeCharge = BigDecimal.valueOf(0.0);
+	
+	public BigDecimal getTotal() {
+		return amount.add(fee);
+	}
+	
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+		this.total = amount.add(fee);
+	}
+	
+	public void setFee(BigDecimal fee) {
+		this.fee = fee;
+		this.total = amount.add(fee);
+	}
 	public Transaction execute(Wallet wallet) {
 		return state.execute(wallet);
 	}

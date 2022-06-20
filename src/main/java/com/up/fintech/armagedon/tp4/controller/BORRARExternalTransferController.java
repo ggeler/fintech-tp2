@@ -20,7 +20,7 @@ import lombok.extern.log4j.Log4j2;
 //@RestController
 //@RequestMapping("/fintech/external/bank/transfer")
 //@Log4j2
-public class ExternalTransferController {
+public class BORRARExternalTransferController {
 
 //	private final WalletService walletService;
 //	

@@ -1,7 +1,5 @@
 package com.up.fintech.armagedon.tp4.entity.credit;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
@@ -20,8 +18,8 @@ public class FeePayment extends Credit {
 
 	@OneToOne @JsonIgnore
 	private Debit origin;
-	
-	private BigDecimal total;
+//	@JsonProperty(access = Access.READ_ONLY) 
+//	private BigDecimal total;
 	
 	private FeePayment() {
 		super.setType(TransactionType.FEEPAY);
@@ -34,7 +32,7 @@ public class FeePayment extends Credit {
 		this.origin = transaction; 
 		
 		setAmount(transaction.getAmount());
-		setTotal(transaction.getAmount());
+//		setTotal(transaction.getAmount());
 		setWallet(wallet);
 	}
 	

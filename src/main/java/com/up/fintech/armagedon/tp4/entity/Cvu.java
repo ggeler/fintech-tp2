@@ -22,9 +22,12 @@ public class Cvu {
 
 	@JsonIgnore @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+	
 	@Column(unique = true) 
 	private String cvu;
-	@JsonIgnore @OneToOne private Wallet wallet;
+	
+	@JsonIgnore @OneToOne 
+	private Wallet wallet;
 
 	public Cvu() {
 	}

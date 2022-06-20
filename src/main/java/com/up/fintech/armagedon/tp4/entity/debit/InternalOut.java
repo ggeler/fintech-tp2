@@ -30,6 +30,6 @@ public class InternalOut extends Debit {
 		super();
 		super.setType(TransactionType.INTERNAL_SEND);
 		setStrategy(SpringContext.getBean(InternalSendTransferServiceStrategy.class));
-		setNote("Transferencia a Billetera Misma Compañía Completeda");
+//		setNote("Transferencia a Billetera Misma Compañía Completeda");
 	}
 }
