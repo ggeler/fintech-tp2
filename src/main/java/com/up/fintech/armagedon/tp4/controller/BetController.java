@@ -2,7 +2,9 @@ package com.up.fintech.armagedon.tp4.controller;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,8 @@ import com.up.fintech.armagedon.tp4.dto.ExternalTransferDto;
 import com.up.fintech.armagedon.tp4.entity.ResponseStatusWrapper;
 import com.up.fintech.armagedon.tp4.entity.Transaction;
 import com.up.fintech.armagedon.tp4.entity.debit.Bet;
+import com.up.fintech.armagedon.tp4.entity.state.transaction.TransactionStatusEnum;
+import com.up.fintech.armagedon.tp4.service.BetService;
 import com.up.fintech.armagedon.tp4.service.TransactionService;
 import com.up.fintech.armagedon.tp4.service.WalletService;
 
@@ -29,11 +33,13 @@ public class BetController {
 	private final WalletService walletService;
 	private final TransactionAssembler assembler;
 	private final TransactionService transactionService;
+	private final BetService betService;
 	
-	public BetController(WalletService walletService, TransactionAssembler assembler, TransactionService transactionService) {
+	public BetController(WalletService walletService, TransactionAssembler assembler, TransactionService transactionService, BetService betService) {
 		this.walletService = walletService;
 		this.assembler = assembler;
 		this.transactionService = transactionService;
+		this.betService = betService;
 	}
 	
 	@GetMapping("")
@@ -42,6 +48,42 @@ public class BetController {
 		var response = new ResponseStatusWrapper<>(preview,true,0,"Previsualización de Apuesta");
 		return ResponseEntity.ok(response);
 	}
+	
+	@GetMapping("/all")
+	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> allBets(@PathVariable UUID wallet, @RequestParam(required = false) TransactionStatusEnum status , Pageable pageable) {
+		if (status == null) {
+			var transactions = betService.getAllBets(wallet, pageable);
+			return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
+		}
+		else {
+			var transactions = betService.getAllBets(wallet, status, pageable);
+			return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
+		}
+	}
+	
+//	@GetMapping("/all/open")
+//	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> allBetsOpen(@PathVariable UUID wallet, Pageable pageable) {
+//		var transactions = betService.getAllBetsOpened(wallet, pageable);
+//		return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
+//	}
+//	
+//	@GetMapping("/all/closed")
+//	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> allBetsClosed(@PathVariable UUID wallet, Pageable pageable) {
+//		var transactions = betService.getAllBetsClosed(wallet, pageable);
+//		return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
+//	}
+//	
+//	@GetMapping("/all/pending")
+//	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> allBetsPending(@PathVariable UUID wallet, Pageable pageable) {
+//		var transactions = betService.getAllBetsPendingConfirmation(wallet, pageable);
+//		return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
+//	}
+//	
+//	@GetMapping("/all/cancelled")
+//	public ResponseEntity<PagedModel<EntityModel<EntityModel<Transaction>>>> allBetsCancelled(@PathVariable UUID wallet, Pageable pageable) {
+//		var transactions = betService.getAllBetsCanceled(wallet, pageable);
+//		return ResponseEntity.ok().body(assembler.toModel(transactions.map(assembler::toModel)));
+//	}
 	
 	@PostMapping("")
 	public ResponseEntity<ResponseStatusWrapper<EntityModel<Transaction>>> request(@PathVariable UUID wallet, @RequestBody Bet bet) {

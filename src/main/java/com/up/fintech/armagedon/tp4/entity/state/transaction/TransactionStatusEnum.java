@@ -7,7 +7,7 @@ public enum TransactionStatusEnum {
 	RECEIVING_WITH_CONFIRMATION("Recibiendo con Confirmación"),
 	DEPOSITING("Depositando"),
 	WITHDRAWING("Extrayendo"),
-	CANCELED("Cancelada"),
+	CANCELLED("Cancelada"),
 	REJECTED("Rechazada"),
 	COMPLETED("Completada"),
 	NEW("Nueva"), 
@@ -16,7 +16,7 @@ public enum TransactionStatusEnum {
 	CHARGINGFEE("Cobrando fee"),
 	PAYINGFEE("Pagando fee"),
 	INVALIDSTATE("Estado invalido - revisar"), 
-	GAMBLING("Apostando");
+	GAMBLING("Apostando"), OPEN("Apuesta abierta"), CLOSED("Apuesta cerrada");
 	
 	public String status;
 	

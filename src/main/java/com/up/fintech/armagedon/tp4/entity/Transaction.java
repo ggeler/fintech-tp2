@@ -25,11 +25,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.CancelState;
+import com.up.fintech.armagedon.tp4.entity.state.transaction.CloseBetState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.CompleteState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.DepositState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.ITransactionState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.InvalidState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.NewState;
+import com.up.fintech.armagedon.tp4.entity.state.transaction.OpenBetState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.FeeChargeState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.FeePayState;
 import com.up.fintech.armagedon.tp4.entity.state.transaction.GamblingState;
@@ -123,7 +125,7 @@ public abstract class Transaction {
 
 	public void setTransactionState() {
 		switch (status) {
-		case CANCELED:
+		case CANCELLED:
 			state = new CancelState(this);
 			break;
 		case COMPLETED:
@@ -167,6 +169,12 @@ public abstract class Transaction {
 			break;
 		case INVALIDSTATE:
 			state = new InvalidState(this);
+			break;
+		case CLOSED:
+			state = new CloseBetState(this);
+			break;
+		case OPEN:
+			state = new OpenBetState(this);
 			break;
 		}
 	}

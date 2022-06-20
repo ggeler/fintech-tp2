@@ -23,6 +23,7 @@ import com.up.fintech.armagedon.tp4.misc.component.SpringContext;
 import com.up.fintech.armagedon.tp4.misc.error.TransactionException;
 import com.up.fintech.armagedon.tp4.misc.error.UserNotFoundException;
 import com.up.fintech.armagedon.tp4.misc.error.WalletNotFoundException;
+import com.up.fintech.armagedon.tp4.repository.IBetRepository;
 import com.up.fintech.armagedon.tp4.repository.ITransactionRepository;
 import com.up.fintech.armagedon.tp4.strategy.BetCancelServiceStrategy;
 import com.up.fintech.armagedon.tp4.strategy.BetConfirmServiceStrategy;
@@ -63,7 +64,7 @@ public class TransactionService {
 		var transactions = repository.findAllByWallet(wallet,pageable);
 		return transactions;
 	}
-	
+
 	public Transaction getTransaction(UUID walletId, UUID transactionId) {
 		var transaction = getTransaction(transactionId);
 		var wallet = service.getWallet(walletId);
@@ -162,6 +163,4 @@ public class TransactionService {
 //		} else
 //			throw new TransactionException("Debe ser deposito o retiro para obtener QR");
 	}
-
-
 }

@@ -24,8 +24,9 @@ public class WalletAssembler implements RepresentationModelAssembler<Wallet, Ent
 		EntityModel<Wallet> model;
 		var walletLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WalletController.class).getWallet(entity.getWalletId())).withSelfRel();
 		var transactionlink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TransactionController.class).getTransactionsPaged(entity.getWalletId(),null)).withRel("transactions");
+		var allBetsLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(BetController.class).allBets(entity.getWalletId(),null,null)).withRel("allBets");
 		
-		model = EntityModel.of(entity, walletLink, transactionlink);
+		model = EntityModel.of(entity, walletLink, transactionlink, allBetsLink);
 		
 		if (entity.getStatus()!=WalletStatusEnum.BLOCKED && entity.getStatus()!=WalletStatusEnum.BLOCKED_DEPOSIT ) {
 			var depositLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DepositController.class).deposit(entity.getWalletId(),null)).withRel("deposit");

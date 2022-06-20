@@ -37,6 +37,7 @@ public class TransactionAssembler implements RepresentationModelAssembler<Transa
 		EntityModel<Transaction> model;
 		
 		var selfLink =  WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(TransactionController.class).getTransaction(entity.getWallet().getWalletId(), entity.getTransactionId())).withSelfRel();
+		
 		model = EntityModel.of(entity, selfLink);
 		
 		if (entity.getWallet().getStatus()!=WalletStatusEnum.BLOCKED && entity.getWallet().getStatus()!=WalletStatusEnum.BLOCKED_WITHDRAW 
