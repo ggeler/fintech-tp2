@@ -22,13 +22,17 @@ import com.up.fintech.armagedon.tp4.entity.state.transaction.TransactionStatusEn
 import com.up.fintech.armagedon.tp4.misc.error.EventException;
 import com.up.fintech.armagedon.tp4.repository.IEventRepository;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
+@Log4j2
 public class EventService {
 
 	private final IEventRepository repository;
 	private final WalletService walletService;
 	private final TransactionService transactionService;
 	List<Bet> winners = new ArrayList<>();
+	int cant=0;
 	
 	public EventService(IEventRepository repository, WalletService walletService, TransactionService transactionService) {
 		this.repository = repository;
@@ -87,7 +91,7 @@ public class EventService {
 		
 		var betbagWallet = walletService.getBetBagWallet();
 		var feeWallet = walletService.getFeeWallet();
-		
+	
 		winners.stream().forEach(winner -> { 
 			winner.setTransactionState();
 			
@@ -114,13 +118,19 @@ public class EventService {
 			walletService.save(betbagWallet);
 			walletService.save(winner.getWallet());
 			walletService.save(feeWallet);
-			
+			cant++;
+			log.info("Winner: "+winner.getId()+" waller: "+winner.getWallet().getId());
 		}); 
+		log.info("Cantidad winners: "+cant);
+		cant = 0;
 		losers.stream().forEach(loser -> {
 			loser.setTransactionState();
 			((OpenBetState) loser.getState()).lose();
 			transactionService.save(loser);
+			log.info("Loser: "+loser.getId()+" waller: "+loser.getWallet().getId());
+			cant++;
 		});
+		log.info("Cantidad losers: "+cant);
 		event.getState().changeState();
 		repository.save(event);
 //		betbagWallet.payWinningBet(new PayBet(winner.getWallet(), winner.getAmount())));
