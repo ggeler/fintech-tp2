@@ -120,6 +120,7 @@ public class EventService {
 			walletService.save(feeWallet);
 			cant++;
 			log.info("Winner: "+winner.getId()+" waller: "+winner.getWallet().getId());
+			log.info("Amount: "+winner.getAmount()+" fee: "+feeCharge.getTotal() +" Total: "+winner.getTotal());
 		}); 
 		log.info("Cantidad winners: "+cant);
 		cant = 0;
@@ -127,7 +128,7 @@ public class EventService {
 			loser.setTransactionState();
 			((OpenBetState) loser.getState()).lose();
 			transactionService.save(loser);
-			log.info("Loser: "+loser.getId()+" waller: "+loser.getWallet().getId());
+			log.info("Loser: "+loser.getId()+" waller: "+loser.getWallet().getId()+" Bet: "+loser.getAmount());
 			cant++;
 		});
 		log.info("Cantidad losers: "+cant);
