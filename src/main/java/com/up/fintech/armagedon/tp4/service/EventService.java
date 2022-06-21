@@ -86,7 +86,7 @@ public class EventService {
 			winners = bets.stream().filter(bet -> bet.getAwayTeamScore() == bet.getHomeTeamScore()).collect(Collectors.toList());
 		
 		var losers = bets.stream()
-				.filter(loser -> winners.stream().anyMatch(winner -> winner.getId()!=loser.getId()))
+				.filter(loser -> winners.stream().allMatch(winner -> winner.getId()!=loser.getId()))
 				.collect(Collectors.toList());
 		
 		var betbagWallet = walletService.getBetBagWallet();
@@ -126,7 +126,7 @@ public class EventService {
 		cant = 0;
 		losers.stream().forEach(loser -> {
 			loser.setTransactionState();
-			//((OpenBetState) loser.getState()).lose();
+			((OpenBetState) loser.getState()).lose();
 			transactionService.save(loser);
 			log.info("Loser: "+loser.getId()+" waller: "+loser.getWallet().getId()+" Bet: "+loser.getAmount());
 			cant++;
