@@ -126,7 +126,7 @@ public class EventService {
 		cant = 0;
 		losers.stream().forEach(loser -> {
 			loser.setTransactionState();
-			((OpenBetState) loser.getState()).lose();
+			//((OpenBetState) loser.getState()).lose();
 			transactionService.save(loser);
 			log.info("Loser: "+loser.getId()+" waller: "+loser.getWallet().getId()+" Bet: "+loser.getAmount());
 			cant++;
