@@ -36,7 +36,7 @@ public class PayBet extends Credit {
 	public PayBet(Wallet wallet, BigDecimal amount, Transaction transaction) {
 		this();
 		this.wallet=wallet;
-		this.setAmount(amount.multiply(BigDecimal.valueOf(1.5)));
+		this.setAmount(amount);
 		origin = transaction;
 	}
 	

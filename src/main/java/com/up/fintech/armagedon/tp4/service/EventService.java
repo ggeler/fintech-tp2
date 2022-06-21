@@ -1,5 +1,6 @@
 package com.up.fintech.armagedon.tp4.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class EventService {
 	private final IEventRepository repository;
 	private final WalletService walletService;
 	private final TransactionService transactionService;
+	List<Bet> winners = new ArrayList<>();
 	
 	public EventService(IEventRepository repository, WalletService walletService, TransactionService transactionService) {
 		this.repository = repository;
@@ -50,10 +52,14 @@ public class EventService {
 	@Transactional(label = "EventTransaction", isolation = Isolation.REPEATABLE_READ)
 	public void update(EventTransferDto dto) throws EventException {
 		var event = getEvent(dto.getEventKey()).orElseThrow(()-> new EventException("Juego no encontrado"));
-		var bets = event.getBets().stream().filter(bet -> bet.getStatus()==TransactionStatusEnum.OPEN).collect(Collectors.toList());
+		var winnerKey = event.getAwayTeamScore()>event.getHomeTeamScore() ? event.getAwayTeamKey() : event.getHomeTeamKey();
+		
+		var bets = event.getBets().stream()
+				.filter(bet -> bet.getStatus()==TransactionStatusEnum.OPEN)
+				.filter(bet -> bet.getEvent().getEventKey()==dto.getEventKey())
+				.collect(Collectors.toList());
 		boolean even=false, away=false, home=false;
-		long winnerKey;
-		List<Bet> winners = new ArrayList<>();
+			
 		
 		event.setAwayTeamScore(dto.getAwayTeamResult());
 		event.setHomeTeamScore(dto.getHomeTeamResult());
@@ -66,7 +72,7 @@ public class EventService {
 		} else
 			home=true;
 		
-		winnerKey = event.getAwayTeamScore()>event.getHomeTeamScore() ? event.getAwayTeamKey() : event.getHomeTeamKey();
+		
 		
 		if (!even && !away && home)  //No hubo empate
 			winners = bets.stream().filter(bet -> bet.getAwayTeamScore() < bet.getHomeTeamScore()).collect(Collectors.toList());
@@ -75,7 +81,9 @@ public class EventService {
 		else if (even && !away && home)
 			winners = bets.stream().filter(bet -> bet.getAwayTeamScore() == bet.getHomeTeamScore()).collect(Collectors.toList());
 		
-//		var losers = bets.stream().filter(loser -> loser.)
+		var losers = bets.stream()
+				.filter(loser -> winners.stream().anyMatch(winner -> winner.getId()!=loser.getId()))
+				.collect(Collectors.toList());
 		
 		var betbagWallet = walletService.getBetBagWallet();
 		var feeWallet = walletService.getFeeWallet();
@@ -83,12 +91,12 @@ public class EventService {
 		winners.stream().forEach(winner -> { 
 			winner.setTransactionState();
 			
-			var debit = new DebitBet(betbagWallet, winner.getAmount(), winner);
+			var debit = new DebitBet(betbagWallet, winner.getAmount().multiply(BigDecimal.valueOf(2)), winner);
 			betbagWallet.payWinningBet(debit);
 			
 			transactionService.save(debit);
 			
-			var credit = new PayBet(winner.getWallet(), winner.getAmount(), winner);
+			var credit = new PayBet(winner.getWallet(), winner.getAmount().multiply(BigDecimal.valueOf(2)), winner);
 			winner.getWallet().receiveWinningBet(credit);
 			transactionService.save(credit);
 			
@@ -105,8 +113,14 @@ public class EventService {
 			
 			walletService.save(betbagWallet);
 			walletService.save(winner.getWallet());
+			walletService.save(feeWallet);
 			
 		}); 
+		losers.stream().forEach(loser -> {
+			loser.setTransactionState();
+			((OpenBetState) loser.getState()).lose();
+			transactionService.save(loser);
+		});
 		event.getState().changeState();
 		repository.save(event);
 //		betbagWallet.payWinningBet(new PayBet(winner.getWallet(), winner.getAmount())));
