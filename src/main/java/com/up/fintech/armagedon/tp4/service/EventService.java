@@ -94,9 +94,9 @@ public class EventService {
 	
 		cant=0;
 		winners.stream().forEach(winner -> { 
-			if (!(winner.getState() instanceof OpenBetState)) {
-				return;
-			}
+//			if (!(winner.getState() instanceof OpenBetState)) {
+//				return;
+//			}
 			
 			winner.setTransactionState();
 			
@@ -130,14 +130,14 @@ public class EventService {
 		log.info("Cantidad winners: "+cant);
 		cant = 0;
 		losers.stream().forEach(loser -> {
-			if (loser.getState() instanceof OpenBetState) {
+//			if (loser.getState() instanceof OpenBetState) {
 				loser.setTransactionState();
 				((OpenBetState) loser.getState()).lose();
 				transactionService.save(loser);
 				log.info("LoserId: "+loser.getId()+" walletId: "+loser.getWallet().getId()+" Bet: "+loser.getAmount());
 				cant++;
-			} else
-				log.error("Loser con estádo invalido - loserId: " + loser.getId());
+//			} else
+//				log.error("Loser con estádo invalido - loserId: " + loser.getId());
 		});
 		log.info("Cantidad losers: "+cant);
 		event.getState().changeState();
