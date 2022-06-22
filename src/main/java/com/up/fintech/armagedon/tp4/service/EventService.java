@@ -79,11 +79,11 @@ public class EventService {
 		
 		
 		if (!even && !away && home)  //No hubo empate
-			winners = bets.stream().filter(bet -> bet.getAwayTeamScore() < bet.getHomeTeamScore() && bet.getState() instanceof OpenBetState && bet.getEvent().getEventKey()==dto.getEventKey()).collect(Collectors.toList());
+			winners = bets.stream().filter(bet -> bet.getAwayTeamScore() < bet.getHomeTeamScore()).collect(Collectors.toList());
 		else if (!even && away && !home)
-			winners = bets.stream().filter(bet -> bet.getAwayTeamScore() > bet.getHomeTeamScore() && bet.getState() instanceof OpenBetState && bet.getEvent().getEventKey()==dto.getEventKey()).collect(Collectors.toList());
+			winners = bets.stream().filter(bet -> bet.getAwayTeamScore() > bet.getHomeTeamScore()).collect(Collectors.toList());
 		else if (even && !away && home)
-			winners = bets.stream().filter(bet -> bet.getAwayTeamScore() == bet.getHomeTeamScore() && bet.getState() instanceof OpenBetState && bet.getEvent().getEventKey()==dto.getEventKey()).collect(Collectors.toList());
+			winners = bets.stream().filter(bet -> bet.getAwayTeamScore() == bet.getHomeTeamScore()).collect(Collectors.toList());
 		
 		var losers = bets.stream()
 				.filter(loser -> winners.stream().allMatch(winner -> winner.getId()!=loser.getId()))
@@ -94,6 +94,10 @@ public class EventService {
 	
 		cant=0;
 		winners.stream().forEach(winner -> { 
+			if (!(winner.getState() instanceof OpenBetState)) {
+				return;
+			}
+			
 			winner.setTransactionState();
 			
 			var debit = new DebitBet(betbagWallet, winner.getAmount().multiply(BigDecimal.valueOf(2)), winner);
