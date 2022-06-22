@@ -93,13 +93,11 @@ public class EventService {
 		var feeWallet = walletService.getFeeWallet();
 	
 		cant=0;
-		winners.stream().forEach(winner -> { 
-//			if (!(winner.getState() instanceof OpenBetState)) {
-//				return;
-//			}
-			
+		winners.stream().forEach(winner -> {
 			winner.setTransactionState();
-			
+			if (!(winner.getState() instanceof OpenBetState)) {
+				return;
+			}
 			var debit = new DebitBet(betbagWallet, winner.getAmount().multiply(BigDecimal.valueOf(2)), winner);
 			betbagWallet.payWinningBet(debit);
 			
@@ -130,14 +128,14 @@ public class EventService {
 		log.info("Cantidad winners: "+cant);
 		cant = 0;
 		losers.stream().forEach(loser -> {
-//			if (loser.getState() instanceof OpenBetState) {
-				loser.setTransactionState();
+			loser.setTransactionState();
+			if (loser.getState() instanceof OpenBetState) {
 				((OpenBetState) loser.getState()).lose();
 				transactionService.save(loser);
 				log.info("LoserId: "+loser.getId()+" walletId: "+loser.getWallet().getId()+" Bet: "+loser.getAmount());
 				cant++;
-//			} else
-//				log.error("Loser con estádo invalido - loserId: " + loser.getId());
+			} else
+				log.error("Loser con estádo invalido - loserId: " + loser.getId());
 		});
 		log.info("Cantidad losers: "+cant);
 		event.getState().changeState();
